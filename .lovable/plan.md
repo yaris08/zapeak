@@ -1,54 +1,57 @@
 
 
-# 3 Alterações em ConfiguracoesPage.tsx
+# Aba IA — Chave API com detecção de provedor + Select dinâmico
 
 ## Arquivo único
 `src/pages/ConfiguracoesPage.tsx`
 
-## Novos states
-- `pixelId`, `pixelToken`, `pixelDataset` — campos Pixel
-- `showPixelToken` — toggle olho password Pixel
-- `iaApiKey` — chave API Anthropic
-- `showIaKey` — toggle olho password IA
-- `pixelSaved`, `iaSaved` — booleans para controlar placeholder pós-save
+## Remover
+- State: `iaPrompt`, `iaVendas`, `iaPix`, `iaNotify`
+- Imports: `Textarea` (se não usado em outro lugar)
+- Na aba IA: textarea "Persona / Prompt base" (linhas 258-261), 3 toggles (linhas 263-276), info box verde (linhas 278-280)
+- No `handleSave` IA: remover `prompt`, `vendas`, `pix`, `notify` do JSON salvo
+- No `useEffect` load IA: remover carregamento de `prompt`, `vendas`, `pix`, `notify`
 
-## Imports adicionais
-- `lucide-react`: `Eye, EyeOff, Save`
+## Adicionar
 
-## 1. Aba Facebook Pixel
-
-Remover o card informativo "As credenciais são configuradas pelo administrador..." (linhas 99-101).
-
-Adicionar antes do toggle server-side (linha 103):
-- Input "Pixel ID" — se `pixelSaved` e valor vazio, mostrar valor mascarado como placeholder
-- Input password "Token de Acesso (Conversions API)" com botão Eye/EyeOff — após salvar, campo fica vazio com placeholder "Token salvo — insira novo para alterar"
-- Input "Dataset ID (opcional)"
-
-## 2. Aba IA
-
-Adicionar antes do Select de modelo (linha 131):
-- Input password "Chave API Anthropic" com botão Eye/EyeOff — mesma lógica de placeholder pós-save
-- Texto helper cinza "Sua chave é armazenada de forma segura e nunca exibida."
-
-A Textarea "Persona / Prompt base" já existe (linha 144-147) — nada a mudar.
-
-## 3. Botão Salvar
-
-Remover os 3 botões Salvar full-width individuais de cada aba (linhas 123, 169, 207).
-
-Adicionar botão fixo fora das abas:
+### Lógica de detecção de provedor
+Função derivada (não state):
 ```
-<button onClick={handleSave} className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50">
-  <Save size={14} /> Salvar configurações
-</button>
+const detectProvider = (key: string) => {
+  if (key.startsWith("sk-ant")) return "anthropic";
+  if (key.startsWith("sk-")) return "openai";
+  if (key.startsWith("AIza")) return "gemini";
+  if (key.length > 0) return "unknown";
+  return null;
+};
+const detectedProvider = detectProvider(iaApiKey);
 ```
 
-## handleSave atualizado
-- Pixel: salvar `pixelId`, `pixelToken`, `pixelDataset`, `serverSide`. Setar `pixelSaved=true`, limpar `pixelToken`
-- IA: salvar `iaApiKey`, model, prompt, toggles. Setar `iaSaved=true`, limpar `iaApiKey`
-- localStorage keys mantêm mesmo padrão `zapeak_settings_[aba]`
+### Badge de provedor (abaixo do input, antes do helper text)
+- `anthropic` → `🟣 Anthropic detectado`
+- `openai` → `🟢 OpenAI detectado`
+- `gemini` → `🔵 Google Gemini detectado`
+- `unknown` → `⚪ Provedor não reconhecido`
+- `null` → não renderiza badge
 
-## useEffect load
-- Pixel: carregar `pixelId`, `pixelDataset`, `serverSide`; se `pixelToken` existia, setar `pixelSaved=true`
-- IA: se `apiKey` existia, setar `iaSaved=true`
+Estilo: `text-xs px-2 py-1 rounded bg-[#2a2a2a] inline-flex`
+
+### Label do input
+Mudar de "Chave API Anthropic" para "Chave API"
+Placeholder: "Cole sua chave API aqui..."
+
+### Select de modelo — dinâmico
+Substituir options fixas por mapeamento:
+- **anthropic**: `claude-sonnet-4.5` "Claude Sonnet 4.5 (Recomendado)" | `claude-haiku-4.5` "Claude Haiku 4.5 (Rápido)"
+- **openai**: `gpt-4o` "GPT-4o (Recomendado)" | `gpt-4o-mini` "GPT-4o Mini (Rápido)" | `gpt-4-turbo` "GPT-4 Turbo"
+- **gemini**: `gemini-1.5-pro` "Gemini 1.5 Pro (Recomendado)" | `gemini-1.5-flash` "Gemini 1.5 Flash (Rápido)"
+- **unknown/null**: Select desabilitado, placeholder "Detectando provedor..."
+
+Ao mudar de provedor, resetar `iaModel` para o primeiro valor do novo provedor.
+
+### handleSave IA
+Salvar: `apiKey`, `model`, `provider` (string detectada). Remover campos removidos.
+
+### useEffect load IA
+Carregar `model`; se `apiKey` existia → `iaSaved=true`; carregar `provider` para eventual uso.
 
