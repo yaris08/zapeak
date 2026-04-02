@@ -15,6 +15,7 @@ const sidebarItems = [
   { label: "Fluxos", path: "/flows", icon: GitBranch },
   { label: "Atendimento", path: "/atendimento", icon: MessageSquare },
   { label: "Relatórios", path: "/relatorios", icon: BarChart3 },
+  { label: "Atribuição", path: "/atribuicao", icon: Target },
   { label: "Contatos", path: "/contatos", icon: Users },
   { label: "Configurações", path: "/configuracoes", icon: Settings },
 ];

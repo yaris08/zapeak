@@ -26,6 +26,7 @@ const App = () => (
             <Route path="/flows" element={<FlowsPage />} />
             <Route path="/atendimento" element={<AtendimentoPage />} />
             <Route path="/relatorios" element={<RelatoriosPage />} />
+            <Route path="/atribuicao" element={<AtribuicaoPage />} />
           </Route>
           <Route path="/flows/:id/editor" element={<FlowEditor />} />
           <Route path="*" element={<NotFound />} />
