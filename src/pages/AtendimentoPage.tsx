@@ -250,9 +250,11 @@ const AtendimentoPage: React.FC = () => {
     setPaymentCampaign("");
   };
 
-  const filtered = contacts.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = contacts.filter((c) => {
+    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesInstance = selectedInstance === "all" || c.instance === selectedInstance;
+    return matchesSearch && matchesInstance;
+  });
 
   return (
     <div className="flex h-[calc(100vh-56px)] bg-[#0f0f0f]">
