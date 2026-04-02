@@ -92,37 +92,6 @@ const ConfiguracoesPage: React.FC = () => {
         ))}
       </div>
 
-      {/* WhatsApp */}
-      {activeTab === "whatsapp" && (
-        <div className="space-y-4">
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="text-sm text-red-400">Desconectado</span>
-            </div>
-            <p className="text-xs text-muted-foreground">A conexão é configurada pelo administrador do sistema.</p>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-[180px] h-[180px] bg-[#1a1a1a] border-2 border-dashed border-[#2a2a2a] rounded-lg flex flex-col items-center justify-center gap-2">
-                <QrCode size={48} className="text-muted-foreground" />
-              </div>
-              <span className="text-xs text-muted-foreground">Escaneie para conectar</span>
-            </div>
-
-            <div className="flex gap-2">
-              <button className="flex-1 px-4 py-2 text-sm border border-[#2a2a2a] rounded-lg text-foreground hover:bg-[#222] transition-colors">Reconectar</button>
-              <button className="flex-1 px-4 py-2 text-sm border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">Desconectar</button>
-            </div>
-
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 text-xs text-muted-foreground">
-              ℹ️ Utilize a Evolution API para conectar seu WhatsApp. Mantenha sua instância rodando 24h para não perder conexões.
-            </div>
-          </div>
-
-          <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
-        </div>
-      )}
-
       {/* Facebook Pixel */}
       {activeTab === "pixel" && (
         <div className="space-y-4">
