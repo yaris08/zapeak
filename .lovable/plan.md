@@ -1,63 +1,32 @@
 
 
-# Formulários Específicos no Painel de Propriedades
+# 3 Correções no Editor de Fluxo
 
-## Resumo
-Reescrever o `PropertiesPanel` com formulários dedicados para cada tipo de nó, com state funcional que atualiza os dados do nó no canvas em tempo real.
+## 1. Pixel — Campo Token de Acesso
+**Arquivo:** `src/components/flow/properties/PixelProperties.tsx`
+- Adicionar campo `pixelToken` logo após o campo "Pixel ID" (linha 23)
+- Input text com placeholder "EAAxxxxxxxxxxxxxxx"
+- Texto de ajuda cinza abaixo: "Necessário para envio de eventos server-side"
 
-## Arquitetura
+## 2. Áudio — Tipo e Player Preview
+**Arquivo:** `src/components/flow/properties/MediaUploadProperties.tsx`
+- Adicionar prop opcional `isAudio?: boolean` (ou detectar via `title === "Enviar Áudio"`)
+- **Antes do upload:** Select com 2 opções — "Gravado (mensagem de voz)" / "Encaminhado (arquivo de áudio)", salva em `data.audioType`, padrão `"forwarded"`
+- **Após upload:** Guardar `file` como Object URL em `data.fileUrl` via `URL.createObjectURL(file)`. Se `fileName` existir e `isAudio`, renderizar `<audio controls src={data.fileUrl} />` com texto "Preview do áudio"
+- Atualizar `handleFileChange` para gerar e salvar a URL do blob
 
-### 1. Adicionar `onUpdateNode` callback ao FlowEditor
-- Nova prop `onUpdateNode: (id: string, data: any) => void` no `PropertiesPanel`
-- No `FlowEditor`, implementar `handleUpdateNode` que usa `setNodes` para atualizar `node.data`
-- Manter `selectedNode` sincronizado: ao clicar num nó, buscar a versão atual do array `nodes`
+## 3. Salvar Fluxo — Persistência localStorage
+**Arquivos:** `src/pages/FlowEditor.tsx` + `src/components/flow/EditorHeader.tsx`
 
-### 2. Reescrever PropertiesPanel com formulários por tipo
-Criar sub-componentes em `src/components/flow/properties/` para cada tipo de nó:
+### FlowEditor.tsx
+- Extrair `flowId` de `useParams()` (rota já é `/flows/:id/editor`)
+- No mount (`useEffect`), checar `localStorage.getItem("flowzap_flow_{id}")` — se existir, restaurar `nodes`, `edges` e `flowName` via `setNodes`/`setEdges`
+- Criar `handleSave` que serializa `{ nodes, edges, flowName }` no localStorage e exibe `toast.success("✓ Fluxo salvo com sucesso")`
+- Adicionar state `hasUnsavedChanges` (boolean) — set `true` em qualquer `onNodesChange`, `onEdgesChange`, `onConnect`, `onDrop`, `handleUpdateNode`, `handleDeleteNode`, `handleDuplicateNode`; set `false` após salvar
+- Passar `onSave`, `hasUnsavedChanges` como props ao `EditorHeader`
 
-- **StartProperties** — Selects para gatilho/correspondência, input com chips de palavras-chave (Enter ou botão + adiciona, X remove)
-- **TextProperties** — Textarea com contador 0/1000, chips clicáveis de variáveis que inserem no cursor
-- **AITextProperties** (`ai-text`) — Textarea prompt, Select modelo, Toggle histórico
-- **ImageProperties** (`image`) — Upload area dashed, input legenda
-- **AudioProperties** (`audio`) — Upload area (MP3/OGG/M4A), input legenda
-- **VideoProperties** (`video`) — Upload area (MP4/AVI/MOV), input legenda
-- **DocumentProperties** (`document`) — Upload area (PDF/DOC/XLS), input legenda
-- **DelayProperties** (`delay`) — Input numérico + Select unidade (Segundos/Minutos/Horas)
-- **WaitResponseProperties** (`wait`) — Input numérico + Select unidade, Textarea timeout
-- **AIRespondProperties** (`ai-respond`) — Textarea persona, 2 Toggles
-- **ConditionProperties** (`condition`) — 3 campos (variável, operador, valor) + info texto
-- **PixelProperties** (`pixel`) — Input ID, Select evento, Input valor, Select moeda, Toggle dados
-- **PaymentProperties** (`payment`) — Toggle IA, Select ação, Input etiqueta
-- **TagsProperties** (`tags`) — Input autocomplete, Toggle adicionar/remover
-- **ConnectFlowProperties** (`connect-flow`) — Select com fluxos mockados
-- **NotifyProperties** (`notify`) — Input tel, Textarea mensagem
-- **DefaultProperties** — Fallback genérico com campo Nome
-
-### 3. Atualizar nós do canvas para refletir dados
-- **TextNode**: mostrar `data.message` truncado em vez de "Configure a mensagem..."
-- **StartNode**: mostrar chips de palavras-chave do `data.keywords`
-- **GenericNode**: mostrar preview contextual baseado em `data` (ex: delay mostra "5 Segundos")
-
-### 4. Componentes UI utilizados
-- `Select` (shadcn), `Input`, `Textarea`, `Switch` (como Toggle), `Badge` (para chips/tags)
-- Tudo com state local sincronizado via `onUpdateNode` no `onChange`/`onBlur`
-
-## Arquivos modificados/criados
-| Arquivo | Ação |
-|---------|------|
-| `src/components/flow/properties/*.tsx` | Criar ~16 sub-componentes |
-| `src/components/flow/PropertiesPanel.tsx` | Reescrever — mapear tipo → sub-componente |
-| `src/pages/FlowEditor.tsx` | Adicionar `handleUpdateNode`, sincronizar `selectedNode` |
-| `src/components/flow/nodes/TextNode.tsx` | Exibir `data.message` |
-| `src/components/flow/nodes/StartNode.tsx` | Exibir `data.keywords` como chips |
-| `src/components/flow/nodes/GenericNode.tsx` | Preview contextual por tipo |
-
-## Fluxo de dados
-```text
-PropertiesPanel (form change)
-  → onUpdateNode(nodeId, newData)
-    → FlowEditor.setNodes(update node.data)
-      → React Flow re-renders node
-        → Node component reads updated data
-```
+### EditorHeader.tsx
+- Receber props `onSave: () => void` e `hasUnsavedChanges: boolean`
+- Botão "Salvar" chama `onSave` em vez de toast direto
+- Se `hasUnsavedChanges`, exibir `<span className="text-primary">● Não salvo</span>` ao lado do nome do fluxo
 
