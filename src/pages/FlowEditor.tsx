@@ -226,8 +226,6 @@ const FlowEditorInner: React.FC = () => {
 
   const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
 
-  const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
-
   useEffect(() => {
     if (!hasUnsavedChanges || !initialized.current) return;
     const timer = setTimeout(() => {
