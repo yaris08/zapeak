@@ -162,7 +162,7 @@ const FlowEditor: React.FC = () => {
       });
 
       const newNode: Node = {
-        id: String(nodeId++),
+        id: `node_${Date.now()}`,
         type: "generic",
         position,
         data: { label: name, type, color },
