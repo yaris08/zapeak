@@ -45,10 +45,8 @@ const ConfiguracoesPage: React.FC = () => {
   const [notifPhone, setNotifPhone] = useState("");
 
   useEffect(() => {
-    const wa = loadSettings("whatsapp");
-    if (wa) { setWaUrl(wa.url || ""); setWaToken(wa.token || ""); }
     const px = loadSettings("pixel");
-    if (px) { setPixelId(px.id || ""); setPixelToken(px.token || ""); setPixelDataset(px.dataset || ""); setPixelServerSide(px.serverSide ?? true); }
+    if (px) { setPixelServerSide(px.serverSide ?? true); }
     const ia = loadSettings("ia");
     if (ia) { setIaModel(ia.model || "sonnet"); setIaPrompt(ia.prompt || ""); setIaVendas(ia.vendas ?? true); setIaPix(ia.pix ?? true); setIaNotify(ia.notify ?? true); }
     const nt = loadSettings("notificacoes");
