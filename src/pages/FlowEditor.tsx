@@ -589,6 +589,25 @@ const FlowEditorInner: React.FC = () => {
 
   const handleNameChange = useCallback((name: string) => { setFlowName(name); setHasUnsavedChanges(true); }, []);
 
+  if (isMobile && !dismissedMobileWarning) {
+    return (
+      <div className="flex flex-col h-screen bg-background items-center justify-center p-8 text-center">
+        <Monitor size={64} className="text-muted-foreground mb-6" />
+        <h2 className="text-lg font-bold text-foreground mb-2">Editor de Fluxos</h2>
+        <p className="text-sm text-muted-foreground mb-6 max-w-[280px]">
+          O editor de fluxos funciona melhor no desktop. Recomendamos usar um computador para a melhor experiência.
+        </p>
+        <button
+          onClick={() => setDismissedMobileWarning(true)}
+          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          style={{ backgroundColor: "#22c55e", color: "#fff" }}
+        >
+          Continuar mesmo assim
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen bg-background">
       <EditorHeader
