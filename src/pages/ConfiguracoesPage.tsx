@@ -7,10 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
-type Tab = "whatsapp" | "pixel" | "ia" | "notificacoes";
+type Tab = "pixel" | "ia" | "notificacoes";
 
 const tabs: { id: Tab; label: string }[] = [
-  { id: "whatsapp", label: "WhatsApp" },
   { id: "pixel", label: "Facebook Pixel" },
   { id: "ia", label: "IA" },
   { id: "notificacoes", label: "Notificações" },
