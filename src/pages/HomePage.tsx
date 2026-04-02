@@ -29,11 +29,11 @@ const baseCampaigns = [
 ];
 
 const baseSales = [
-  { time: "14:32", name: "João Silva", campaign: "Páscoa 2024", value: 97, confidence: 94, pixel: true },
-  { time: "13:15", name: "Maria Souza", campaign: "Black Friday", value: 197, confidence: 88, pixel: true },
-  { time: "12:40", name: "Carlos Lima", campaign: "Lead Quente", value: 47, confidence: 76, pixel: true },
-  { time: "11:22", name: "Ana Paula", campaign: "Páscoa 2024", value: 97, confidence: 91, pixel: true },
-  { time: "10:05", name: "Pedro Costa", campaign: "Black Friday", value: 297, confidence: 62, pixel: false },
+  { time: "14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", value: 97, confidence: 94, pixel: true },
+  { time: "13:15", name: "Maria Souza", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", campaign: "Black Friday", value: 197, confidence: 88, pixel: true },
+  { time: "12:40", name: "Carlos Lima", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", campaign: "Lead Quente", value: 47, confidence: 76, pixel: true },
+  { time: "11:22", name: "Ana Paula", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", campaign: "Páscoa 2024", value: 97, confidence: 91, pixel: true },
+  { time: "10:05", name: "Pedro Costa", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", campaign: "Black Friday", value: 297, confidence: 62, pixel: false },
 ];
 
 const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string; color: string }) => (
