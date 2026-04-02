@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { QrCode, Loader2, Check } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -7,10 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
-type Tab = "whatsapp" | "pixel" | "ia" | "notificacoes";
+type Tab = "pixel" | "ia" | "notificacoes";
 
 const tabs: { id: Tab; label: string }[] = [
-  { id: "whatsapp", label: "WhatsApp" },
   { id: "pixel", label: "Facebook Pixel" },
   { id: "ia", label: "IA" },
   { id: "notificacoes", label: "Notificações" },
@@ -24,7 +23,7 @@ function loadSettings(tab: string) {
 }
 
 const ConfiguracoesPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>("whatsapp");
+  const [activeTab, setActiveTab] = useState<Tab>("pixel");
 
   // Pixel
   const [pixelServerSide, setPixelServerSide] = useState(true);
@@ -54,7 +53,7 @@ const ConfiguracoesPage: React.FC = () => {
   }, []);
 
   const handleSave = () => {
-    if (activeTab === "whatsapp") localStorage.setItem("zapeak_settings_whatsapp", JSON.stringify({}));
+    
     if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ serverSide: pixelServerSide }));
     if (activeTab === "ia") localStorage.setItem("zapeak_settings_ia", JSON.stringify({ model: iaModel, prompt: iaPrompt, vendas: iaVendas, pix: iaPix, notify: iaNotify }));
     if (activeTab === "notificacoes") localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({ venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, phone: notifPhone }));
@@ -92,37 +91,6 @@ const ConfiguracoesPage: React.FC = () => {
           </button>
         ))}
       </div>
-
-      {/* WhatsApp */}
-      {activeTab === "whatsapp" && (
-        <div className="space-y-4">
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="text-sm text-red-400">Desconectado</span>
-            </div>
-            <p className="text-xs text-muted-foreground">A conexão é configurada pelo administrador do sistema.</p>
-
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-[180px] h-[180px] bg-[#1a1a1a] border-2 border-dashed border-[#2a2a2a] rounded-lg flex flex-col items-center justify-center gap-2">
-                <QrCode size={48} className="text-muted-foreground" />
-              </div>
-              <span className="text-xs text-muted-foreground">Escaneie para conectar</span>
-            </div>
-
-            <div className="flex gap-2">
-              <button className="flex-1 px-4 py-2 text-sm border border-[#2a2a2a] rounded-lg text-foreground hover:bg-[#222] transition-colors">Reconectar</button>
-              <button className="flex-1 px-4 py-2 text-sm border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">Desconectar</button>
-            </div>
-
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 text-xs text-muted-foreground">
-              ℹ️ Utilize a Evolution API para conectar seu WhatsApp. Mantenha sua instância rodando 24h para não perder conexões.
-            </div>
-          </div>
-
-          <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
-        </div>
-      )}
 
       {/* Facebook Pixel */}
       {activeTab === "pixel" && (
