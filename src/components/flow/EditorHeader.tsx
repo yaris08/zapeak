@@ -59,7 +59,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, ins
       <div className="flex items-center gap-4">
         <span className="text-xs text-muted-foreground">0 sessões | 0% finalizaram</span>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">
+          <Button size="sm" className="h-8 text-xs text-white" style={{ backgroundColor: "#22c55e" }}>
             Publicar
           </Button>
         </div>
