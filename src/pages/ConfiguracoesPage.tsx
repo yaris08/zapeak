@@ -469,10 +469,6 @@ const ConfiguracoesPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <button onClick={handleSave}
-        className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50">
-        <Save size={14} /> Salvar configurações
-      </button>
     </div>
   );
 };
