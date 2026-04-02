@@ -147,7 +147,7 @@ const ConfiguracoesPage: React.FC = () => {
     }
     if (activeTab === "notificacoes") {
       localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({
-        venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, phone: notifPhone,
+        venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, adminNumbers,
       }));
     }
     toast.success("✓ Configurações salvas");
