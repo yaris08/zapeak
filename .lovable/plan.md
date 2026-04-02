@@ -1,46 +1,53 @@
 
 
-# Corrigir Alinhamento das Mensagens — WhatsApp Style
+# 3 Correções no Projeto
 
-## Arquivo único
-`src/pages/AtendimentoPage.tsx` — editar bloco de renderização de mensagens (linhas 363-398)
+## 1. Áudio estilo WhatsApp no AtendimentoPage.tsx
 
-## Alterações
+**Arquivo:** `src/pages/AtendimentoPage.tsx`
 
-### Mensagens do sistema (linhas 365-372)
-- Adicionar `mb-3` no wrapper
-- Mudar texto para `text-[11px]`
+### Interface Message
+- Adicionar campo opcional `audio?: { duration: string }`
 
-### Mensagens contact/bot/agent (linhas 374-397)
-Substituir toda a estrutura por:
+### Dados mockados do João (índice 0)
+Substituir array de mensagens por 11 mensagens conforme especificado, incluindo 2 com áudio (id 4 do bot e id 10 do contato).
 
-**Contact** (esquerda):
-- `flex items-start gap-2 mb-3`
-- Avatar circular (inicial, bg `#2a2a2a`, 28px) à esquerda
-- Label com nome do contato acima (apenas na primeira msg consecutiva do mesmo sender — verificar `prevMsg`)
-- Bolha: `bg-[#2a2a2a] rounded-2xl rounded-tl-sm max-w-xs lg:max-w-md px-3 py-2`
-- Horário abaixo em `text-[10px]`
+### AudioBubble inline
+Componente funcional dentro do arquivo que renderiza:
+- Botão play circular (32px) com ícone `Play` (já importado)
+- Barra de progresso simulada (div 60% width, altura 3px)
+- Duração à direita
+- Largura fixa `w-[200px]`
+- Cores adaptadas: contact → `bg-[#444]` botão / bot → `bg-[#444]` / agent → `bg-[#22c55e]`
 
-**Bot** (esquerda):
-- `flex items-start gap-2 mb-3`
-- Sem avatar (spacer de 28px para alinhar com contact)
-- Label "Bot" em verde `#22c55e` acima
-- Bolha: `bg-[#1e2a1e] rounded-2xl rounded-tl-sm max-w-xs lg:max-w-md px-3 py-2`
-- Horário abaixo
+### Renderização
+No bloco de mensagens, verificar `msg.audio`: se presente, renderizar `AudioBubble` dentro da bolha ao invés do texto.
 
-**Agent** (direita):
-- `flex items-start justify-end gap-2 mb-3`
-- `flex-col items-end`
-- Bolha: `bg-[#22c55e]/20 border border-[#22c55e]/30 rounded-2xl rounded-tr-sm max-w-xs lg:max-w-md px-3 py-2`
-- Horário abaixo à direita
+## 2. Auto-save com debounce no FlowEditor
 
-### Lógica de label consecutivo
-Antes do map, verificar índice anterior para mostrar label apenas na primeira mensagem consecutiva do mesmo sender:
-```
-const prevMsg = index > 0 ? currentMessages[index - 1] : null;
-const showLabel = prevMsg?.sender !== msg.sender;
-```
+**Arquivo:** `src/components/flow/PropertiesPanel.tsx`
+- Remover o botão "Salvar" do header (linhas 103-105) — manter apenas o título "Propriedades"
 
-### Nenhuma outra alteração
-Layout, funcionalidades, modais, inputs — tudo mantido.
+**Arquivo:** `src/pages/FlowEditor.tsx`
+- Adicionar `useEffect` com debounce de 1.5s que observa `nodes`, `edges`, `flowName`
+- Quando `hasUnsavedChanges` é true, após 1.5s salva no localStorage silenciosamente (sem toast)
+- O botão "Salvar" no `EditorHeader` continua funcionando com toast
+
+## 3. Delay com valor padrão
+
+**Arquivo:** `src/components/flow/nodes/GenericNode.tsx` (linha 156)
+- Mudar `data.delayValue || "?"` para `data.delayValue ?? 5`
+- Mudar `data.delayUnit || "seconds"` para `data.delayUnit ?? "seconds"`
+
+**Arquivo:** `src/components/flow/properties/DelayProperties.tsx`
+- Adicionar `useEffect` que seta valores padrão se `delayValue` for undefined
+
+## Arquivos modificados
+| Arquivo | Ação |
+|---------|------|
+| `src/pages/AtendimentoPage.tsx` | Editar (interface, dados, AudioBubble, renderização) |
+| `src/components/flow/PropertiesPanel.tsx` | Editar (remover botão Salvar) |
+| `src/pages/FlowEditor.tsx` | Editar (auto-save debounce) |
+| `src/components/flow/nodes/GenericNode.tsx` | Editar (delay default) |
+| `src/components/flow/properties/DelayProperties.tsx` | Editar (useEffect default) |
 
