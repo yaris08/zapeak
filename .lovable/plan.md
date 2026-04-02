@@ -1,43 +1,54 @@
 
 
-# Indicador de Instância nos Fluxos + Modal Novo Fluxo
+# 3 Alterações em ConfiguracoesPage.tsx
 
-## Arquivos
+## Arquivo único
+`src/pages/ConfiguracoesPage.tsx`
 
-| Arquivo | Ação |
-|---------|------|
-| `src/pages/FlowsPage.tsx` | Editar — campo `instance` nos dados, badge na lista, modal novo fluxo |
-| `src/components/flow/EditorHeader.tsx` | Editar — badge de instância ao lado de "Rascunho" |
+## Novos states
+- `pixelId`, `pixelToken`, `pixelDataset` — campos Pixel
+- `showPixelToken` — toggle olho password Pixel
+- `iaApiKey` — chave API Anthropic
+- `showIaKey` — toggle olho password IA
+- `pixelSaved`, `iaSaved` — booleans para controlar placeholder pós-save
 
-## 1. FlowsPage.tsx
+## Imports adicionais
+- `lucide-react`: `Eye, EyeOff, Save`
 
-### Dados
-Adicionar `instance` a cada fluxo:
-- Boas-vindas → `"Principal"`
-- Qualificação de Lead → `"Vendas"`
-- Suporte Automático → `undefined` (não definida)
-- Pesquisa de Satisfação → `"Principal"`
-- Recuperação de Carrinho → `undefined` (não definida)
+## 1. Aba Facebook Pixel
 
-### Badge na lista
-Entre o bloco de nome/stats e o bloco de status/more, inserir badge:
-- Definida: `bg-[#2a2a2a] border border-[#333] text-[#9ca3af]` com `Smartphone` (10px) + nome
-- Não definida: mesma estrutura mas texto `"Não definida"` com `text-yellow-500`
+Remover o card informativo "As credenciais são configuradas pelo administrador..." (linhas 99-101).
 
-### Modal Novo Fluxo
-- State: `showNewFlow`, `newFlowName`, `newFlowInstance`
-- Botão "Novo Fluxo" abre o Dialog em vez de ser decorativo
-- Campos: Input nome + Select instância (3 opções, Suporte desabilitada com title tooltip "Instância offline")
-- Botões: Cancelar / Criar Fluxo (verde) → `navigate(/flows/new/editor)`
-- Imports: `Dialog, DialogContent, DialogHeader, DialogTitle`, `Select, SelectTrigger, SelectContent, SelectItem, SelectValue`, `Smartphone`, `useNavigate`, `toast`
+Adicionar antes do toggle server-side (linha 103):
+- Input "Pixel ID" — se `pixelSaved` e valor vazio, mostrar valor mascarado como placeholder
+- Input password "Token de Acesso (Conversions API)" com botão Eye/EyeOff — após salvar, campo fica vazio com placeholder "Token salvo — insira novo para alterar"
+- Input "Dataset ID (opcional)"
 
-## 2. EditorHeader.tsx
+## 2. Aba IA
 
-### Badge de instância
-Após o badge "Rascunho" (linha 48-50), adicionar badge com `Smartphone` (10px) + nome da instância.
-- Prop opcional `instanceName?: string` e `instanceStatus?: "active" | "standby"`
-- Verde (`text-green-400 border-green-800/50`) se active, amarelo (`text-yellow-400 border-yellow-800/50`) se standby
-- Não renderiza se `instanceName` undefined
+Adicionar antes do Select de modelo (linha 131):
+- Input password "Chave API Anthropic" com botão Eye/EyeOff — mesma lógica de placeholder pós-save
+- Texto helper cinza "Sua chave é armazenada de forma segura e nunca exibida."
 
-O `FlowEditor.tsx` que usa EditorHeader passará a prop — preciso verificar.
+A Textarea "Persona / Prompt base" já existe (linha 144-147) — nada a mudar.
+
+## 3. Botão Salvar
+
+Remover os 3 botões Salvar full-width individuais de cada aba (linhas 123, 169, 207).
+
+Adicionar botão fixo fora das abas:
+```
+<button onClick={handleSave} className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50">
+  <Save size={14} /> Salvar configurações
+</button>
+```
+
+## handleSave atualizado
+- Pixel: salvar `pixelId`, `pixelToken`, `pixelDataset`, `serverSide`. Setar `pixelSaved=true`, limpar `pixelToken`
+- IA: salvar `iaApiKey`, model, prompt, toggles. Setar `iaSaved=true`, limpar `iaApiKey`
+- localStorage keys mantêm mesmo padrão `zapeak_settings_[aba]`
+
+## useEffect load
+- Pixel: carregar `pixelId`, `pixelDataset`, `serverSide`; se `pixelToken` existia, setar `pixelSaved=true`
+- IA: se `apiKey` existia, setar `iaSaved=true`
 
