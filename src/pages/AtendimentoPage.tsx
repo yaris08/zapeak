@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot } from "lucide-react";
+import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot, Menu, X, User } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
@@ -157,7 +157,6 @@ const AtendimentoPage: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // New states
   const [showFlowModal, setShowFlowModal] = useState(false);
   const [selectedFlow, setSelectedFlow] = useState<number | null>(null);
   const [showStopModal, setShowStopModal] = useState(false);
@@ -169,6 +168,9 @@ const AtendimentoPage: React.FC = () => {
   const [contactTags, setContactTags] = useState<Record<number, { label: string; color: string }[]>>(
     Object.fromEntries(contacts.map((c, i) => [i, [...c.tags]]))
   );
+
+  const [showMobileContacts, setShowMobileContacts] = useState(false);
+  const [showMobileProfile, setShowMobileProfile] = useState(false);
 
   const selected = contacts[selectedIdx];
   const currentMessages = chatMessages[selectedIdx] || [];
@@ -236,7 +238,6 @@ const AtendimentoPage: React.FC = () => {
     const formatted = parseFloat(val).toFixed(2).replace(".", ",");
     toast.success(`✓ Pagamento de R$ ${formatted} registrado`);
     addSystemMessage(`💰 Pagamento de R$ ${formatted} registrado manualmente`);
-    // Add "pago" tag if not present
     const tags = contactTags[selectedIdx] || [];
     if (!tags.some((t) => t.label === "pago")) {
       setContactTags((prev) => ({
@@ -256,103 +257,218 @@ const AtendimentoPage: React.FC = () => {
     return matchesSearch && matchesInstance;
   });
 
-  return (
-    <div className="flex h-[calc(100vh-56px)] bg-[#0f0f0f]">
-      {/* Left — Contact List */}
-      <div className="w-[280px] min-w-[280px] border-r border-[#2a2a2a] flex flex-col">
-        <div className="p-4 space-y-3">
-          <h1 className="text-lg font-bold text-foreground">Atendimento</h1>
-          <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar..."
-              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md pl-8 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
-            />
-          </div>
-          <select
-            value={selectedInstance}
-            onChange={(e) => setSelectedInstance(e.target.value)}
-            className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
-          >
-            {instances.map((inst) => (
-              <option key={inst.id} value={inst.id}>
-                {inst.id === "all" ? inst.name : `📱 ${inst.number} — ${inst.name}`}
-              </option>
-            ))}
-          </select>
-          <div className="flex gap-1">
-            {tabs.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                className={`flex-1 text-xs py-1.5 border-b-2 transition-colors ${
-                  activeTab === t.key
-                    ? "border-[#22c55e] text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+  const handleSelectContact = (realIdx: number) => {
+    setSelectedIdx(realIdx);
+    setShowMobileContacts(false);
+  };
+
+  const contactListContent = (
+    <>
+      <div className="p-4 space-y-3">
+        <h1 className="text-lg font-bold text-foreground">Atendimento</h1>
+        <div className="relative">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Buscar..."
+            className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md pl-8 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+          />
         </div>
-        <div className="flex-1 overflow-y-auto">
-          {filtered.map((c, i) => {
-            const realIdx = contacts.indexOf(c);
-            const tags = contactTags[realIdx] || [];
-            const hasPago = tags.some((t) => t.label === "pago");
-            const displayBadge = hasPago
-              ? { label: "pago", color: "bg-green-500/20 text-green-400" }
-              : c.badge;
-            return (
-              <button
-                key={i}
-                onClick={() => setSelectedIdx(realIdx)}
-                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-[#2a2a2a] text-left transition-colors ${
-                  realIdx === selectedIdx
-                    ? "bg-[#1a1a1a] border-l-2 border-l-[#22c55e]"
-                    : "hover:bg-[#1f1f1f] border-l-2 border-l-transparent"
-                }`}
-              >
-                <div className="w-9 h-9 min-w-[36px] rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
-                  {c.name.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-foreground truncate">{c.name}</span>
-                    <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{c.time}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate mt-0.5">{c.lastMsg}</p>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    {displayBadge && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${displayBadge.color}`}>
-                        {displayBadge.label}
-                      </span>
-                    )}
-                    <span className="text-[9px] text-muted-foreground bg-[#1a1a1a] px-1.5 py-0.5 rounded">
-                      {instances.find((inst) => inst.id === c.instance)?.name}
-                    </span>
-                    {c.unread > 0 && (
-                      <span className="ml-auto w-5 h-5 rounded-full bg-[#22c55e] text-[10px] font-bold flex items-center justify-center text-white">
-                        {c.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+        <select
+          value={selectedInstance}
+          onChange={(e) => setSelectedInstance(e.target.value)}
+          className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+        >
+          {instances.map((inst) => (
+            <option key={inst.id} value={inst.id}>
+              {inst.id === "all" ? inst.name : `📱 ${inst.number} — ${inst.name}`}
+            </option>
+          ))}
+        </select>
+        <div className="flex gap-1">
+          {tabs.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setActiveTab(t.key)}
+              className={`flex-1 text-xs py-1.5 border-b-2 transition-colors ${
+                activeTab === t.key
+                  ? "border-[#22c55e] text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
       </div>
+      <div className="flex-1 overflow-y-auto">
+        {filtered.map((c, i) => {
+          const realIdx = contacts.indexOf(c);
+          const tags = contactTags[realIdx] || [];
+          const hasPago = tags.some((t) => t.label === "pago");
+          const displayBadge = hasPago
+            ? { label: "pago", color: "bg-green-500/20 text-green-400" }
+            : c.badge;
+          return (
+            <button
+              key={i}
+              onClick={() => handleSelectContact(realIdx)}
+              className={`w-full flex items-start gap-3 px-4 py-3 border-b border-[#2a2a2a] text-left transition-colors ${
+                realIdx === selectedIdx
+                  ? "bg-[#1a1a1a] border-l-2 border-l-[#22c55e]"
+                  : "hover:bg-[#1f1f1f] border-l-2 border-l-transparent"
+              }`}
+            >
+              <div className="w-9 h-9 min-w-[36px] rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
+                {c.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-foreground truncate">{c.name}</span>
+                  <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{c.time}</span>
+                </div>
+                <p className="text-xs text-muted-foreground truncate mt-0.5">{c.lastMsg}</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  {displayBadge && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${displayBadge.color}`}>
+                      {displayBadge.label}
+                    </span>
+                  )}
+                  <span className="text-[9px] text-muted-foreground bg-[#1a1a1a] px-1.5 py-0.5 rounded">
+                    {instances.find((inst) => inst.id === c.instance)?.name}
+                  </span>
+                  {c.unread > 0 && (
+                    <span className="ml-auto w-5 h-5 rounded-full bg-[#22c55e] text-[10px] font-bold flex items-center justify-center text-white">
+                      {c.unread}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
 
-      {/* Center — Chat */}
+  const profileContent = (
+    <div className="p-4 space-y-5">
+      <h2 className="text-sm font-semibold text-foreground">Perfil do Contato</h2>
+      <div className="flex flex-col items-center text-center space-y-2">
+        <div className="w-16 h-16 rounded-full bg-[#2a2a2a] flex items-center justify-center text-2xl font-bold text-foreground">
+          {selected.name.charAt(0)}
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-foreground">{selected.name}</p>
+          <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+            <Phone size={10} /> {selected.phone}
+          </p>
+        </div>
+        {selected.badge && (
+          <span className={`text-[10px] px-2 py-0.5 rounded-full ${selected.badge.color}`}>
+            {selected.badge.label}
+          </span>
+        )}
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Etiquetas</h3>
+        <div className="flex flex-wrap gap-1.5">
+          {currentTags.map((t, i) => (
+            <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${t.color}`}>
+              {t.label}
+            </span>
+          ))}
+          <button className="text-[10px] px-2 py-0.5 rounded-full border border-[#2a2a2a] text-muted-foreground hover:text-foreground flex items-center gap-0.5 transition-colors">
+            <Plus size={8} /> Adicionar
+          </button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Histórico</h3>
+        <div className="space-y-1.5 text-xs text-muted-foreground">
+          <p className="flex items-center gap-1.5"><Clock size={10} /> {selected.history.convos} conversas anteriores</p>
+          <p className="flex items-center gap-1.5"><Tag size={10} /> Primeiro contato: {selected.history.firstContact}</p>
+          <p className="flex items-center gap-1.5"><ArrowRight size={10} /> Fluxo: {selected.history.flow}</p>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <button
+          onClick={() => { setSelectedFlow(null); setShowFlowModal(true); }}
+          className="w-full text-xs py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Play size={12} /> Iniciar Fluxo
+        </button>
+        <button
+          onClick={() => setShowPaymentModal(true)}
+          className="w-full text-xs py-2 rounded-md border border-[#22c55e]/40 text-green-400 hover:text-green-300 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <DollarSign size={12} /> Marcar como Pago
+        </button>
+        <button className="w-full text-xs py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors flex items-center justify-center gap-1.5">
+          <CheckCircle size={12} /> Marcar como Resolvido
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderBubbleContent = (msg: Message) => {
+    if (msg.audio) {
+      const isAgent = msg.sender === "agent";
+      const btnBg = isAgent ? "#22c55e" : "#444";
+      return (
+        <div className="flex items-center gap-2 w-[200px]">
+          <button className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: btnBg }}>
+            <Play size={14} fill="white" className="text-white ml-0.5" />
+          </button>
+          <div className="flex-1 min-w-0">
+            <div className="h-[3px] bg-[#555] rounded-full overflow-hidden">
+              <div className="h-full w-[60%] rounded-full" style={{ backgroundColor: isAgent ? "#22c55e" : "#888" }} />
+            </div>
+          </div>
+          <span className="text-[11px] text-muted-foreground shrink-0">{msg.audio.duration}</span>
+        </div>
+      );
+    }
+    return <>{msg.text}</>;
+  };
+
+  return (
+    <div className="flex h-[calc(100vh-56px)] bg-[#0f0f0f]">
+      <div className="hidden md:flex w-[280px] min-w-[280px] border-r border-[#2a2a2a] flex-col">
+        {contactListContent}
+      </div>
+
+      {showMobileContacts && (
+        <div
+          className="md:hidden fixed inset-0 z-50 bg-black/60"
+          onClick={() => setShowMobileContacts(false)}
+        />
+      )}
+      <div
+        className={`md:hidden fixed left-0 top-0 z-50 h-screen w-[80%] max-w-[320px] bg-[#0f0f0f] border-r border-[#2a2a2a] flex flex-col transition-transform duration-300 ${
+          showMobileContacts ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between p-3 border-b border-[#2a2a2a]">
+          <span className="text-sm font-bold text-foreground">Conversas</span>
+          <button onClick={() => setShowMobileContacts(false)} className="p-1 text-muted-foreground">
+            <X size={18} />
+          </button>
+        </div>
+        {contactListContent}
+      </div>
+
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Chat Header */}
         <div className="px-4 py-3 border-b border-[#2a2a2a]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <button
+                className="md:hidden p-1 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowMobileContacts(true)}
+              >
+                <Menu size={18} />
+              </button>
               <div className="w-9 h-9 rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
                 {selected.name.charAt(0)}
               </div>
@@ -369,23 +485,28 @@ const AtendimentoPage: React.FC = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <button className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
+              <button className="hidden md:inline-flex text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
                 Transferir
               </button>
               {activeFlow && (
                 <button
                   onClick={() => setShowStopModal(true)}
-                  className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+                  className="hidden md:inline-flex text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-red-400 hover:text-red-300 transition-colors items-center gap-1"
                 >
                   <StopCircle size={12} /> Parar Fluxo
                 </button>
               )}
-              <button className="text-xs px-3 py-1.5 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors">
+              <button className="hidden md:inline-flex text-xs px-3 py-1.5 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors">
                 Resolver
+              </button>
+              <button
+                className="md:hidden p-1 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowMobileProfile(true)}
+              >
+                <User size={18} />
               </button>
             </div>
           </div>
-          {/* Active flow indicator */}
           <div className="flex items-center gap-1.5 mt-1.5 ml-12">
             <Bot size={12} className={activeFlow ? "text-[#22c55e]" : "text-gray-500"} />
             <span className="text-[11px] text-muted-foreground">
@@ -394,7 +515,6 @@ const AtendimentoPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4">
           {currentMessages.map((msg, index) => {
             const prevMsg = index > 0 ? currentMessages[index - 1] : null;
@@ -409,27 +529,6 @@ const AtendimentoPage: React.FC = () => {
                 </div>
               );
             }
-
-            const renderBubbleContent = (msg: Message) => {
-              if (msg.audio) {
-                const isAgent = msg.sender === "agent";
-                const btnBg = isAgent ? "#22c55e" : "#444";
-                return (
-                  <div className="flex items-center gap-2 w-[200px]">
-                    <button className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: btnBg }}>
-                      <Play size={14} fill="white" className="text-white ml-0.5" />
-                    </button>
-                    <div className="flex-1 min-w-0">
-                      <div className="h-[3px] bg-[#555] rounded-full overflow-hidden">
-                        <div className="h-full w-[60%] rounded-full" style={{ backgroundColor: isAgent ? "#22c55e" : "#888" }} />
-                      </div>
-                    </div>
-                    <span className="text-[11px] text-muted-foreground shrink-0">{msg.audio.duration}</span>
-                  </div>
-                );
-              }
-              return <>{msg.text}</>;
-            };
 
             if (msg.sender === "contact") {
               return (
@@ -467,7 +566,6 @@ const AtendimentoPage: React.FC = () => {
               );
             }
 
-            // agent
             return (
               <div key={msg.id} className="flex items-start justify-end gap-2 mb-3">
                 <div className="flex flex-col items-end">
@@ -482,7 +580,6 @@ const AtendimentoPage: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
         <div className="p-3 border-t border-[#2a2a2a]">
           <div className="flex items-end gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2">
             <textarea
@@ -511,76 +608,30 @@ const AtendimentoPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Right — Profile */}
-      <div className="w-[260px] min-w-[260px] border-l border-[#2a2a2a] overflow-y-auto">
-        <div className="p-4 space-y-5">
-          <h2 className="text-sm font-semibold text-foreground">Perfil do Contato</h2>
-
-          {/* Avatar + Info */}
-          <div className="flex flex-col items-center text-center space-y-2">
-            <div className="w-16 h-16 rounded-full bg-[#2a2a2a] flex items-center justify-center text-2xl font-bold text-foreground">
-              {selected.name.charAt(0)}
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">{selected.name}</p>
-              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
-                <Phone size={10} /> {selected.phone}
-              </p>
-            </div>
-            {selected.badge && (
-              <span className={`text-[10px] px-2 py-0.5 rounded-full ${selected.badge.color}`}>
-                {selected.badge.label}
-              </span>
-            )}
-          </div>
-
-          {/* Tags */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Etiquetas</h3>
-            <div className="flex flex-wrap gap-1.5">
-              {currentTags.map((t, i) => (
-                <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${t.color}`}>
-                  {t.label}
-                </span>
-              ))}
-              <button className="text-[10px] px-2 py-0.5 rounded-full border border-[#2a2a2a] text-muted-foreground hover:text-foreground flex items-center gap-0.5 transition-colors">
-                <Plus size={8} /> Adicionar
-              </button>
-            </div>
-          </div>
-
-          {/* History */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Histórico</h3>
-            <div className="space-y-1.5 text-xs text-muted-foreground">
-              <p className="flex items-center gap-1.5"><Clock size={10} /> {selected.history.convos} conversas anteriores</p>
-              <p className="flex items-center gap-1.5"><Tag size={10} /> Primeiro contato: {selected.history.firstContact}</p>
-              <p className="flex items-center gap-1.5"><ArrowRight size={10} /> Fluxo: {selected.history.flow}</p>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="space-y-2">
-            <button
-              onClick={() => { setSelectedFlow(null); setShowFlowModal(true); }}
-              className="w-full text-xs py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5"
-            >
-              <Play size={12} /> Iniciar Fluxo
-            </button>
-            <button
-              onClick={() => setShowPaymentModal(true)}
-              className="w-full text-xs py-2 rounded-md border border-[#22c55e]/40 text-green-400 hover:text-green-300 transition-colors flex items-center justify-center gap-1.5"
-            >
-              <DollarSign size={12} /> Marcar como Pago
-            </button>
-            <button className="w-full text-xs py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors flex items-center justify-center gap-1.5">
-              <CheckCircle size={12} /> Marcar como Resolvido
-            </button>
-          </div>
-        </div>
+      <div className="hidden md:block w-[260px] min-w-[260px] border-l border-[#2a2a2a] overflow-y-auto">
+        {profileContent}
       </div>
 
-      {/* Modal — Iniciar Fluxo */}
+      {showMobileProfile && (
+        <div
+          className="md:hidden fixed inset-0 z-50 bg-black/60"
+          onClick={() => setShowMobileProfile(false)}
+        />
+      )}
+      <div
+        className={`md:hidden fixed right-0 top-0 z-50 h-screen w-[80%] max-w-[300px] bg-[#0f0f0f] border-l border-[#2a2a2a] overflow-y-auto transition-transform duration-300 ${
+          showMobileProfile ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between p-3 border-b border-[#2a2a2a]">
+          <span className="text-sm font-bold text-foreground">Perfil</span>
+          <button onClick={() => setShowMobileProfile(false)} className="p-1 text-muted-foreground">
+            <X size={18} />
+          </button>
+        </div>
+        {profileContent}
+      </div>
+
       <Dialog open={showFlowModal} onOpenChange={setShowFlowModal}>
         <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-md">
           <DialogHeader>
@@ -626,7 +677,6 @@ const AtendimentoPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Modal — Parar Fluxo */}
       <AlertDialog open={showStopModal} onOpenChange={setShowStopModal}>
         <AlertDialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground">
           <AlertDialogHeader>
@@ -649,7 +699,6 @@ const AtendimentoPage: React.FC = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Modal — Marcar como Pago */}
       <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
         <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-sm">
           <DialogHeader>
