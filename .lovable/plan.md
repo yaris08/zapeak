@@ -1,27 +1,18 @@
 
-# Mover botão "Salvar configurações" para dentro de cada card
+
+# Substituir Funil de Conversão por design em cascata
 
 ## Arquivo único
-`src/pages/ConfiguracoesPage.tsx`
+`src/pages/HomePage.tsx`
 
-## Alterações
+## Alteração
 
-### Remover
-- Botão fixo `fixed bottom-6 right-6` (linhas 457-460)
+Substituir o bloco inteiro do funil (o `<div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4">` que contém "Funil de Conversão" e o `space-y-4` com os steps) pelo novo layout em cascata fornecido pelo usuário.
 
-### Adicionar em cada aba — dentro do card, após o último elemento e antes do `</div>` de fechamento do card:
+- Manter o wrapper card (`bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4`) e o título "Funil de Conversão"
+- Remover o `funnel` useMemo (já não será usado — os valores ficam inline com `Math.round(X * m)`)
+- Remover imports não usados: `MessageCircle`, `UserCheck`, `ShoppingBag` (verificar se usados em outro lugar)
+- `CheckCircle` — verificar se usado nos KPIs, senão remover também
 
-Bloco padrão a inserir:
-```html
-<div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
-  <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
-    <Save size={14} /> Salvar configurações
-  </button>
-</div>
-```
+Os 4 valores dinâmicos no novo layout: `500*m`, `400*m`, `272*m`, `51*m` — já escalados pelo multiplicador de período.
 
-### Posição exata por aba:
-
-1. **Pixel** (após info box azul, linha 270, dentro do `<div className="bg-[#1a1a1a]...">` que fecha na linha 272)
-2. **IA** (após o Select de modelo, linha 354, dentro do card que fecha na linha 355)
-3. **Notificações** (após info box amarelo, linha 416, dentro do card que fecha na linha 417)
