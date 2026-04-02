@@ -203,7 +203,7 @@ const ConfiguracoesPage: React.FC = () => {
   const currentModels = detectedProvider && detectedProvider !== "unknown" ? modelsByProvider[detectedProvider] : null;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 md:p-6 space-y-6">
       <div>
         <h2 className="text-xl font-bold text-foreground">Configurações</h2>
         <p className="text-sm text-muted-foreground">Gerencie suas integrações</p>
