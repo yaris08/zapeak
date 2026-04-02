@@ -285,6 +285,12 @@ const HomePage: React.FC = () => {
                 <tr key={i} className="border-b border-[#2a2a2a] last:border-0 hover:bg-[#222]">
                   <td className={tdClass}>{s.time}</td>
                   <td className="px-4 py-3 text-foreground">{s.name}</td>
+                  <td className="px-4 py-3">
+                    <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 no-underline" style={{ color: "#22c55e", fontSize: "12px" }}>
+                      <MessageCircle size={12} />
+                      {s.phone}
+                    </a>
+                  </td>
                   <td className={tdClass}>{s.campaign}</td>
                   <td className={tdClass}>{fmt(s.value)}</td>
                   <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded text-xs font-medium ${confidenceColor(s.confidence)}`}>{s.confidence}%</span></td>
