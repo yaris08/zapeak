@@ -174,7 +174,7 @@ const HomePage: React.FC = () => {
           </div>
           <div className="ml-2 md:ml-3" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 2 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e0e", border: "0.5px solid #22c55e30", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px" }}>
+          <div className="overflow-hidden ml-1 md:ml-2" style={{ background: "#22c55e0e", border: "0.5px solid #22c55e30", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <Bot size={14} color="#22c55e" style={{ opacity: 0.8, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Interagiram com bot</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
