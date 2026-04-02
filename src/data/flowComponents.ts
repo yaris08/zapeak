@@ -1,4 +1,4 @@
-import { MessageSquare, Sparkles, Image, Mic, Video, FileText, Smile, User, LayoutList, Clock, MessageCircle, Bot, GitBranch, Shuffle, Zap, ScanLine, Tag, CreditCard, QrCode, Receipt, Bell, ArrowRightLeft } from "lucide-react";
+import { MessageSquare, Sparkles, Image, Mic, Video, FileText, Smile, Clock, MessageCircle, Bot, GitBranch, Shuffle, Zap, ScanLine, Tag, CreditCard, QrCode, Bell, ArrowRightLeft } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface ComponentItem {
