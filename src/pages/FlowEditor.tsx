@@ -75,9 +75,7 @@ const FlowEditor: React.FC = () => {
         if (parsed.nodes) setNodes(parsed.nodes);
         if (parsed.edges) setEdges(parsed.edges);
         if (parsed.flowName) setFlowName(parsed.flowName);
-        // Update nodeId counter
-        const maxId = Math.max(...(parsed.nodes || []).map((n: Node) => parseInt(n.id) || 0), 2);
-        nodeId = maxId + 1;
+        // IDs now use timestamps, no counter needed
       }
     } catch {}
   }, [storageKey, setNodes, setEdges]);
