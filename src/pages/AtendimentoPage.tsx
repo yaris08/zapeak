@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus } from "lucide-react";
+import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot } from "lucide-react";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 interface Message {
   id: number;
@@ -116,6 +119,15 @@ const tabs = [
   { key: "resolvidas", label: "Resolvidas" },
 ] as const;
 
+const mockFlows = [
+  { name: "Boas-vindas", trigger: "Palavra-chave", sessions: 245 },
+  { name: "Qualificação Lead", trigger: "Palavra-chave", sessions: 89 },
+  { name: "Suporte Automático", trigger: "Horário", sessions: 67 },
+  { name: "Recuperação Carrinho", trigger: "Horário", sessions: 34 },
+];
+
+const campaigns = ["Páscoa 2024", "Black Friday", "Lead Quente", "Sem campanha"];
+
 const AtendimentoPage: React.FC = () => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [activeTab, setActiveTab] = useState<"todas" | "aguardando" | "resolvidas">("todas");
@@ -126,23 +138,50 @@ const AtendimentoPage: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // New states
+  const [showFlowModal, setShowFlowModal] = useState(false);
+  const [selectedFlow, setSelectedFlow] = useState<number | null>(null);
+  const [showStopModal, setShowStopModal] = useState(false);
+  const [activeFlow, setActiveFlow] = useState<string | null>("Boas-vindas");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentValue, setPaymentValue] = useState("");
+  const [paymentNote, setPaymentNote] = useState("");
+  const [paymentCampaign, setPaymentCampaign] = useState("");
+  const [contactTags, setContactTags] = useState<Record<number, { label: string; color: string }[]>>(
+    Object.fromEntries(contacts.map((c, i) => [i, [...c.tags]]))
+  );
+
   const selected = contacts[selectedIdx];
   const currentMessages = chatMessages[selectedIdx] || [];
+  const currentTags = contactTags[selectedIdx] || [];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentMessages.length]);
 
-  const handleSend = () => {
-    const text = inputValue.trim();
-    if (!text) return;
+  const getNow = () => {
     const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  };
+
+  const addSystemMessage = (text: string) => {
     setChatMessages((prev) => ({
       ...prev,
       [selectedIdx]: [
         ...(prev[selectedIdx] || []),
-        { id: Date.now(), sender: "agent", text, time },
+        { id: Date.now(), sender: "system", text, time: getNow() },
+      ],
+    }));
+  };
+
+  const handleSend = () => {
+    const text = inputValue.trim();
+    if (!text) return;
+    setChatMessages((prev) => ({
+      ...prev,
+      [selectedIdx]: [
+        ...(prev[selectedIdx] || []),
+        { id: Date.now(), sender: "agent", text, time: getNow() },
       ],
     }));
     setInputValue("");
@@ -153,6 +192,43 @@ const AtendimentoPage: React.FC = () => {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleStartFlow = () => {
+    if (selectedFlow === null) return;
+    const flow = mockFlows[selectedFlow];
+    setActiveFlow(flow.name);
+    toast.success(`✓ Fluxo disparado para ${selected.name}`);
+    addSystemMessage(`🤖 Fluxo '${flow.name}' iniciado manualmente`);
+    setShowFlowModal(false);
+    setSelectedFlow(null);
+  };
+
+  const handleStopFlow = () => {
+    setActiveFlow(null);
+    toast.success("✓ Fluxo pausado");
+    addSystemMessage("⏹ Fluxo interrompido manualmente");
+    setShowStopModal(false);
+  };
+
+  const handlePayment = () => {
+    const val = paymentValue.trim();
+    if (!val) return;
+    const formatted = parseFloat(val).toFixed(2).replace(".", ",");
+    toast.success(`✓ Pagamento de R$ ${formatted} registrado`);
+    addSystemMessage(`💰 Pagamento de R$ ${formatted} registrado manualmente`);
+    // Add "pago" tag if not present
+    const tags = contactTags[selectedIdx] || [];
+    if (!tags.some((t) => t.label === "pago")) {
+      setContactTags((prev) => ({
+        ...prev,
+        [selectedIdx]: [...(prev[selectedIdx] || []), { label: "pago", color: "bg-green-500/20 text-green-400" }],
+      }));
+    }
+    setShowPaymentModal(false);
+    setPaymentValue("");
+    setPaymentNote("");
+    setPaymentCampaign("");
   };
 
   const filtered = contacts.filter((c) =>
@@ -193,6 +269,11 @@ const AtendimentoPage: React.FC = () => {
         <div className="flex-1 overflow-y-auto">
           {filtered.map((c, i) => {
             const realIdx = contacts.indexOf(c);
+            const tags = contactTags[realIdx] || [];
+            const hasPago = tags.some((t) => t.label === "pago");
+            const displayBadge = hasPago
+              ? { label: "pago", color: "bg-green-500/20 text-green-400" }
+              : c.badge;
             return (
               <button
                 key={i}
@@ -213,9 +294,9 @@ const AtendimentoPage: React.FC = () => {
                   </div>
                   <p className="text-xs text-muted-foreground truncate mt-0.5">{c.lastMsg}</p>
                   <div className="flex items-center gap-1.5 mt-1">
-                    {c.badge && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${c.badge.color}`}>
-                        {c.badge.label}
+                    {displayBadge && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${displayBadge.color}`}>
+                        {displayBadge.label}
                       </span>
                     )}
                     {c.unread > 0 && (
@@ -234,30 +315,47 @@ const AtendimentoPage: React.FC = () => {
       {/* Center — Chat */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Chat Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2a2a]">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
-              {selected.name.charAt(0)}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-foreground">{selected.name}</span>
-                {selected.badge && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${selected.badge.color}`}>
-                    {selected.badge.label}
-                  </span>
-                )}
+        <div className="px-4 py-3 border-b border-[#2a2a2a]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
+                {selected.name.charAt(0)}
               </div>
-              <span className="text-xs text-muted-foreground">{selected.phone}</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-foreground">{selected.name}</span>
+                  {selected.badge && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${selected.badge.color}`}>
+                      {selected.badge.label}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground">{selected.phone}</span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
+                Transferir
+              </button>
+              {activeFlow && (
+                <button
+                  onClick={() => setShowStopModal(true)}
+                  className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+                >
+                  <StopCircle size={12} /> Parar Fluxo
+                </button>
+              )}
+              <button className="text-xs px-3 py-1.5 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors">
+                Resolver
+              </button>
             </div>
           </div>
-          <div className="flex gap-2">
-            <button className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
-              Transferir
-            </button>
-            <button className="text-xs px-3 py-1.5 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors">
-              Resolver
-            </button>
+          {/* Active flow indicator */}
+          <div className="flex items-center gap-1.5 mt-1.5 ml-12">
+            <Bot size={12} className={activeFlow ? "text-[#22c55e]" : "text-gray-500"} />
+            <span className="text-[11px] text-muted-foreground">
+              {activeFlow ? `Fluxo ativo: ${activeFlow}` : "Sem fluxo ativo"}
+            </span>
           </div>
         </div>
 
@@ -357,7 +455,7 @@ const AtendimentoPage: React.FC = () => {
           <div className="space-y-2">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Etiquetas</h3>
             <div className="flex flex-wrap gap-1.5">
-              {selected.tags.map((t, i) => (
+              {currentTags.map((t, i) => (
                 <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${t.color}`}>
                   {t.label}
                 </span>
@@ -380,8 +478,17 @@ const AtendimentoPage: React.FC = () => {
 
           {/* Actions */}
           <div className="space-y-2">
-            <button className="w-full text-xs py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
-              Iniciar Fluxo
+            <button
+              onClick={() => { setSelectedFlow(null); setShowFlowModal(true); }}
+              className="w-full text-xs py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5"
+            >
+              <Play size={12} /> Iniciar Fluxo
+            </button>
+            <button
+              onClick={() => setShowPaymentModal(true)}
+              className="w-full text-xs py-2 rounded-md border border-[#22c55e]/40 text-green-400 hover:text-green-300 transition-colors flex items-center justify-center gap-1.5"
+            >
+              <DollarSign size={12} /> Marcar como Pago
             </button>
             <button className="w-full text-xs py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors flex items-center justify-center gap-1.5">
               <CheckCircle size={12} /> Marcar como Resolvido
@@ -389,6 +496,137 @@ const AtendimentoPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal — Iniciar Fluxo */}
+      <Dialog open={showFlowModal} onOpenChange={setShowFlowModal}>
+        <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-md">
+          <DialogHeader>
+            <DialogTitle>Iniciar Fluxo</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Selecione qual fluxo disparar para {selected.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            {mockFlows.map((f, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedFlow(i)}
+                className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${
+                  selectedFlow === i
+                    ? "border-[#22c55e] bg-[#1a2a1a]"
+                    : "border-[#2a2a2a] hover:border-[#3a3a3a]"
+                }`}
+              >
+                <Play size={16} className="text-[#22c55e] shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{f.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{f.trigger} | {f.sessions} sessões</p>
+                </div>
+              </button>
+            ))}
+          </div>
+          <DialogFooter className="gap-2">
+            <button
+              onClick={() => setShowFlowModal(false)}
+              className="text-xs px-4 py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleStartFlow}
+              disabled={selectedFlow === null}
+              className="text-xs px-4 py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors disabled:opacity-40"
+            >
+              Disparar Fluxo
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal — Parar Fluxo */}
+      <AlertDialog open={showStopModal} onOpenChange={setShowStopModal}>
+        <AlertDialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Parar Fluxo</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Tem certeza que deseja parar o fluxo ativo desta conversa?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-transparent border-[#2a2a2a] text-muted-foreground hover:text-foreground hover:bg-[#2a2a2a]">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleStopFlow}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              Parar Fluxo
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Modal — Marcar como Pago */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Registrar Pagamento</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Registre o pagamento manualmente para {selected.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground">Valor pago</label>
+              <input
+                type="number"
+                value={paymentValue}
+                onChange={(e) => setPaymentValue(e.target.value)}
+                placeholder="R$ 0,00"
+                className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground">Observação</label>
+              <input
+                type="text"
+                value={paymentNote}
+                onChange={(e) => setPaymentNote(e.target.value)}
+                placeholder="Ex: PIX confirmado"
+                className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground">Campanha</label>
+              <select
+                value={paymentCampaign}
+                onChange={(e) => setPaymentCampaign(e.target.value)}
+                className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+              >
+                <option value="">Selecione...</option>
+                {campaigns.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <button
+              onClick={() => setShowPaymentModal(false)}
+              className="text-xs px-4 py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handlePayment}
+              disabled={!paymentValue.trim()}
+              className="text-xs px-4 py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors disabled:opacity-40"
+            >
+              Confirmar Pagamento
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
