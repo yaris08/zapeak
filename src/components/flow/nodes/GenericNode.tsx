@@ -151,6 +151,19 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
       );
     }
 
+    // Delay with visual time
+    if (data.type === "delay") {
+      const val = data.delayValue || "?";
+      const unit = data.delayUnit || "seconds";
+      const unitMap: Record<string, string> = { seconds: "seg", minutes: "min", hours: "h" };
+      return (
+        <div className="flex items-center justify-center gap-1.5 py-1">
+          <span className="text-lg font-bold text-foreground">{val}</span>
+          <span className="text-xs text-muted-foreground">{unitMap[unit] || unit}</span>
+        </div>
+      );
+    }
+
     // Default text preview
     return <p className={`text-xs ${hasData ? "text-foreground" : "text-muted-foreground"}`}>{preview}</p>;
   };
