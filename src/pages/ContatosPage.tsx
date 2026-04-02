@@ -51,7 +51,7 @@ const ContatosPage = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -137,9 +137,14 @@ const ContatosPage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["", "NOME", "TELEFONE", "ETIQUETAS", "INSTÂNCIA", "ÚLTIMO CONTATO", "STATUS", "AÇÕES"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">{h}</th>
-                ))}
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider"></th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">NOME</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">TELEFONE</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">ETIQUETAS</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden md:table-cell">INSTÂNCIA</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden md:table-cell">ÚLTIMO CONTATO</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">STATUS</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">AÇÕES</th>
               </tr>
             </thead>
             <tbody>
@@ -161,8 +166,8 @@ const ContatosPage = () => {
                       ))}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-[#9ca3af] text-xs">{c.instance}</td>
-                  <td className="px-4 py-3 text-[#9ca3af] text-xs">{c.lastContact}</td>
+                  <td className="px-4 py-3 text-[#9ca3af] text-xs hidden md:table-cell">{c.instance}</td>
+                  <td className="px-4 py-3 text-[#9ca3af] text-xs hidden md:table-cell">{c.lastContact}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${c.status === "Pagou" ? "bg-[#22c55e20] text-[#22c55e]" : "bg-[#9ca3af20] text-[#9ca3af]"}`}>{c.status}</span>
                   </td>

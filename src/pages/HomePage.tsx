@@ -112,7 +112,7 @@ const HomePage: React.FC = () => {
   const tdClass = "px-4 py-3 text-muted-foreground";
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

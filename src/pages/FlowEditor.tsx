@@ -18,8 +18,9 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   Plus, Minus, Maximize2, Expand, Play, Square,
-  Phone, Video, X, Paperclip, Send, RotateCcw,
+  Phone, Video, X, Paperclip, Send, RotateCcw, Monitor,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import EditorHeader from "@/components/flow/EditorHeader";
 import ComponentsSidebar from "@/components/flow/ComponentsSidebar";
@@ -486,6 +487,8 @@ const SimulatorPanel: React.FC<{ onClose: () => void; nodes: Node[]; edges: Edge
 };
 
 const FlowEditorInner: React.FC = () => {
+  const isMobile = useIsMobile();
+  const [dismissedMobileWarning, setDismissedMobileWarning] = useState(false);
   const { id: flowId } = useParams<{ id: string }>();
   const storageKey = `zapeak_flow_${flowId || "default"}`;
 
@@ -586,6 +589,25 @@ const FlowEditorInner: React.FC = () => {
   }, [setNodes, markDirty]);
 
   const handleNameChange = useCallback((name: string) => { setFlowName(name); setHasUnsavedChanges(true); }, []);
+
+  if (isMobile && !dismissedMobileWarning) {
+    return (
+      <div className="flex flex-col h-screen bg-background items-center justify-center p-8 text-center">
+        <Monitor size={64} className="text-muted-foreground mb-6" />
+        <h2 className="text-lg font-bold text-foreground mb-2">Editor de Fluxos</h2>
+        <p className="text-sm text-muted-foreground mb-6 max-w-[280px]">
+          O editor de fluxos funciona melhor no desktop. Recomendamos usar um computador para a melhor experiência.
+        </p>
+        <button
+          onClick={() => setDismissedMobileWarning(true)}
+          className="px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          style={{ backgroundColor: "#22c55e", color: "#fff" }}
+        >
+          Continuar mesmo assim
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background">

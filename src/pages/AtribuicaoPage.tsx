@@ -74,7 +74,7 @@ const AtribuicaoPage: React.FC = () => {
   }), { investment: 0, conversas: 0, vendas: 0, faturamento: 0 });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ const AtribuicaoPage: React.FC = () => {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpis.map(k => {
           const Icon = k.icon;
           const val = k.label === "Ticket Médio" || k.label === "Custo por Compra" ? k.base : k.base * m;

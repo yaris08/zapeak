@@ -33,7 +33,7 @@ const FlowsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-3 md:p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold text-foreground">Fluxos</h1>
@@ -41,7 +41,7 @@ const FlowsPage: React.FC = () => {
         </div>
         <Button
           size="sm"
-          className="bg-primary hover:bg-primary/90 text-xs"
+          className="bg-primary hover:bg-primary/90 text-xs w-full md:w-auto"
           onClick={() => setShowNewFlow(true)}
         >
           <Plus size={14} className="mr-1" /> Novo Fluxo
