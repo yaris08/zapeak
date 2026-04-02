@@ -82,6 +82,7 @@ const contacts: Contact[] = [
     time: "13:40",
     unread: 0,
     tags: [],
+    instance: "vendas",
     history: { convos: 2, firstContact: "28/03/2026", flow: "Suporte" },
     messages: [
       { id: 1, sender: "contact", text: "Olá, tudo bem?", time: "13:40" },
