@@ -165,46 +165,46 @@ const HomePage: React.FC = () => {
             <Users size={14} color="#22c55e" style={{ flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Conversas iniciadas</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "100%", height: "100%", background: "#22c55e", borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(500 * m)}</div>
               <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>100%</div>
             </div>
           </div>
-          <div style={{ marginLeft: "12px", width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
+          <div className="ml-2 md:ml-3" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 2 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e0e", border: "0.5px solid #22c55e30", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px" }}>
+          <div className="overflow-hidden ml-1 md:ml-2" style={{ background: "#22c55e0e", border: "0.5px solid #22c55e30", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <Bot size={14} color="#22c55e" style={{ opacity: 0.8, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Interagiram com bot</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "80%", height: "100%", background: "#22c55e", opacity: 0.8, borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(400 * m)}</div>
               <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>80%</div>
             </div>
           </div>
-          <div style={{ marginLeft: "24px", width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
+          <div className="ml-3 md:ml-6" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 3 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e08", border: "0.5px solid #22c55e20", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "16px" }}>
+          <div className="overflow-hidden ml-2 md:ml-4" style={{ background: "#22c55e08", border: "0.5px solid #22c55e20", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <CheckCircle size={14} color="#22c55e" style={{ opacity: 0.6, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Concluíram o fluxo</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "54%", height: "100%", background: "#22c55e", opacity: 0.6, borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(272 * m)}</div>
               <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>54%</div>
             </div>
           </div>
-          <div style={{ marginLeft: "36px", width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
+          <div className="ml-4 md:ml-9" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 4 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e05", border: "0.5px solid #22c55e15", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "24px" }}>
+          <div className="overflow-hidden ml-3 md:ml-6" style={{ background: "#22c55e05", border: "0.5px solid #22c55e15", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <ShoppingCart size={14} color="#22c55e" style={{ opacity: 0.4, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Compraram</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(51 * m)}</div>
