@@ -1,41 +1,53 @@
 
 
-# 4 Correções no Projeto
+# Página de Atribuição — AtribuicaoPage.tsx
 
-## 1. Criar PixProperties.tsx
-**Novo arquivo:** `src/components/flow/properties/PixProperties.tsx`
-- Formulário com Select para tipo de chave PIX (EVP, CPF, CNPJ, Telefone, E-mail)
-- Input para chave PIX com botão copiar (clipboard + toast)
-- Input para nome do recebedor com texto de ajuda
+## Arquivos a modificar/criar
 
-**Editar:** `src/components/flow/PropertiesPanel.tsx`
-- Adicionar import do PixProperties
-- Adicionar `case "pix"` no switch antes do default
-
-## 2. Nó Áudio — Player estilo WhatsApp
-**Editar:** `src/components/flow/nodes/GenericNode.tsx` (linhas 77-85)
-- Substituir o `<audio controls>` por player customizado dark
-- Botão play/pause circular laranja com ícone SVG
-- Barra de progresso estilizada (fundo `#2a2a2a`, preenchimento laranja)
-- Timestamp "0:00" + badge tipo áudio
-- Elemento `<audio>` oculto com controle via JS
-
-## 3. Nó Delay — Preview visual com tempo
-**Editar:** `src/components/flow/nodes/GenericNode.tsx`
-- Adicionar bloco no `renderContent()` para `data.type === "delay"`
-- Mostrar ícone de relógio com valor e unidade abreviada (seg/min/h) centralizado
-- Estilo visual destacado com texto grande
-
-## 4. Background do Canvas
-**Editar:** `src/pages/FlowEditor.tsx`
-- Linha 242: mudar Background para `gap={16}`, `size={0.8}`, `color="#1a1a1a"`
-- Linha 224: adicionar `style={{ backgroundColor: "#0a0a0a" }}` no div wrapper do ReactFlow
-
-## Arquivos modificados
 | Arquivo | Ação |
 |---------|------|
-| `src/components/flow/properties/PixProperties.tsx` | Criar |
-| `src/components/flow/PropertiesPanel.tsx` | Editar (import + case) |
-| `src/components/flow/nodes/GenericNode.tsx` | Editar (áudio player + delay preview) |
-| `src/pages/FlowEditor.tsx` | Editar (background) |
+| `src/pages/AtribuicaoPage.tsx` | Criar |
+| `src/App.tsx` | Editar — adicionar rota `/atribuicao` |
+| `src/components/layout/AppLayout.tsx` | Editar — adicionar "Atribuição" em navItems e sidebarItems |
+
+## Estrutura do componente
+
+### State
+- `period: "today" | "7d" | "30d"` com multiplicadores `{today: 1, "7d": 5.2, "30d": 18}` (mesmo padrão da HomePage)
+- `showModal: boolean` para modal de nova campanha
+- `campaignName: string`, `investment: string`, `startDate: string`, `endDate: string` para o formulário do modal
+- `ref` derivado automaticamente do nome: `campaignName.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"_")`
+
+### KPIs — 4 cards (grid-cols-4)
+Componente `KpiCard` inline (mesmo padrão da HomePage):
+- Faturamento Real: R$4.890, DollarSign, `#22c55e`
+- Total de Vendas: 51, ShoppingCart, `#22c55e`
+- Ticket Médio: R$95,88, TrendingUp, `#3b82f6`
+- Custo por Compra: R$15,69, CreditCard, `#f97316`
+
+Valores escalados por multiplicador do período.
+
+### Tabela Campanhas
+- Header com título "Campanhas" + botão "Nova Campanha" laranja
+- 3 linhas mockadas com dados fornecidos
+- Linha de totais em negrito no footer
+- ROAS badge: `>=2` verde, `>=1.5` amarelo, `<1.5` vermelho
+
+### Modal Nova Campanha
+- Dialog (shadcn) com campos: nome, ref (auto-gerado, readonly), link `wa.me/5511999999999?ref={REF}` (readonly + botão copiar), investimento, data início, data fim
+- Botões: Cancelar | Criar Campanha (laranja)
+
+### Tabela Vendas Identificadas
+- Header com título + botão "Exportar CSV" outline
+- 5 linhas mockadas com dados fornecidos
+- Confiança IA badge: `>=80%` verde, `>=60%` amarelo, `<60%` vermelho
+- Pixel: ✅ verde / ❌ vermelho
+- Botão "Marcar como venda" outline em cada linha
+
+### Navegação
+- `AppLayout.tsx`: adicionar `{ label: "Atribuição", path: "/atribuicao", icon: Target }` em `navItems` e `sidebarItems`
+- `App.tsx`: importar `AtribuicaoPage` e adicionar `<Route path="/atribuicao" element={<AtribuicaoPage />} />`
+
+### Estilo
+- Mesmos padrões: bg `#1a1a1a`, bordas `#2a2a2a`, hover `#222`, headers tabela `text-[10px] uppercase`, padding `p-6`, `space-y-6`
 
