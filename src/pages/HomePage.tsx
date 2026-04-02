@@ -279,7 +279,6 @@ const HomePage: React.FC = () => {
                   const hidden = h === "Telefone" ? " hidden sm:table-cell" : "";
                   return <th key={h} className={thClass + hidden}>{h}</th>;
                 })}
-                ))}
               </tr>
             </thead>
             <tbody>
