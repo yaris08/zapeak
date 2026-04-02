@@ -44,6 +44,7 @@ const contacts: Contact[] = [
       { label: "pago", color: "bg-green-500/20 text-green-400" },
       { label: "cliente", color: "bg-blue-500/20 text-blue-400" },
     ],
+    instance: "principal",
     history: { convos: 3, firstContact: "01/04/2026", flow: "Boas-vindas" },
     messages: [
       { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo! Como posso te ajudar?", time: "14:20" },
