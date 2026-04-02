@@ -54,8 +54,8 @@ const ConfiguracoesPage: React.FC = () => {
   }, []);
 
   const handleSave = () => {
-    if (activeTab === "whatsapp") localStorage.setItem("zapeak_settings_whatsapp", JSON.stringify({ url: waUrl, token: waToken }));
-    if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ id: pixelId, token: pixelToken, dataset: pixelDataset, serverSide: pixelServerSide }));
+    if (activeTab === "whatsapp") localStorage.setItem("zapeak_settings_whatsapp", JSON.stringify({}));
+    if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ serverSide: pixelServerSide }));
     if (activeTab === "ia") localStorage.setItem("zapeak_settings_ia", JSON.stringify({ model: iaModel, prompt: iaPrompt, vendas: iaVendas, pix: iaPix, notify: iaNotify }));
     if (activeTab === "notificacoes") localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({ venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, phone: notifPhone }));
     toast.success("✓ Configurações salvas");
