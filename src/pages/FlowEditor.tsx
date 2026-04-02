@@ -22,6 +22,7 @@ import PropertiesPanel from "@/components/flow/PropertiesPanel";
 import StartNode from "@/components/flow/nodes/StartNode";
 import TextNode from "@/components/flow/nodes/TextNode";
 import GenericNode from "@/components/flow/nodes/GenericNode";
+import CustomEdge from "@/components/flow/edges/CustomEdge";
 
 const defaultNodes: Node[] = [
   {
@@ -43,12 +44,11 @@ const defaultEdges: Edge[] = [
     id: "e1-2",
     source: "1",
     target: "2",
-    animated: true,
-    style: { stroke: "#f97316", strokeDasharray: "5 5" },
+    type: "custom",
+    animated: false,
+    style: { stroke: "#f97316" },
   },
 ];
-
-let nodeId = 3;
 
 const FlowEditor: React.FC = () => {
   const { id: flowId } = useParams<{ id: string }>();
