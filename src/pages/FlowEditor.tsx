@@ -624,7 +624,7 @@ const FlowEditorInner: React.FC = () => {
             <CustomControls showSimulator={showSimulator} onToggleSimulator={() => setShowSimulator(v => !v)} />
           </ReactFlow>
         </div>
-        {showSimulator && <SimulatorPanel onClose={() => setShowSimulator(false)} />}
+        {showSimulator && <SimulatorPanel onClose={() => setShowSimulator(false)} nodes={nodes} edges={edges} />}
         <PropertiesPanel
           node={selectedNode}
           onClose={() => setSelectedNodeId(null)}
