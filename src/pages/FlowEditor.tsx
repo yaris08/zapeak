@@ -46,7 +46,7 @@ const defaultEdges: Edge[] = [
     target: "2",
     type: "custom",
     animated: false,
-    style: { stroke: "#f97316" },
+    style: { stroke: "#22c55e" },
   },
 ];
 
@@ -115,7 +115,7 @@ const FlowEditor: React.FC = () => {
     (params: Connection) => {
       setEdges((eds) =>
         addEdge(
-          { ...params, type: "custom", animated: false, style: { stroke: "#f97316" } },
+          { ...params, type: "custom", animated: false, style: { stroke: "#22c55e" } },
           eds
         )
       );
@@ -243,7 +243,7 @@ const FlowEditor: React.FC = () => {
             <Controls className="!bg-card !border-border !rounded-lg [&>button]:!bg-card [&>button]:!border-border [&>button]:!text-foreground [&>button:hover]:!bg-accent" />
             <MiniMap
               className="!bg-card !border !border-border !rounded-lg"
-              nodeColor="#f97316"
+              nodeColor="#22c55e"
               maskColor="rgba(0,0,0,0.7)"
             />
           </ReactFlow>

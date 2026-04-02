@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import {
   Users, MessageSquare, CheckCircle, MousePointer,
   ShoppingCart, DollarSign, TrendingUp, CreditCard,
-  Target, Percent, Wallet, MessageCircle, UserCheck, ShoppingBag,
+  Target, Percent, Wallet, MessageCircle, UserCheck, ShoppingBag, Receipt,
 } from "lucide-react";
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
@@ -146,49 +146,26 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Bloco 1 — Tráfego */}
-      <div>
-        <p className="text-sm font-bold text-foreground mb-3">Tráfego</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KpiCard icon={Users} label="Conversas Iniciadas" value={traffic.conversas.toLocaleString()} color="#3b82f6" />
-          <KpiCard icon={MessageSquare} label="Taxa de Resposta ao Bot" value={`${traffic.taxaResposta}%`} color="#06b6d4" />
-          <KpiCard icon={CheckCircle} label="Taxa de Conclusão" value={`${traffic.taxaConclusao}%`} color="#f97316" />
-          <KpiCard icon={MousePointer} label="Custo por Conversa" value={fmt(traffic.custoConversa)} color="#a855f7" />
-        </div>
-      </div>
-
-      {/* Bloco 2 — Vendas */}
-      <div>
-        <p className="text-sm font-bold text-foreground mb-3">Vendas</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <KpiCard icon={ShoppingCart} label="Total de Vendas" value={vendas.total.toLocaleString()} color="#22c55e" />
-          <KpiCard icon={DollarSign} label="Faturamento Real" value={fmt(vendas.faturamento)} color="#22c55e" />
-          <KpiCard icon={TrendingUp} label="Ticket Médio" value={fmt(vendas.ticket)} color="#3b82f6" />
-          <KpiCard icon={CreditCard} label="Custo por Compra" value={fmt(vendas.custoCompra)} color="#f97316" />
-        </div>
-      </div>
-
-      {/* Bloco 3 — ROAS */}
-      <div>
-        <p className="text-sm font-bold text-foreground mb-3">ROAS</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-500/20">
-              <Target size={20} className="text-green-400" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="text-2xl font-bold text-foreground">{roasData.roas}x</p>
-                <span className={`px-2 py-0.5 rounded text-xs font-medium ${roasColor(roasData.roas)}`}>
-                  {roasData.roas >= 2 ? "Bom" : roasData.roas >= 1.5 ? "Médio" : "Baixo"}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">ROAS Médio</p>
-            </div>
+      {/* KPIs — 10 cards em grid 5x2 */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <KpiCard icon={ShoppingCart} label="Vendas" value={vendas.total.toLocaleString()} color="#22c55e" />
+        <KpiCard icon={CreditCard} label="CPA (Custo por Aquisição)" value={fmt(vendas.custoCompra)} color="#ef4444" />
+        <KpiCard icon={TrendingUp} label="Lucro" value={fmt(vendas.faturamento - roasData.investimento)} color="#22c55e" />
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: (roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444") + "20" }}>
+            <Target size={20} style={{ color: roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444" }} />
           </div>
-          <KpiCard icon={Percent} label="Taxa de Conversão" value={`${roasData.taxaConversao}%`} color="#f97316" />
-          <KpiCard icon={Wallet} label="Investimento Total" value={fmt(roasData.investimento)} color="#9ca3af" />
+          <div>
+            <p className="text-2xl font-bold text-foreground">{roasData.roas}x</p>
+            <p className="text-xs text-muted-foreground">ROI</p>
+          </div>
         </div>
+        <KpiCard icon={DollarSign} label="Faturamento" value={fmt(vendas.faturamento)} color="#22c55e" />
+        <KpiCard icon={Wallet} label="Investimento Total" value={fmt(roasData.investimento)} color="#f97316" />
+        <KpiCard icon={Percent} label="Taxa de Conversão" value={`${roasData.taxaConversao}%`} color="#3b82f6" />
+        <KpiCard icon={Receipt} label="Ticket Médio" value={fmt(vendas.ticket)} color="#3b82f6" />
+        <KpiCard icon={MessageSquare} label="Total de Conversas" value={traffic.conversas.toLocaleString()} color="#06b6d4" />
+        <KpiCard icon={MousePointer} label="Custo por Conversa" value={fmt(traffic.custoConversa)} color="#a855f7" />
       </div>
 
       {/* Bloco 4 — Funil */}
@@ -226,7 +203,7 @@ const HomePage: React.FC = () => {
             <XAxis dataKey="hora" tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 8, color: "#fff" }} labelStyle={{ color: "#9ca3af" }} />
-            <Line type="monotone" dataKey="sessoes" stroke="#f97316" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="sessoes" stroke="#22c55e" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>

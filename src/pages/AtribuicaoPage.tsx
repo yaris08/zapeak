@@ -78,14 +78,14 @@ const AtribuicaoPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Target size={20} style={{ color: "#f97316" }} />
+          <Target size={20} className="text-primary" />
           <h1 className="text-lg font-bold text-foreground">Atribuição</h1>
         </div>
         <div className="flex gap-1 rounded-lg p-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
           {([["today", "Hoje"], ["7d", "7 dias"], ["30d", "30 dias"]] as [Period, string][]).map(([k, l]) => (
             <button key={k} onClick={() => setPeriod(k)}
               className="px-3 py-1 text-xs rounded-md font-medium transition-colors"
-              style={period === k ? { backgroundColor: "#f97316", color: "#fff" } : { color: "#999" }}
+              style={period === k ? { backgroundColor: "hsl(142.1, 71.8%, 45.3%)", color: "#fff" } : { color: "#999" }}
             >{l}</button>
           ))}
         </div>
@@ -112,7 +112,7 @@ const AtribuicaoPage: React.FC = () => {
       <div className="rounded-lg" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
         <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: "#2a2a2a" }}>
           <span className="text-sm font-bold text-foreground">Campanhas</span>
-          <Button size="sm" className="h-7 text-xs" style={{ backgroundColor: "#f97316" }} onClick={() => setShowModal(true)}>
+          <Button size="sm" className="h-7 text-xs bg-primary hover:bg-primary/90" onClick={() => setShowModal(true)}>
             <Plus size={14} /> Nova Campanha
           </Button>
         </div>
@@ -241,7 +241,7 @@ const AtribuicaoPage: React.FC = () => {
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setShowModal(false)}>Cancelar</Button>
-              <Button size="sm" className="text-xs" style={{ backgroundColor: "#f97316" }} onClick={() => { setShowModal(false); toast("Campanha criada!"); setCampaignName(""); setInvestment(""); setStartDate(""); setEndDate(""); }}>
+              <Button size="sm" className="text-xs bg-primary hover:bg-primary/90" onClick={() => { setShowModal(false); toast("Campanha criada!"); setCampaignName(""); setInvestment(""); setStartDate(""); setEndDate(""); }}>
                 Criar Campanha
               </Button>
             </div>
