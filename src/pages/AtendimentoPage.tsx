@@ -379,6 +379,27 @@ const AtendimentoPage: React.FC = () => {
               );
             }
 
+            const renderBubbleContent = (msg: Message) => {
+              if (msg.audio) {
+                const isAgent = msg.sender === "agent";
+                const btnBg = isAgent ? "#22c55e" : "#444";
+                return (
+                  <div className="flex items-center gap-2 w-[200px]">
+                    <button className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: btnBg }}>
+                      <Play size={14} fill="white" className="text-white ml-0.5" />
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-[3px] bg-[#555] rounded-full overflow-hidden">
+                        <div className="h-full w-[60%] rounded-full" style={{ backgroundColor: isAgent ? "#22c55e" : "#888" }} />
+                      </div>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground shrink-0">{msg.audio.duration}</span>
+                  </div>
+                );
+              }
+              return <>{msg.text}</>;
+            };
+
             if (msg.sender === "contact") {
               return (
                 <div key={msg.id} className="flex items-start gap-2 mb-3">
@@ -390,7 +411,7 @@ const AtendimentoPage: React.FC = () => {
                       <span className="text-[10px] text-muted-foreground font-medium mb-0.5 block">{selected.name.split(" ")[0]}</span>
                     )}
                     <div className="bg-[#2a2a2a] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
-                      {msg.text}
+                      {renderBubbleContent(msg)}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
                   </div>
@@ -407,7 +428,7 @@ const AtendimentoPage: React.FC = () => {
                       <span className="text-[10px] text-[#22c55e] font-medium mb-0.5 block">Bot</span>
                     )}
                     <div className="bg-[#1e2a1e] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
-                      {msg.text}
+                      {renderBubbleContent(msg)}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
                   </div>
@@ -420,7 +441,7 @@ const AtendimentoPage: React.FC = () => {
               <div key={msg.id} className="flex items-start justify-end gap-2 mb-3">
                 <div className="flex flex-col items-end">
                   <div className="bg-[#22c55e]/20 border border-[#22c55e]/30 text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tr-sm px-3 py-2 text-sm">
-                    {msg.text}
+                    {renderBubbleContent(msg)}
                   </div>
                   <span className="text-[10px] text-muted-foreground mt-1">{msg.time}</span>
                 </div>

@@ -88,6 +88,16 @@ const FlowEditor: React.FC = () => {
 
   const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
 
+  // Auto-save with 1.5s debounce (silent, no toast)
+  useEffect(() => {
+    if (!hasUnsavedChanges || !initialized.current) return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(storageKey, JSON.stringify({ nodes, edges, flowName }));
+      setHasUnsavedChanges(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [hasUnsavedChanges, nodes, edges, flowName, storageKey]);
+
   const selectedNode = useMemo(() => nodes.find((n) => n.id === selectedNodeId) || null, [nodes, selectedNodeId]);
 
   const nodeTypes = useMemo(

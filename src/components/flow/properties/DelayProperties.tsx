@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,6 +6,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface Props { data: any; onUpdate: (data: any) => void; }
 
 const DelayProperties: React.FC<Props> = ({ data, onUpdate }) => {
+  useEffect(() => {
+    if (data.delayValue === undefined) {
+      onUpdate({ ...data, delayValue: 5, delayUnit: "seconds" });
+    }
+  }, []);
   const value = data.delayValue ?? 5;
   const unit = data.delayUnit || "seconds";
 

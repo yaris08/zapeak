@@ -153,8 +153,8 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
 
     // Delay with visual time
     if (data.type === "delay") {
-      const val = data.delayValue || "?";
-      const unit = data.delayUnit || "seconds";
+      const val = data.delayValue ?? 5;
+      const unit = data.delayUnit ?? "seconds";
       const unitMap: Record<string, string> = { seconds: "seg", minutes: "min", hours: "h" };
       return (
         <div className="flex items-center justify-center gap-1.5 py-1">
