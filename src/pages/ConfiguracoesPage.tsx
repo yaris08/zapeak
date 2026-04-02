@@ -268,6 +268,11 @@ const ConfiguracoesPage: React.FC = () => {
             <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-3 text-xs text-blue-300">
               💡 O Token de Acesso é necessário para enviar eventos server-side com maior precisão e sem bloqueio de navegadores.
             </div>
+            <div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
+              <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
+                <Save size={14} /> Salvar configurações
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -352,6 +357,11 @@ const ConfiguracoesPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
+              <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
+                <Save size={14} /> Salvar configurações
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -414,6 +424,11 @@ const ConfiguracoesPage: React.FC = () => {
             <div className="bg-yellow-900/20 border border-yellow-800/30 rounded-lg p-3 text-xs text-yellow-300">
               ⚠️ Configure um número válido para receber alertas. Certifique-se que o número está salvo em seus contatos.
             </div>
+            <div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
+              <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
+                <Save size={14} /> Salvar configurações
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -454,10 +469,6 @@ const ConfiguracoesPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <button onClick={handleSave}
-        className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50">
-        <Save size={14} /> Salvar configurações
-      </button>
     </div>
   );
 };
