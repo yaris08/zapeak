@@ -81,7 +81,7 @@ const CustomControls: React.FC<{ showSimulator: boolean; onToggleSimulator: () =
       <div style={{ height: 1, background: "#2a2a2a", margin: "2px 0" }} />
       <button
         className="w-8 h-8 rounded-md flex items-center justify-center transition-colors"
-        style={{ color: showSimulator ? "#ef4444" : "#f97316" }}
+        style={{ color: showSimulator ? "#ef4444" : "#22c55e" }}
         onClick={onToggleSimulator}
       >
         {showSimulator ? <Square size={14} /> : <Play size={14} />}
