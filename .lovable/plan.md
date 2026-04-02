@@ -1,18 +1,21 @@
 
 
-# Substituir Funil de Conversão por design em cascata
+# Substituir bolinhas por ícones no Funil de Conversão
 
 ## Arquivo único
 `src/pages/HomePage.tsx`
 
-## Alteração
+## Alterações
 
-Substituir o bloco inteiro do funil (o `<div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4">` que contém "Funil de Conversão" e o `space-y-4` com os steps) pelo novo layout em cascata fornecido pelo usuário.
+1. **Imports** — adicionar `Users`, `Bot`, `CheckCircle`, `ShoppingCart` de `lucide-react` (verificar quais já estão importados)
 
-- Manter o wrapper card (`bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4`) e o título "Funil de Conversão"
-- Remover o `funnel` useMemo (já não será usado — os valores ficam inline com `Math.round(X * m)`)
-- Remover imports não usados: `MessageCircle`, `UserCheck`, `ShoppingBag` (verificar se usados em outro lugar)
-- `CheckCircle` — verificar se usado nos KPIs, senão remover também
+2. **Etapa 1** — substituir `<div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", flexShrink: 0 }} />` por `<Users size={14} color="#22c55e" style={{ flexShrink: 0 }} />`
 
-Os 4 valores dinâmicos no novo layout: `500*m`, `400*m`, `272*m`, `51*m` — já escalados pelo multiplicador de período.
+3. **Etapa 2** — substituir bolinha por `<Bot size={14} color="#22c55e" style={{ opacity: 0.8, flexShrink: 0 }} />`
+
+4. **Etapa 3** — substituir bolinha por `<CheckCircle size={14} color="#22c55e" style={{ opacity: 0.6, flexShrink: 0 }} />`
+
+5. **Etapa 4** — substituir bolinha por `<ShoppingCart size={14} color="#22c55e" style={{ opacity: 0.4, flexShrink: 0 }} />`
+
+Nenhuma outra alteração.
 
