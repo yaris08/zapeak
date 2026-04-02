@@ -187,7 +187,7 @@ const HomePage: React.FC = () => {
           </div>
           <div className="ml-3 md:ml-6" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 3 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e08", border: "0.5px solid #22c55e20", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "16px" }}>
+          <div className="overflow-hidden ml-2 md:ml-4" style={{ background: "#22c55e08", border: "0.5px solid #22c55e20", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <CheckCircle size={14} color="#22c55e" style={{ opacity: 0.6, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Concluíram o fluxo</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
