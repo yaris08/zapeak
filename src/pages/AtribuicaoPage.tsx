@@ -117,7 +117,7 @@ const AtribuicaoPage: React.FC = () => {
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[650px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2a2a2a" }}>
                 {["Campanha", "Investimento", "Conversas", "Vendas", "Faturamento", "Ticket Médio", "Custo/Compra", "ROAS"].map(h => (
