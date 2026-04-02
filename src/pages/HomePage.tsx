@@ -272,11 +272,13 @@ const HomePage: React.FC = () => {
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <p className="text-sm font-bold text-foreground p-4 pb-2">Últimas Vendas Identificadas pela IA</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
-                  <th key={h} className={thClass}>{h}</th>
+                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => {
+                  const hidden = h === "Telefone" ? " hidden sm:table-cell" : "";
+                  return <th key={h} className={thClass + hidden}>{h}</th>;
+                })}
                 ))}
               </tr>
             </thead>
