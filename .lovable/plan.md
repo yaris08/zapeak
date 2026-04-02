@@ -1,61 +1,33 @@
 
 
-# Criar página de Contatos
+# Corrigir espaçamento e telefones em AtribuicaoPage.tsx
 
-## Arquivos
+## Arquivo único
+`src/pages/AtribuicaoPage.tsx`
 
-| Arquivo | Ação |
-|---------|------|
-| `src/pages/ContatosPage.tsx` | Criar |
-| `src/App.tsx` | Editar — adicionar rota `/contatos` |
+## Alterações
 
-## 1. App.tsx
+### 1. Import
+Adicionar `MessageCircle` ao import de `lucide-react` (linha 2)
 
-- Importar `ContatosPage`
-- Adicionar `<Route path="/contatos" element={<ContatosPage />} />` dentro do `AppLayout` (linha 33, antes do fechamento)
-- Sidebar já tem o link "Contatos" apontando para `/contatos`
+### 2. salesBase — números completos + wa links (linhas 28-34)
+Substituir `phone` mascarados e adicionar campo `wa`:
+- João Silva → `phone: "(11) 98765-4321"`, `wa: "https://wa.me/5511987654321"`
+- Maria Souza → `phone: "(11) 91234-5678"`, `wa: "https://wa.me/5511912345678"`
+- Carlos Lima → `phone: "(11) 99876-5432"`, `wa: "https://wa.me/5511998765432"`
+- Ana Paula → `phone: "(11) 92345-6789"`, `wa: "https://wa.me/5511923456789"`
+- Pedro Costa → `phone: "(11) 98123-4567"`, `wa: "https://wa.me/5511981234567"`
 
-## 2. ContatosPage.tsx — Componente completo
+### 3. Telefone na tabela — link clicável (linha 186)
+Substituir `<td className="px-4 py-2.5 text-muted-foreground">{s.phone}</td>` por:
+```tsx
+<td className="px-4 py-2.5">
+  <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5" style={{ color: "#22c55e", fontSize: "12px", textDecoration: "none" }}>
+    <MessageCircle size={12} />{s.phone}
+  </a>
+</td>
+```
 
-### State
-- `search`, `tagFilter`, `instanceFilter`, `statusFilter` — filtros
-- `currentPage` — paginação
-- `selectedContact` — contato para modal (null ou objeto)
-
-### Dados mockados
-Array de 8 contatos com: `id`, `name`, `initial`, `phone`, `wa`, `tags[]`, `instance`, `lastContact`, `status`, `conversations`, `firstContact`, `flows[]`
-
-### Layout (de cima para baixo)
-
-1. **Header**: título "Contatos" + subtítulo + botão "Exportar CSV" (outline, ícone Download)
-
-2. **Filtros**: input busca + 3 selects (Etiqueta, Instância, Status) + botão "Limpar filtros"
-
-3. **KPIs**: 3 cards lado a lado
-   - Total de Contatos: 1.247 (Users, azul `#3b82f6`)
-   - Pagaram: 312 (DollarSign, verde `#22c55e`)
-   - Taxa de conversão: 25% (TrendingUp, laranja `#f97316`)
-
-4. **Tabela**: 8 colunas — Avatar (círculo bg `#2a2a2a` + inicial), Nome, Telefone (link verde wa.me), Etiquetas (chips: pago=verde, lead=azul, suporte=amarelo, cliente=roxo), Instância, Último contato, Status (badge verde/cinza), Ações (MessageCircle + Eye)
-
-5. **Paginação**: "Mostrando 8 de 1.247 contatos" + botões Anterior/1/2/3/.../Próximo
-
-6. **Modal**: Dialog com avatar grande, nome, número, etiquetas, instância, status, histórico, fluxos, botões "Abrir no Atendimento" (verde) + "Fechar" (outline)
-
-### Filtros funcionais
-- Busca filtra por nome ou telefone
-- Selects filtram por tag, instância, status
-- "Limpar filtros" reseta tudo
-
-### Imports
-- `lucide-react`: Users, DollarSign, TrendingUp, MessageCircle, Eye, Download, Search, X
-- `Dialog` de shadcn
-- `Select` de shadcn
-- `Input` de shadcn
-- `useNavigate` para "Abrir no Atendimento"
-
-### Estilo
-- Cards `bg-[#1a1a1a]`, bordas `border-[#2a2a2a]`
-- Hover tabela `hover:bg-[#222]`
-- Tema dark padrão do projeto
+### 4. Espaçamento — já correto
+O wrapper `<div className="p-6 space-y-6">` já aplica `space-y-6` (24px gap) entre todos os blocos filhos. O espaçamento entre header e KPIs já é consistente com as outras páginas. Nenhuma alteração necessária aqui.
 
