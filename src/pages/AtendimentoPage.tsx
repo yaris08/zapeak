@@ -271,6 +271,17 @@ const AtendimentoPage: React.FC = () => {
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md pl-8 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
             />
           </div>
+          <select
+            value={selectedInstance}
+            onChange={(e) => setSelectedInstance(e.target.value)}
+            className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+          >
+            {instances.map((inst) => (
+              <option key={inst.id} value={inst.id}>
+                {inst.id === "all" ? inst.name : `📱 ${inst.number} — ${inst.name}`}
+              </option>
+            ))}
+          </select>
           <div className="flex gap-1">
             {tabs.map((t) => (
               <button
