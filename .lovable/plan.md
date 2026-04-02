@@ -1,53 +1,39 @@
 
 
-# 3 Correções no Projeto
+# 2 Alterações: Remover Carrossel + Aguardar Resposta Completo
 
-## 1. Áudio estilo WhatsApp no AtendimentoPage.tsx
+## 1. Remover Carrossel
+**Arquivo:** `src/data/flowComponents.ts`
+- Remover linha `{ id: "carrossel", name: "Carrossel", icon: GalleryHorizontal, ... type: "carousel" }`
+- Remover `GalleryHorizontal` do import se não for usado em outro lugar
 
-**Arquivo:** `src/pages/AtendimentoPage.tsx`
+## 2. WaitResponseProperties — substituição completa
+**Arquivo:** `src/components/flow/properties/WaitResponseProperties.tsx`
+- Substituir todo o conteúdo pelo componente fornecido pelo usuário
+- Inclui: tempo de espera, ação para não-resposta, switch salvar resposta, grupos de análise de respostas com keywords/chips
 
-### Interface Message
-- Adicionar campo opcional `audio?: { duration: string }`
-
-### Dados mockados do João (índice 0)
-Substituir array de mensagens por 11 mensagens conforme especificado, incluindo 2 com áudio (id 4 do bot e id 10 do contato).
-
-### AudioBubble inline
-Componente funcional dentro do arquivo que renderiza:
-- Botão play circular (32px) com ícone `Play` (já importado)
-- Barra de progresso simulada (div 60% width, altura 3px)
-- Duração à direita
-- Largura fixa `w-[200px]`
-- Cores adaptadas: contact → `bg-[#444]` botão / bot → `bg-[#444]` / agent → `bg-[#22c55e]`
-
-### Renderização
-No bloco de mensagens, verificar `msg.audio`: se presente, renderizar `AudioBubble` dentro da bolha ao invés do texto.
-
-## 2. Auto-save com debounce no FlowEditor
-
-**Arquivo:** `src/components/flow/PropertiesPanel.tsx`
-- Remover o botão "Salvar" do header (linhas 103-105) — manter apenas o título "Propriedades"
-
-**Arquivo:** `src/pages/FlowEditor.tsx`
-- Adicionar `useEffect` com debounce de 1.5s que observa `nodes`, `edges`, `flowName`
-- Quando `hasUnsavedChanges` é true, após 1.5s salva no localStorage silenciosamente (sem toast)
-- O botão "Salvar" no `EditorHeader` continua funcionando com toast
-
-## 3. Delay com valor padrão
-
-**Arquivo:** `src/components/flow/nodes/GenericNode.tsx` (linha 156)
-- Mudar `data.delayValue || "?"` para `data.delayValue ?? 5`
-- Mudar `data.delayUnit || "seconds"` para `data.delayUnit ?? "seconds"`
-
-**Arquivo:** `src/components/flow/properties/DelayProperties.tsx`
-- Adicionar `useEffect` que seta valores padrão se `delayValue` for undefined
+## 3. GenericNode — preview do nó "wait"
+**Arquivo:** `src/components/flow/nodes/GenericNode.tsx`
+- Adicionar bloco antes do "Default text preview" (antes da linha 167):
+```
+if (data.type === "wait") {
+  const val = data.waitValue ?? 2;
+  const unit = data.waitUnit || "hours";
+  const unitMap = { minutes: "Min", hours: "Horas", days: "Dias" };
+  const groups = data.responseGroups?.length || 1;
+  return (
+    <div className="space-y-1 py-1">
+      <p className="text-xs text-foreground font-medium">Esperar {val} {unitMap[unit] || unit}</p>
+      <p className="text-[10px] text-muted-foreground">{groups} grupo{groups > 1 ? "s" : ""} de respostas</p>
+    </div>
+  );
+}
+```
 
 ## Arquivos modificados
 | Arquivo | Ação |
 |---------|------|
-| `src/pages/AtendimentoPage.tsx` | Editar (interface, dados, AudioBubble, renderização) |
-| `src/components/flow/PropertiesPanel.tsx` | Editar (remover botão Salvar) |
-| `src/pages/FlowEditor.tsx` | Editar (auto-save debounce) |
-| `src/components/flow/nodes/GenericNode.tsx` | Editar (delay default) |
-| `src/components/flow/properties/DelayProperties.tsx` | Editar (useEffect default) |
+| `src/data/flowComponents.ts` | Editar (remover carrossel) |
+| `src/components/flow/properties/WaitResponseProperties.tsx` | Substituir completamente |
+| `src/components/flow/nodes/GenericNode.tsx` | Editar (preview wait) |
 
