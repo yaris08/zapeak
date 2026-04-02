@@ -1,76 +1,66 @@
 
 
-# 2 Alterações: Gerenciador de Pixels + Node Pixel Select
+# 3 Alterações no Projeto
 
 ## Arquivos
 
 | Arquivo | Ação |
 |---------|------|
-| `src/pages/ConfiguracoesPage.tsx` | Editar — substituir aba Pixel por gerenciador multi-pixel |
-| `src/components/flow/properties/PixelProperties.tsx` | Editar — substituir campos por select de pixel cadastrado |
+| `src/data/flowComponents.ts` | Editar — remover 3 componentes |
+| `src/pages/ConfiguracoesPage.tsx` | Editar — gerenciador de números admin na aba Notificações |
+| `src/components/flow/properties/NotifyProperties.tsx` | Editar — substituir input por select |
 
-## 1. ConfiguracoesPage.tsx — Aba Facebook Pixel
+## 1. flowComponents.ts — Remover itens
+
+Remover linhas:
+- `{ id: "contato", ... type: "contact" }` (linha 22)
+- `{ id: "interativa", ... type: "interactive" }` (linha 23)
+- `{ id: "cobranca", ... type: "billing" }` (linha 37)
+
+Remover imports não usados: `User`, `LayoutList`, `Receipt`
+
+## 2. ConfiguracoesPage.tsx — Aba Notificações
+
+### Adicionar interface e dados
+```
+interface AdminNumber {
+  id: string; name: string; phone: string; active: boolean;
+}
+```
+Defaults mockados: `{ id: "principal", name: "Principal", phone: "+55 11 99999-9999", active: true }` e `{ id: "backup", name: "Backup", phone: "+55 11 88888-8888", active: true }`
+
+### Novos states
+- `adminNumbers: AdminNumber[]`
+- `showAdminModal: boolean`
+- `editingAdmin: AdminNumber | null`
+- `adminForm: { name, phone, active }`
 
 ### Remover
-- States: `pixelId`, `pixelToken`, `pixelDataset`, `showPixelToken`, `pixelSaved`, `maskedPixelId`
-- Campos individuais de Pixel ID, Token, Dataset ID, toggle server-side
-- Lógica de save/load relacionada ao pixel individual
+- State `notifPhone`
+- Input "Número para notificações" e texto helper (linhas 371-374)
 
-### Adicionar
-
-**Imports**: `Pencil, Trash2, Plus` de lucide-react; `Dialog, DialogContent, DialogHeader, DialogTitle` de shadcn
-
-**Interface Pixel**:
-```
-{ id: string; name: string; pixelId: string; token: string; datasetId: string; serverSide: boolean; active: boolean }
-```
-
-**States**:
-- `pixels`: array de Pixel, inicializado com 2 mockados (Principal "1234567890" e Vendas "9876543210")
-- `showPixelModal`: boolean
-- `editingPixel`: Pixel | null (null = novo)
-- `modalForm`: { name, pixelId, token, datasetId, serverSide, showToken }
-
-**Renderização da aba**:
-1. Header: "Pixels Cadastrados" + botão "Adicionar Pixel" (verde, pequeno, ícone Plus)
-2. Lista de cards para cada pixel:
-   - Nome + ID + badge "Ativo"/"Inativo" (verde/cinza)
-   - Toggle ativar/desativar
+### Substituir por (após os 4 toggles)
+1. Header "Números de Admin" + botão "Adicionar Número" (verde, Plus)
+2. Lista de cards (estilo `bg-[#0f0f0f] border-[#2a2a2a]`) com:
+   - Nome + número + badge Ativo/Inativo
    - Botões Pencil (editar) e Trash2 (excluir)
-   - Estilo: `bg-[#0f0f0f] border-[#2a2a2a] rounded-lg p-3`
-3. Botão "Testar Conexão" (mantido)
-4. Info box azul (mantido)
+3. Modal Dialog com campos Nome, Número WhatsApp, toggle Ativo
+   - Botões Cancelar | Salvar (verde)
+   - Toast "✓ Número salvo"
 
-**Modal Adicionar/Editar Pixel**:
-- Campos: Nome, Pixel ID, Token (password + eye), Dataset ID, toggle server-side
-- Botões: Cancelar | Salvar Pixel (verde)
-- Ao salvar: adiciona/atualiza no array `pixels`, toast "✓ Pixel salvo com sucesso"
-- Ao editar: preenche form com dados existentes (token fica vazio, placeholder "Token salvo")
+### Persistência
+- handleSave notificações: salvar `adminNumbers` junto com toggles
+- useEffect load: carregar `adminNumbers` do localStorage
 
-**Persistência**: salvar/carregar array `pixels` em `zapeak_settings_pixels` via localStorage no handleSave global e useEffect
+## 3. NotifyProperties.tsx — Select de admin
 
-### handleSave
-- Aba pixel: salvar array `pixels` no localStorage
-
-## 2. PixelProperties.tsx — Select de Pixel
-
-### Remover
-- Campos "Pixel ID" e "Token de Acesso"
-
-### Substituir por
-- Select "Selecionar Pixel" com opções mockadas:
-  - `"principal"` → "Pixel Principal (1234567890)"
-  - `"vendas"` → "Pixel Vendas (9876543210)"
-  - `"new"` → "+ Cadastrar novo pixel →"
-- Ao selecionar "new": `window.location.href = "/configuracoes"` (ou `useNavigate`)
-- Salva em `data.selectedPixelId`
-
-### Manter
-- Select Evento (5 opções)
-- Input Valor (opcional)
-- Select Moeda (BRL/USD/EUR)
-- Toggle "Usar dados do contato"
-
-### Imports adicionais
-- `useNavigate` de react-router-dom
+### Substituir completamente por
+- Import: `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` + `useNavigate`
+- Select "Selecionar admin" com opções:
+  - `"principal"` → "Principal — (11) 99999-9999"
+  - `"backup"` → "Backup — (11) 88888-8888"
+  - `"todos"` → "Todos os admins"
+  - `"new"` → "+ Cadastrar número →" (ao selecionar, `navigate("/configuracoes")`)
+- Salvar em `data.selectedAdminId`
+- Manter textarea "Mensagem de notificação" inalterada
 
