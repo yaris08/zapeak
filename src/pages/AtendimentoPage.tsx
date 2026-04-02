@@ -150,6 +150,7 @@ const AtendimentoPage: React.FC = () => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [activeTab, setActiveTab] = useState<"todas" | "aguardando" | "resolvidas">("todas");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedInstance, setSelectedInstance] = useState("all");
   const [chatMessages, setChatMessages] = useState<Record<number, Message[]>>(
     Object.fromEntries(contacts.map((c, i) => [i, [...c.messages]]))
   );
