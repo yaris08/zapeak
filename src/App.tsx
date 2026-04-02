@@ -12,6 +12,7 @@ import InstanciasPage from "@/pages/InstanciasPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import AtribuicaoPage from "@/pages/AtribuicaoPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import ContatosPage from "@/pages/ContatosPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
