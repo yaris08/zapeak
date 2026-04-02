@@ -8,7 +8,7 @@ import { toast } from "sonner";
 interface Props { data: any; onUpdate: (data: any) => void }
 
 const PixProperties: React.FC<Props> = ({ data, onUpdate }) => {
-  const pixType = data.pixType || "random";
+  const pixType = data.pixType || "phone";
   const pixKey = data.pixKey || "";
   const receiverName = data.receiverName || "";
 
