@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   Plus, Minus, Maximize2, Expand, Play, Square,
-  Phone, Video, X, Paperclip, Send,
+  Phone, Video, X, Paperclip, Send, RotateCcw,
 } from "lucide-react";
 
 import EditorHeader from "@/components/flow/EditorHeader";
@@ -91,13 +91,23 @@ const CustomControls: React.FC<{ showSimulator: boolean; onToggleSimulator: () =
 };
 
 // Simulator Panel
-type Message = { from: "lead" | "bot"; text: string; time: string };
+type Message = {
+  from: "lead" | "bot" | "system";
+  text: string;
+  time: string;
+  imageUrl?: string;
+  audioUrl?: string;
+  buttons?: { label: string; value: string; handleId?: string }[];
+};
 
-const SimulatorPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const SimulatorPanel: React.FC<{ onClose: () => void; nodes: Node[]; edges: Edge[] }> = ({ onClose, nodes, edges }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [started, setStarted] = useState(false);
   const [input, setInput] = useState("");
+  const [waitingFor, setWaitingFor] = useState<{ type: "wait" | "condition" | "payment"; nodeId: string } | null>(null);
+  const [running, setRunning] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef(false);
 
   const now = () => new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
@@ -105,21 +115,241 @@ const SimulatorPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
   }, [messages]);
 
-  const startTest = () => {
-    setStarted(true);
-    const t = now();
-    setMessages([{ from: "lead", text: "Oi", time: t }]);
-    setTimeout(() => setMessages(prev => [...prev, { from: "bot", text: "Olá! Bem-vindo ao simulador 👋", time: now() }]), 1500);
-    setTimeout(() => setMessages(prev => [...prev, { from: "bot", text: "Este é um preview do seu fluxo.", time: now() }]), 2500);
-  };
+  const getNextNode = useCallback((currentId: string, handleId?: string): Node | null => {
+    const edge = edges.find(e => e.source === currentId && (handleId ? e.sourceHandle === handleId : true));
+    if (!edge) return null;
+    return nodes.find(n => n.id === edge.target) || null;
+  }, [nodes, edges]);
 
-  const sendMessage = () => {
+  const addMessage = useCallback((msg: Message) => {
+    setMessages(prev => [...prev, msg]);
+  }, []);
+
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const processNodeAndContinue = useCallback(async (node: Node) => {
+    if (abortRef.current) return;
+    const data = node.data as any;
+    const type = data.type || node.type;
+
+    switch (type) {
+      case "start": {
+        const next = getNextNode(node.id);
+        if (next) { await delay(300); await processNodeAndContinue(next); }
+        else addMessage({ from: "system", text: "✅ Fluxo concluído!", time: now() });
+        return;
+      }
+      case "text":
+      case "textNode": {
+        addMessage({ from: "bot", text: data.message || "[Mensagem não configurada]", time: now() });
+        break;
+      }
+      case "delay": {
+        const val = data.delayValue ?? 5;
+        const unit = data.delayUnit || "seconds";
+        const unitLabels: Record<string, string> = { seconds: "segundos", minutes: "minutos", hours: "horas" };
+        addMessage({ from: "system", text: `⏱ Aguardando ${val} ${unitLabels[unit] || unit}...`, time: now() });
+        const ms = Math.min(val * (unit === "seconds" ? 500 : 1000), 3000);
+        await delay(ms);
+        break;
+      }
+      case "image": {
+        if (data.fileUrl) {
+          addMessage({ from: "bot", text: "", time: now(), imageUrl: data.fileUrl });
+        } else {
+          addMessage({ from: "bot", text: "[Imagem não configurada]", time: now() });
+        }
+        break;
+      }
+      case "audio": {
+        if (data.fileUrl) {
+          addMessage({ from: "bot", text: "", time: now(), audioUrl: data.fileUrl });
+        } else {
+          addMessage({ from: "bot", text: "[Áudio não configurado]", time: now() });
+        }
+        break;
+      }
+      case "wait": {
+        addMessage({ from: "system", text: "⏳ Aguardando sua resposta...", time: now() });
+        const groups = data.responseGroups || [];
+        const buttons: Message["buttons"] = [];
+        groups.forEach((g: any) => {
+          (g.keywords || []).forEach((kw: string) => {
+            buttons.push({ label: kw, value: kw });
+          });
+        });
+        buttons.push({ label: "Outra resposta", value: "__free__" });
+        addMessage({ from: "system", text: "", time: now(), buttons });
+        setWaitingFor({ type: "wait", nodeId: node.id });
+        setRunning(false);
+        return;
+      }
+      case "condition": {
+        addMessage({ from: "system", text: `🔀 Condição: ${data.condValue || "[não configurada]"}`, time: now() });
+        addMessage({
+          from: "system", text: "", time: now(),
+          buttons: [
+            { label: "✓ Verdadeiro", value: "true", handleId: "true" },
+            { label: "✗ Falso", value: "false", handleId: "false" },
+          ],
+        });
+        setWaitingFor({ type: "condition", nodeId: node.id });
+        setRunning(false);
+        return;
+      }
+      case "payment": {
+        addMessage({ from: "system", text: "💰 Aguardando confirmação de pagamento...", time: now() });
+        addMessage({
+          from: "system", text: "", time: now(),
+          buttons: [
+            { label: "✓ Simular Pagamento", value: "paid", handleId: "paid" },
+            { label: "✗ Não pagou", value: "unpaid", handleId: "unpaid" },
+          ],
+        });
+        setWaitingFor({ type: "payment", nodeId: node.id });
+        setRunning(false);
+        return;
+      }
+      case "ai-respond": {
+        const prompt = data.prompt ? data.prompt.substring(0, 60) + "..." : "Resposta da IA";
+        addMessage({ from: "bot", text: `[IA] ${prompt}`, time: now() });
+        break;
+      }
+      case "pixel": {
+        addMessage({ from: "system", text: `📊 Evento Pixel disparado: ${data.pixelEvent || "Lead"}`, time: now() });
+        break;
+      }
+      case "pix": {
+        addMessage({ from: "bot", text: `Chave PIX: ${data.pixKey || "[não configurada]"}\nTipo: ${data.pixType || "Telefone"}`, time: now() });
+        break;
+      }
+      case "notify": {
+        addMessage({ from: "system", text: `🔔 Admin notificado: ${data.adminPhone || ""}`, time: now() });
+        break;
+      }
+      case "connect-flow": {
+        addMessage({ from: "system", text: `🔗 Conectando ao fluxo: ${data.targetFlow || "[não configurado]"}`, time: now() });
+        addMessage({ from: "system", text: "✅ Fluxo concluído!", time: now() });
+        setRunning(false);
+        return;
+      }
+      case "randomizer": {
+        const paths = data.randomPaths || ["Caminho A", "Caminho B"];
+        const idx = Math.floor(Math.random() * paths.length);
+        addMessage({ from: "system", text: `🎲 Randomizador → ${paths[idx]}`, time: now() });
+        await delay(800);
+        const next = getNextNode(node.id, `path-${idx}`);
+        if (next) { await processNodeAndContinue(next); }
+        else addMessage({ from: "system", text: "✅ Fluxo concluído!", time: now() });
+        setRunning(false);
+        return;
+      }
+      case "sticker": {
+        if (data.stickerUrl) {
+          addMessage({ from: "bot", text: "", time: now(), imageUrl: data.stickerUrl });
+        } else {
+          addMessage({ from: "bot", text: "[Figurinha não configurada]", time: now() });
+        }
+        break;
+      }
+      case "wa-tag":
+      case "tags": {
+        const action = data.tagAction === "remove" ? "Removida" : "Adicionada";
+        addMessage({ from: "system", text: `🏷 Etiqueta ${action}: ${data.tagName || "[sem nome]"}`, time: now() });
+        break;
+      }
+      case "passage-id": {
+        addMessage({ from: "system", text: `🔖 Identificador: ${data.passageLabel || "[não configurado]"}`, time: now() });
+        break;
+      }
+      case "ai-text": {
+        addMessage({ from: "bot", text: `[IA Texto] ${data.prompt ? data.prompt.substring(0, 60) + "..." : "Texto gerado por IA"}`, time: now() });
+        break;
+      }
+      case "video": {
+        addMessage({ from: "bot", text: `🎬 ${data.fileName || "[Vídeo não configurado]"}`, time: now() });
+        break;
+      }
+      case "document": {
+        addMessage({ from: "bot", text: `📄 ${data.fileName || "[Documento não configurado]"}`, time: now() });
+        break;
+      }
+      default: {
+        addMessage({ from: "system", text: `⚙️ Nó: ${data.label || type}`, time: now() });
+        break;
+      }
+    }
+
+    // Continue to next node
+    await delay(800);
+    if (abortRef.current) return;
+    const next = getNextNode(node.id);
+    if (next) {
+      await processNodeAndContinue(next);
+    } else {
+      addMessage({ from: "system", text: "✅ Fluxo concluído!", time: now() });
+      setRunning(false);
+    }
+  }, [getNextNode, addMessage]);
+
+  const continueFromWait = useCallback(async (handleId?: string) => {
+    if (!waitingFor) return;
+    const next = getNextNode(waitingFor.nodeId, handleId);
+    setWaitingFor(null);
+    setRunning(true);
+    if (next) {
+      await delay(800);
+      await processNodeAndContinue(next);
+    } else {
+      addMessage({ from: "system", text: "✅ Fluxo concluído!", time: now() });
+      setRunning(false);
+    }
+  }, [waitingFor, getNextNode, processNodeAndContinue, addMessage]);
+
+  const startTest = useCallback(async () => {
+    abortRef.current = false;
+    setMessages([]);
+    setWaitingFor(null);
+    setStarted(true);
+    setRunning(true);
+    const startNode = nodes.find(n => n.type === "start" || (n.data as any).type === "start");
+    if (!startNode) {
+      setMessages([{ from: "system", text: "❌ Nó de início não encontrado!", time: now() }]);
+      setRunning(false);
+      return;
+    }
+    await delay(500);
+    await processNodeAndContinue(startNode);
+  }, [nodes, processNodeAndContinue]);
+
+  const resetSimulator = useCallback(() => {
+    abortRef.current = true;
+    setMessages([]);
+    setStarted(false);
+    setRunning(false);
+    setWaitingFor(null);
+    setInput("");
+  }, []);
+
+  const handleButtonClick = useCallback((btn: { label: string; value: string; handleId?: string }) => {
+    if (!waitingFor) return;
+    if (btn.value === "__free__") {
+      // Focus input for free text
+      return;
+    }
+    addMessage({ from: "lead", text: btn.label, time: now() });
+    continueFromWait(btn.handleId);
+  }, [waitingFor, addMessage, continueFromWait]);
+
+  const sendMessage = useCallback(() => {
     if (!input.trim()) return;
     const text = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { from: "lead", text, time: now() }]);
-    setTimeout(() => setMessages(prev => [...prev, { from: "bot", text: "Mensagem recebida ✓", time: now() }]), 1000);
-  };
+    addMessage({ from: "lead", text, time: now() });
+    if (waitingFor?.type === "wait") {
+      continueFromWait();
+    }
+  }, [input, waitingFor, addMessage, continueFromWait]);
 
   return (
     <div style={{
@@ -148,6 +378,7 @@ const SimulatorPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
         <button className="text-muted-foreground hover:text-foreground p-1"><Phone size={16} /></button>
         <button className="text-muted-foreground hover:text-foreground p-1"><Video size={16} /></button>
+        <button className="text-muted-foreground hover:text-foreground p-1" onClick={resetSimulator}><RotateCcw size={14} /></button>
         <button className="text-muted-foreground hover:text-foreground p-1" onClick={onClose}><X size={16} /></button>
       </div>
       {/* Messages */}
@@ -165,18 +396,77 @@ const SimulatorPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </button>
           </div>
         ) : (
-          messages.map((m, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: m.from === "lead" ? "flex-end" : "flex-start" }}>
-              <div style={{
-                maxWidth: "80%", padding: "8px 12px", fontSize: 13, color: "#fff",
-                background: m.from === "lead" ? "#005c4b" : "#1f2c34",
-                borderRadius: m.from === "lead" ? "8px 0 8px 8px" : "0 8px 8px 8px",
-              }}>
-                {m.text}
+          messages.map((m, i) => {
+            if (m.from === "system") {
+              return (
+                <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                  {m.text && (
+                    <div style={{
+                      background: "#1a1a1a", borderRadius: 6, padding: "4px 10px",
+                      fontSize: 12, color: "#9ca3af", fontStyle: "italic", textAlign: "center",
+                      maxWidth: "90%", whiteSpace: "pre-wrap",
+                    }}>
+                      {m.text}
+                    </div>
+                  )}
+                  {m.buttons && m.buttons.length > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center", marginTop: 2 }}>
+                      {m.buttons.map((btn, bi) => (
+                        <button
+                          key={bi}
+                          onClick={() => handleButtonClick(btn)}
+                          disabled={!waitingFor}
+                          style={{
+                            background: waitingFor ? "#2a2a2a" : "#1a1a1a",
+                            border: "1px solid #333",
+                            borderRadius: 16, padding: "4px 10px",
+                            fontSize: 12, color: waitingFor ? "#fff" : "#666",
+                            cursor: waitingFor ? "pointer" : "default",
+                          }}
+                          onMouseEnter={e => { if (waitingFor) (e.target as HTMLButtonElement).style.background = "#333"; }}
+                          onMouseLeave={e => { if (waitingFor) (e.target as HTMLButtonElement).style.background = "#2a2a2a"; }}
+                        >
+                          {btn.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: m.from === "lead" ? "flex-end" : "flex-start" }}>
+                <div style={{
+                  maxWidth: "80%", padding: m.imageUrl ? 4 : "8px 12px", fontSize: 13, color: "#fff",
+                  background: m.from === "lead" ? "#005c4b" : "#1f2c34",
+                  borderRadius: m.from === "lead" ? "8px 0 8px 8px" : "0 8px 8px 8px",
+                  overflow: "hidden",
+                }}>
+                  {m.imageUrl ? (
+                    <img src={m.imageUrl} alt="" style={{ maxWidth: "100%", borderRadius: 4, display: "block" }} />
+                  ) : m.audioUrl ? (
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 8px" }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const audio = document.getElementById(`sim-audio-${i}`) as HTMLAudioElement;
+                          if (audio) audio.paused ? audio.play() : audio.pause();
+                        }}
+                        style={{ width: 28, height: 28, borderRadius: "50%", background: "#22c55e", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21" /></svg>
+                      </button>
+                      <div style={{ flex: 1, height: 4, background: "#2a2a2a", borderRadius: 2 }} />
+                      <audio id={`sim-audio-${i}`} src={m.audioUrl} style={{ display: "none" }} />
+                    </div>
+                  ) : (
+                    <span style={{ whiteSpace: "pre-wrap" }}>{m.text}</span>
+                  )}
+                </div>
+                <span style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>{m.time}</span>
               </div>
-              <span style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>{m.time}</span>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
       {/* Input */}
