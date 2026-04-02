@@ -166,8 +166,8 @@ const ContatosPage = () => {
                       ))}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-[#9ca3af] text-xs">{c.instance}</td>
-                  <td className="px-4 py-3 text-[#9ca3af] text-xs">{c.lastContact}</td>
+                  <td className="px-4 py-3 text-[#9ca3af] text-xs hidden md:table-cell">{c.instance}</td>
+                  <td className="px-4 py-3 text-[#9ca3af] text-xs hidden md:table-cell">{c.lastContact}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${c.status === "Pagou" ? "bg-[#22c55e20] text-[#22c55e]" : "bg-[#9ca3af20] text-[#9ca3af]"}`}>{c.status}</span>
                   </td>
