@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap } from "lucide-react";
+import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target } from "lucide-react";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
