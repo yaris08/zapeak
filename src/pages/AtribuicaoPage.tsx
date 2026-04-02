@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DollarSign, ShoppingCart, TrendingUp, CreditCard, Copy, Plus, Download, Target } from "lucide-react";
+import { DollarSign, ShoppingCart, TrendingUp, CreditCard, Copy, Plus, Download, Target, MessageCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
