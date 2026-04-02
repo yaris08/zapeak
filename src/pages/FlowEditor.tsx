@@ -117,7 +117,7 @@ const FlowEditor: React.FC = () => {
     (params: Connection) => {
       setEdges((eds) =>
         addEdge(
-          { ...params, animated: true, style: { stroke: "#f97316", strokeDasharray: "5 5" } },
+          { ...params, type: "custom", animated: false, style: { stroke: "#f97316" } },
           eds
         )
       );
