@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { QrCode, Eye, EyeOff, Loader2, Check, X } from "lucide-react";
+import { QrCode, Loader2, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -26,16 +26,7 @@ function loadSettings(tab: string) {
 const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("whatsapp");
 
-  // WhatsApp
-  const [waUrl, setWaUrl] = useState("");
-  const [waToken, setWaToken] = useState("");
-  const [showWaToken, setShowWaToken] = useState(false);
-
   // Pixel
-  const [pixelId, setPixelId] = useState("");
-  const [pixelToken, setPixelToken] = useState("");
-  const [showPixelToken, setShowPixelToken] = useState(false);
-  const [pixelDataset, setPixelDataset] = useState("");
   const [pixelServerSide, setPixelServerSide] = useState(true);
   const [pixelTestStatus, setPixelTestStatus] = useState<null | "loading" | "success">(null);
 
@@ -54,10 +45,8 @@ const ConfiguracoesPage: React.FC = () => {
   const [notifPhone, setNotifPhone] = useState("");
 
   useEffect(() => {
-    const wa = loadSettings("whatsapp");
-    if (wa) { setWaUrl(wa.url || ""); setWaToken(wa.token || ""); }
     const px = loadSettings("pixel");
-    if (px) { setPixelId(px.id || ""); setPixelToken(px.token || ""); setPixelDataset(px.dataset || ""); setPixelServerSide(px.serverSide ?? true); }
+    if (px) { setPixelServerSide(px.serverSide ?? true); }
     const ia = loadSettings("ia");
     if (ia) { setIaModel(ia.model || "sonnet"); setIaPrompt(ia.prompt || ""); setIaVendas(ia.vendas ?? true); setIaPix(ia.pix ?? true); setIaNotify(ia.notify ?? true); }
     const nt = loadSettings("notificacoes");
@@ -65,8 +54,8 @@ const ConfiguracoesPage: React.FC = () => {
   }, []);
 
   const handleSave = () => {
-    if (activeTab === "whatsapp") localStorage.setItem("zapeak_settings_whatsapp", JSON.stringify({ url: waUrl, token: waToken }));
-    if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ id: pixelId, token: pixelToken, dataset: pixelDataset, serverSide: pixelServerSide }));
+    if (activeTab === "whatsapp") localStorage.setItem("zapeak_settings_whatsapp", JSON.stringify({}));
+    if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ serverSide: pixelServerSide }));
     if (activeTab === "ia") localStorage.setItem("zapeak_settings_ia", JSON.stringify({ model: iaModel, prompt: iaPrompt, vendas: iaVendas, pix: iaPix, notify: iaNotify }));
     if (activeTab === "notificacoes") localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({ venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, phone: notifPhone }));
     toast.success("✓ Configurações salvas");
@@ -112,21 +101,7 @@ const ConfiguracoesPage: React.FC = () => {
               <div className="w-2 h-2 rounded-full bg-red-500" />
               <span className="text-sm text-red-400">Desconectado</span>
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">URL da Instância</Label>
-              <Input value={waUrl} onChange={e => setWaUrl(e.target.value)} placeholder="https://sua-instancia.evolution.com" className="bg-[#0f0f0f] border-[#2a2a2a]" />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Token de Autenticação</Label>
-              <div className="relative">
-                <Input type={showWaToken ? "text" : "password"} value={waToken} onChange={e => setWaToken(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a] pr-10" />
-                <button onClick={() => setShowWaToken(!showWaToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  {showWaToken ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
+            <p className="text-xs text-muted-foreground">A conexão é configurada pelo administrador do sistema.</p>
 
             <div className="flex flex-col items-center gap-2">
               <div className="w-[180px] h-[180px] bg-[#1a1a1a] border-2 border-dashed border-[#2a2a2a] rounded-lg flex flex-col items-center justify-center gap-2">
@@ -153,24 +128,8 @@ const ConfiguracoesPage: React.FC = () => {
       {activeTab === "pixel" && (
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Pixel ID</Label>
-              <Input value={pixelId} onChange={e => setPixelId(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a]" />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Token de Acesso</Label>
-              <div className="relative">
-                <Input type={showPixelToken ? "text" : "password"} value={pixelToken} onChange={e => setPixelToken(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a] pr-10" />
-                <button onClick={() => setShowPixelToken(!showPixelToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  {showPixelToken ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Dataset ID <span className="text-muted-foreground">(opcional)</span></Label>
-              <Input value={pixelDataset} onChange={e => setPixelDataset(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a]" />
+            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 text-xs text-muted-foreground">
+              As credenciais do Facebook Pixel são configuradas pelo administrador. Aqui você pode ativar ou desativar o envio de eventos.
             </div>
 
             <div className="flex items-center justify-between">
