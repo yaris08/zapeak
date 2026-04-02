@@ -41,7 +41,7 @@ const FlowsPage: React.FC = () => {
         </div>
         <Button
           size="sm"
-          className="bg-primary hover:bg-primary/90 text-xs"
+          className="bg-primary hover:bg-primary/90 text-xs w-full md:w-auto"
           onClick={() => setShowNewFlow(true)}
         >
           <Plus size={14} className="mr-1" /> Novo Fluxo

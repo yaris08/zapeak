@@ -92,7 +92,7 @@ const AtribuicaoPage: React.FC = () => {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpis.map(k => {
           const Icon = k.icon;
           const val = k.label === "Ticket Médio" || k.label === "Custo por Compra" ? k.base : k.base * m;

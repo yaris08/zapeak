@@ -79,7 +79,7 @@ const InstanciasPage: React.FC = () => {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KpiCard icon={Smartphone} label="Total de Instâncias" value={mockInstances.length} color="bg-blue-500/20 text-blue-400" />
         <KpiCard icon={Wifi} label="Conectadas" value={connected} color="bg-green-500/20 text-green-400" />
         <KpiCard icon={WifiOff} label="Em Standby" value={standby} color="bg-yellow-500/20 text-yellow-400" />

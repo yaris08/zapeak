@@ -209,7 +209,7 @@ const ConfiguracoesPage: React.FC = () => {
         <p className="text-sm text-muted-foreground">Gerencie suas integrações</p>
       </div>
 
-      <div className="flex gap-0 border-b border-[#2a2a2a]">
+      <div className="flex gap-0 border-b border-[#2a2a2a] overflow-x-auto">
         {tabs.map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)}
             className={`px-4 py-2 text-sm transition-colors relative ${activeTab === t.id ? "text-[#22c55e] font-medium" : "text-muted-foreground hover:text-foreground"}`}>
