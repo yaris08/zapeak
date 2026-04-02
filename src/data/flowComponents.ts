@@ -19,8 +19,6 @@ export const componentItems: ComponentItem[] = [
   { id: "video", name: "Vídeo", icon: Video, color: "#ef4444", section: "MENSAGENS", type: "video" },
   { id: "documento", name: "Documento", icon: FileText, color: "#ef4444", section: "MENSAGENS", type: "document" },
   { id: "figurinha", name: "Figurinha", icon: Smile, color: "#22c55e", section: "MENSAGENS", type: "sticker" },
-  { id: "contato", name: "Contato", icon: User, color: "#22c55e", section: "MENSAGENS", type: "contact" },
-  { id: "interativa", name: "Msg Interativa", icon: LayoutList, color: "#3b82f6", section: "MENSAGENS", type: "interactive" },
   
   // CONTROLE
   { id: "delay", name: "Delay", icon: Clock, color: "#eab308", section: "CONTROLE", type: "delay" },
