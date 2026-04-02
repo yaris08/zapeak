@@ -23,7 +23,7 @@ function loadSettings(tab: string) {
 }
 
 const ConfiguracoesPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>("whatsapp");
+  const [activeTab, setActiveTab] = useState<Tab>("pixel");
 
   // Pixel
   const [pixelServerSide, setPixelServerSide] = useState(true);
