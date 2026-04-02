@@ -3,7 +3,6 @@ import { Loader2, Check, Eye, EyeOff, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
@@ -22,6 +21,37 @@ function loadSettings(tab: string) {
   } catch { return null; }
 }
 
+const detectProvider = (key: string): string | null => {
+  if (key.startsWith("sk-ant")) return "anthropic";
+  if (key.startsWith("sk-")) return "openai";
+  if (key.startsWith("AIza")) return "gemini";
+  if (key.length > 0) return "unknown";
+  return null;
+};
+
+const modelsByProvider: Record<string, { value: string; label: string }[]> = {
+  anthropic: [
+    { value: "claude-sonnet-4.5", label: "Claude Sonnet 4.5 (Recomendado)" },
+    { value: "claude-haiku-4.5", label: "Claude Haiku 4.5 (Rápido)" },
+  ],
+  openai: [
+    { value: "gpt-4o", label: "GPT-4o (Recomendado)" },
+    { value: "gpt-4o-mini", label: "GPT-4o Mini (Rápido)" },
+    { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
+  ],
+  gemini: [
+    { value: "gemini-1.5-pro", label: "Gemini 1.5 Pro (Recomendado)" },
+    { value: "gemini-1.5-flash", label: "Gemini 1.5 Flash (Rápido)" },
+  ],
+};
+
+const providerBadges: Record<string, { emoji: string; label: string }> = {
+  anthropic: { emoji: "🟣", label: "Anthropic detectado" },
+  openai: { emoji: "🟢", label: "OpenAI detectado" },
+  gemini: { emoji: "🔵", label: "Google Gemini detectado" },
+  unknown: { emoji: "⚪", label: "Provedor não reconhecido" },
+};
+
 const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("pixel");
 
@@ -38,11 +68,7 @@ const ConfiguracoesPage: React.FC = () => {
   const [iaApiKey, setIaApiKey] = useState("");
   const [showIaKey, setShowIaKey] = useState(false);
   const [iaSaved, setIaSaved] = useState(false);
-  const [iaModel, setIaModel] = useState("sonnet");
-  const [iaPrompt, setIaPrompt] = useState("");
-  const [iaVendas, setIaVendas] = useState(true);
-  const [iaPix, setIaPix] = useState(true);
-  const [iaNotify, setIaNotify] = useState(true);
+  const [iaModel, setIaModel] = useState("");
 
   // Notificações
   const [notifVenda, setNotifVenda] = useState(true);
@@ -50,6 +76,18 @@ const ConfiguracoesPage: React.FC = () => {
   const [notifPixel, setNotifPixel] = useState(true);
   const [notifTimeout, setNotifTimeout] = useState(true);
   const [notifPhone, setNotifPhone] = useState("");
+
+  const detectedProvider = detectProvider(iaApiKey);
+  const lastProvider = React.useRef<string | null>(null);
+
+  // Reset model when provider changes
+  useEffect(() => {
+    if (detectedProvider && detectedProvider !== "unknown" && detectedProvider !== lastProvider.current) {
+      const models = modelsByProvider[detectedProvider];
+      if (models) setIaModel(models[0].value);
+    }
+    lastProvider.current = detectedProvider;
+  }, [detectedProvider]);
 
   useEffect(() => {
     const px = loadSettings("pixel");
@@ -61,11 +99,7 @@ const ConfiguracoesPage: React.FC = () => {
     }
     const ia = loadSettings("ia");
     if (ia) {
-      setIaModel(ia.model || "sonnet");
-      setIaPrompt(ia.prompt || "");
-      setIaVendas(ia.vendas ?? true);
-      setIaPix(ia.pix ?? true);
-      setIaNotify(ia.notify ?? true);
+      setIaModel(ia.model || "");
       if (ia.apiKey) setIaSaved(true);
     }
     const nt = loadSettings("notificacoes");
@@ -99,10 +133,7 @@ const ConfiguracoesPage: React.FC = () => {
       localStorage.setItem("zapeak_settings_ia", JSON.stringify({
         apiKey: iaApiKey || prev.apiKey || "",
         model: iaModel,
-        prompt: iaPrompt,
-        vendas: iaVendas,
-        pix: iaPix,
-        notify: iaNotify,
+        provider: detectedProvider || prev.provider || "",
       }));
       if (iaApiKey) setIaSaved(true);
       setIaApiKey("");
@@ -123,6 +154,8 @@ const ConfiguracoesPage: React.FC = () => {
     setPixelTestStatus("loading");
     setTimeout(() => setPixelTestStatus("success"), 1500);
   };
+
+  const currentModels = detectedProvider && detectedProvider !== "unknown" ? modelsByProvider[detectedProvider] : null;
 
   return (
     <div className="p-6 space-y-6">
@@ -222,13 +255,13 @@ const ConfiguracoesPage: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Chave API Anthropic</Label>
+              <Label className="text-xs text-muted-foreground">Chave API</Label>
               <div className="relative">
                 <Input
                   type={showIaKey ? "text" : "password"}
                   value={iaApiKey}
                   onChange={e => setIaApiKey(e.target.value)}
-                  placeholder={iaSaved ? "Chave salva — insira nova para alterar" : "Insira sua chave da API"}
+                  placeholder={iaSaved ? "Chave salva — insira nova para alterar" : "Cole sua chave API aqui..."}
                   className="bg-[#0f0f0f] border-[#2a2a2a] pr-10"
                 />
                 <button
@@ -239,44 +272,26 @@ const ConfiguracoesPage: React.FC = () => {
                   {showIaKey ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
+              {detectedProvider && providerBadges[detectedProvider] && (
+                <span className="text-xs px-2 py-1 rounded bg-[#2a2a2a] inline-flex items-center gap-1">
+                  {providerBadges[detectedProvider].emoji} {providerBadges[detectedProvider].label}
+                </span>
+              )}
               <p className="text-[10px] text-muted-foreground">Sua chave é armazenada de forma segura e nunca exibida.</p>
             </div>
 
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">Modelo</Label>
-              <Select value={iaModel} onValueChange={setIaModel}>
+              <Select value={iaModel} onValueChange={setIaModel} disabled={!currentModels}>
                 <SelectTrigger className="bg-[#0f0f0f] border-[#2a2a2a]">
-                  <SelectValue />
+                  <SelectValue placeholder={currentModels ? "Selecione o modelo" : "Detectando provedor..."} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sonnet">Claude Sonnet (Recomendado)</SelectItem>
-                  <SelectItem value="haiku">Claude Haiku (Rápido e barato)</SelectItem>
+                  {currentModels?.map(m => (
+                    <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Persona / Prompt base</Label>
-              <Textarea value={iaPrompt} onChange={e => setIaPrompt(e.target.value)} rows={4} placeholder="Você é um assistente de vendas da [empresa]. Seja cordial, objetivo e foque em converter o lead..." className="bg-[#0f0f0f] border-[#2a2a2a] resize-none" />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-foreground">Reconhecimento automático de vendas</Label>
-                <Switch checked={iaVendas} onCheckedChange={setIaVendas} />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-foreground">Analisar comprovantes de PIX</Label>
-                <Switch checked={iaPix} onCheckedChange={setIaPix} />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-sm text-foreground">Notificar admin ao identificar venda</Label>
-                <Switch checked={iaNotify} onCheckedChange={setIaNotify} />
-              </div>
-            </div>
-
-            <div className="bg-green-900/20 border border-green-800/30 rounded-lg p-3 text-xs text-green-300">
-              🤖 A IA analisa cada mensagem recebida em busca de confirmações de pagamento e comprovantes de PIX enviados pelos leads.
             </div>
           </div>
         </div>
