@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import {
   Users, MessageSquare, MousePointer, Bot, CheckCircle,
   ShoppingCart, DollarSign, TrendingUp, CreditCard,
-  Target, Percent, Wallet, Receipt,
+  Target, Percent, Wallet, Receipt, MessageCircle,
 } from "lucide-react";
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
@@ -29,11 +29,11 @@ const baseCampaigns = [
 ];
 
 const baseSales = [
-  { time: "14:32", name: "João Silva", campaign: "Páscoa 2024", value: 97, confidence: 94, pixel: true },
-  { time: "13:15", name: "Maria Souza", campaign: "Black Friday", value: 197, confidence: 88, pixel: true },
-  { time: "12:40", name: "Carlos Lima", campaign: "Lead Quente", value: 47, confidence: 76, pixel: true },
-  { time: "11:22", name: "Ana Paula", campaign: "Páscoa 2024", value: 97, confidence: 91, pixel: true },
-  { time: "10:05", name: "Pedro Costa", campaign: "Black Friday", value: 297, confidence: 62, pixel: false },
+  { time: "14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", value: 97, confidence: 94, pixel: true },
+  { time: "13:15", name: "Maria Souza", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", campaign: "Black Friday", value: 197, confidence: 88, pixel: true },
+  { time: "12:40", name: "Carlos Lima", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", campaign: "Lead Quente", value: 47, confidence: 76, pixel: true },
+  { time: "11:22", name: "Ana Paula", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", campaign: "Páscoa 2024", value: 97, confidence: 91, pixel: true },
+  { time: "10:05", name: "Pedro Costa", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", campaign: "Black Friday", value: 297, confidence: 62, pixel: false },
 ];
 
 const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string; color: string }) => (
@@ -275,7 +275,7 @@ const HomePage: React.FC = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["Horário","Nome","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
+                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
                   <th key={h} className={thClass}>{h}</th>
                 ))}
               </tr>
@@ -285,6 +285,12 @@ const HomePage: React.FC = () => {
                 <tr key={i} className="border-b border-[#2a2a2a] last:border-0 hover:bg-[#222]">
                   <td className={tdClass}>{s.time}</td>
                   <td className="px-4 py-3 text-foreground">{s.name}</td>
+                  <td className="px-4 py-3">
+                    <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 no-underline" style={{ color: "#22c55e", fontSize: "12px" }}>
+                      <MessageCircle size={12} />
+                      {s.phone}
+                    </a>
+                  </td>
                   <td className={tdClass}>{s.campaign}</td>
                   <td className={tdClass}>{fmt(s.value)}</td>
                   <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded text-xs font-medium ${confidenceColor(s.confidence)}`}>{s.confidence}%</span></td>
