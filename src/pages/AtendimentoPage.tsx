@@ -123,6 +123,7 @@ const contacts: Contact[] = [
     time: "11:30",
     unread: 0,
     tags: [],
+    instance: "suporte",
     history: { convos: 1, firstContact: "02/04/2026", flow: "Pesquisa" },
     messages: [
       { id: 1, sender: "contact", text: "Obrigada!", time: "11:30" },
