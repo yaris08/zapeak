@@ -1,66 +1,27 @@
 
+# Mover botão "Salvar configurações" para dentro de cada card
 
-# 3 Alterações no Projeto
+## Arquivo único
+`src/pages/ConfiguracoesPage.tsx`
 
-## Arquivos
-
-| Arquivo | Ação |
-|---------|------|
-| `src/data/flowComponents.ts` | Editar — remover 3 componentes |
-| `src/pages/ConfiguracoesPage.tsx` | Editar — gerenciador de números admin na aba Notificações |
-| `src/components/flow/properties/NotifyProperties.tsx` | Editar — substituir input por select |
-
-## 1. flowComponents.ts — Remover itens
-
-Remover linhas:
-- `{ id: "contato", ... type: "contact" }` (linha 22)
-- `{ id: "interativa", ... type: "interactive" }` (linha 23)
-- `{ id: "cobranca", ... type: "billing" }` (linha 37)
-
-Remover imports não usados: `User`, `LayoutList`, `Receipt`
-
-## 2. ConfiguracoesPage.tsx — Aba Notificações
-
-### Adicionar interface e dados
-```
-interface AdminNumber {
-  id: string; name: string; phone: string; active: boolean;
-}
-```
-Defaults mockados: `{ id: "principal", name: "Principal", phone: "+55 11 99999-9999", active: true }` e `{ id: "backup", name: "Backup", phone: "+55 11 88888-8888", active: true }`
-
-### Novos states
-- `adminNumbers: AdminNumber[]`
-- `showAdminModal: boolean`
-- `editingAdmin: AdminNumber | null`
-- `adminForm: { name, phone, active }`
+## Alterações
 
 ### Remover
-- State `notifPhone`
-- Input "Número para notificações" e texto helper (linhas 371-374)
+- Botão fixo `fixed bottom-6 right-6` (linhas 457-460)
 
-### Substituir por (após os 4 toggles)
-1. Header "Números de Admin" + botão "Adicionar Número" (verde, Plus)
-2. Lista de cards (estilo `bg-[#0f0f0f] border-[#2a2a2a]`) com:
-   - Nome + número + badge Ativo/Inativo
-   - Botões Pencil (editar) e Trash2 (excluir)
-3. Modal Dialog com campos Nome, Número WhatsApp, toggle Ativo
-   - Botões Cancelar | Salvar (verde)
-   - Toast "✓ Número salvo"
+### Adicionar em cada aba — dentro do card, após o último elemento e antes do `</div>` de fechamento do card:
 
-### Persistência
-- handleSave notificações: salvar `adminNumbers` junto com toggles
-- useEffect load: carregar `adminNumbers` do localStorage
+Bloco padrão a inserir:
+```html
+<div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
+  <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
+    <Save size={14} /> Salvar configurações
+  </button>
+</div>
+```
 
-## 3. NotifyProperties.tsx — Select de admin
+### Posição exata por aba:
 
-### Substituir completamente por
-- Import: `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` + `useNavigate`
-- Select "Selecionar admin" com opções:
-  - `"principal"` → "Principal — (11) 99999-9999"
-  - `"backup"` → "Backup — (11) 88888-8888"
-  - `"todos"` → "Todos os admins"
-  - `"new"` → "+ Cadastrar número →" (ao selecionar, `navigate("/configuracoes")`)
-- Salvar em `data.selectedAdminId`
-- Manter textarea "Mensagem de notificação" inalterada
-
+1. **Pixel** (após info box azul, linha 270, dentro do `<div className="bg-[#1a1a1a]...">` que fecha na linha 272)
+2. **IA** (após o Select de modelo, linha 354, dentro do card que fecha na linha 355)
+3. **Notificações** (após info box amarelo, linha 416, dentro do card que fecha na linha 417)
