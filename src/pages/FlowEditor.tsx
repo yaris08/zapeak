@@ -52,7 +52,7 @@ const defaultEdges: Edge[] = [
 
 const FlowEditor: React.FC = () => {
   const { id: flowId } = useParams<{ id: string }>();
-  const storageKey = `flowzap_flow_${flowId || "default"}`;
+  const storageKey = `zapeak_flow_${flowId || "default"}`;
 
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
