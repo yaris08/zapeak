@@ -237,6 +237,7 @@ const FlowEditor: React.FC = () => {
             onDragOver={onDragOver}
             onDrop={onDrop}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             fitView
             proOptions={{ hideAttribution: true }}
           >
