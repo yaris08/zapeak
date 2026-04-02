@@ -3,14 +3,15 @@ import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 interface EditorHeaderProps {
   flowName: string;
   onNameChange: (name: string) => void;
+  onSave: () => void;
+  hasUnsavedChanges: boolean;
 }
 
-const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange }) => {
+const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onSave, hasUnsavedChanges }) => {
   const navigate = useNavigate();
   const [editing, setEditing] = React.useState(false);
 
@@ -41,6 +42,9 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange }) =
             {flowName}
           </span>
         )}
+        {hasUnsavedChanges && (
+          <span className="text-xs text-primary font-medium">● Não salvo</span>
+        )}
         <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
           Rascunho
         </Badge>
@@ -51,7 +55,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange }) =
           <Button
             size="sm"
             className="h-8 text-xs bg-primary hover:bg-primary/90"
-            onClick={() => toast.success("Fluxo salvo com sucesso")}
+            onClick={onSave}
           >
             <Save size={14} className="mr-1" /> Salvar
           </Button>
