@@ -17,6 +17,7 @@ import PaymentProperties from "./properties/PaymentProperties";
 import TagsProperties from "./properties/TagsProperties";
 import ConnectFlowProperties from "./properties/ConnectFlowProperties";
 import NotifyProperties from "./properties/NotifyProperties";
+import PixProperties from "./properties/PixProperties";
 
 interface PropertiesPanelProps {
   node: Node | null;
@@ -80,6 +81,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ node, onClose, onDele
         return <ConnectFlowProperties data={node.data} onUpdate={handleUpdate} />;
       case "notify":
         return <NotifyProperties data={node.data} onUpdate={handleUpdate} />;
+      case "pix":
+        return <PixProperties data={node.data} onUpdate={handleUpdate} />;
       default:
         return (
           <div className="space-y-3">

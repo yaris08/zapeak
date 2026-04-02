@@ -221,7 +221,7 @@ const FlowEditor: React.FC = () => {
       />
       <div className="flex flex-1 overflow-hidden">
         <ComponentsSidebar />
-        <div className="flex-1" ref={reactFlowWrapper}>
+        <div className="flex-1" ref={reactFlowWrapper} style={{ backgroundColor: "#0a0a0a" }}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -239,7 +239,7 @@ const FlowEditor: React.FC = () => {
             fitView
             proOptions={{ hideAttribution: true }}
           >
-            <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="hsl(var(--canvas-dots))" />
+            <Background variant={BackgroundVariant.Dots} gap={16} size={0.8} color="#1a1a1a" />
             <Controls className="!bg-card !border-border !rounded-lg [&>button]:!bg-card [&>button]:!border-border [&>button]:!text-foreground [&>button:hover]:!bg-accent" />
             <MiniMap
               className="!bg-card !border !border-border !rounded-lg"
