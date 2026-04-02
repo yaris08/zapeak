@@ -228,6 +228,8 @@ const FlowEditor: React.FC = () => {
         onNameChange={handleNameChange}
         onSave={handleSave}
         hasUnsavedChanges={hasUnsavedChanges}
+        instanceName="Principal"
+        instanceStatus="active"
       />
       <div className="flex flex-1 overflow-hidden">
         <ComponentsSidebar />
