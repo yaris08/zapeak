@@ -22,7 +22,15 @@ interface Contact {
   messages: Message[];
   tags: { label: string; color: string }[];
   history: { convos: number; firstContact: string; flow: string };
+  instance: string;
 }
+
+const instances = [
+  { id: "all", name: "Todas as instâncias", number: "", status: "" },
+  { id: "principal", name: "Principal", number: "(11) 99999-0001", status: "active" },
+  { id: "vendas", name: "Vendas", number: "(11) 99999-0002", status: "active" },
+  { id: "suporte", name: "Suporte", number: "(11) 99999-0003", status: "standby" },
+];
 
 const contacts: Contact[] = [
   {
@@ -36,6 +44,7 @@ const contacts: Contact[] = [
       { label: "pago", color: "bg-green-500/20 text-green-400" },
       { label: "cliente", color: "bg-blue-500/20 text-blue-400" },
     ],
+    instance: "principal",
     history: { convos: 3, firstContact: "01/04/2026", flow: "Boas-vindas" },
     messages: [
       { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo! Como posso te ajudar?", time: "14:20" },
@@ -59,6 +68,7 @@ const contacts: Contact[] = [
     unread: 1,
     badge: { label: "lead", color: "bg-blue-500/20 text-blue-400" },
     tags: [{ label: "lead", color: "bg-blue-500/20 text-blue-400" }],
+    instance: "principal",
     history: { convos: 1, firstContact: "02/04/2026", flow: "Qualificação" },
     messages: [
       { id: 1, sender: "bot", text: "Olá Maria! Como posso ajudar?", time: "14:10" },
@@ -72,6 +82,7 @@ const contacts: Contact[] = [
     time: "13:40",
     unread: 0,
     tags: [],
+    instance: "vendas",
     history: { convos: 2, firstContact: "28/03/2026", flow: "Suporte" },
     messages: [
       { id: 1, sender: "contact", text: "Olá, tudo bem?", time: "13:40" },
@@ -85,6 +96,7 @@ const contacts: Contact[] = [
     unread: 0,
     badge: { label: "pago", color: "bg-green-500/20 text-green-400" },
     tags: [{ label: "pago", color: "bg-green-500/20 text-green-400" }],
+    instance: "vendas",
     history: { convos: 5, firstContact: "15/03/2026", flow: "Boas-vindas" },
     messages: [
       { id: 1, sender: "contact", text: "Quero saber mais sobre o curso", time: "13:22" },
@@ -98,6 +110,7 @@ const contacts: Contact[] = [
     unread: 3,
     badge: { label: "suporte", color: "bg-yellow-500/20 text-yellow-400" },
     tags: [{ label: "suporte", color: "bg-yellow-500/20 text-yellow-400" }],
+    instance: "suporte",
     history: { convos: 4, firstContact: "20/03/2026", flow: "Suporte Automático" },
     messages: [
       { id: 1, sender: "contact", text: "Não recebi o produto", time: "12:05" },
@@ -110,6 +123,7 @@ const contacts: Contact[] = [
     time: "11:30",
     unread: 0,
     tags: [],
+    instance: "suporte",
     history: { convos: 1, firstContact: "02/04/2026", flow: "Pesquisa" },
     messages: [
       { id: 1, sender: "contact", text: "Obrigada!", time: "11:30" },
@@ -136,6 +150,7 @@ const AtendimentoPage: React.FC = () => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [activeTab, setActiveTab] = useState<"todas" | "aguardando" | "resolvidas">("todas");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedInstance, setSelectedInstance] = useState("all");
   const [chatMessages, setChatMessages] = useState<Record<number, Message[]>>(
     Object.fromEntries(contacts.map((c, i) => [i, [...c.messages]]))
   );
@@ -235,9 +250,11 @@ const AtendimentoPage: React.FC = () => {
     setPaymentCampaign("");
   };
 
-  const filtered = contacts.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = contacts.filter((c) => {
+    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesInstance = selectedInstance === "all" || c.instance === selectedInstance;
+    return matchesSearch && matchesInstance;
+  });
 
   return (
     <div className="flex h-[calc(100vh-56px)] bg-[#0f0f0f]">
@@ -254,6 +271,17 @@ const AtendimentoPage: React.FC = () => {
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md pl-8 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
             />
           </div>
+          <select
+            value={selectedInstance}
+            onChange={(e) => setSelectedInstance(e.target.value)}
+            className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+          >
+            {instances.map((inst) => (
+              <option key={inst.id} value={inst.id}>
+                {inst.id === "all" ? inst.name : `📱 ${inst.number} — ${inst.name}`}
+              </option>
+            ))}
+          </select>
           <div className="flex gap-1">
             {tabs.map((t) => (
               <button
@@ -303,6 +331,9 @@ const AtendimentoPage: React.FC = () => {
                         {displayBadge.label}
                       </span>
                     )}
+                    <span className="text-[9px] text-muted-foreground bg-[#1a1a1a] px-1.5 py-0.5 rounded">
+                      {instances.find((inst) => inst.id === c.instance)?.name}
+                    </span>
                     {c.unread > 0 && (
                       <span className="ml-auto w-5 h-5 rounded-full bg-[#22c55e] text-[10px] font-bold flex items-center justify-center text-white">
                         {c.unread}

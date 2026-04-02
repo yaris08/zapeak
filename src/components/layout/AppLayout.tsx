@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target } from "lucide-react";
+import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target, Smartphone } from "lucide-react";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
@@ -14,6 +14,7 @@ const sidebarItems = [
   { label: "Home", path: "/", icon: Home },
   { label: "Fluxos", path: "/flows", icon: GitBranch },
   { label: "Atendimento", path: "/atendimento", icon: MessageSquare },
+  { label: "Instâncias", path: "/instancias", icon: Smartphone },
   { label: "Relatórios", path: "/relatorios", icon: BarChart3 },
   { label: "Atribuição", path: "/atribuicao", icon: Target },
   { label: "Contatos", path: "/contatos", icon: Users },

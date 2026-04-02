@@ -8,6 +8,7 @@ import HomePage from "@/pages/HomePage";
 import FlowsPage from "@/pages/FlowsPage";
 import FlowEditor from "@/pages/FlowEditor";
 import AtendimentoPage from "@/pages/AtendimentoPage";
+import InstanciasPage from "@/pages/InstanciasPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import AtribuicaoPage from "@/pages/AtribuicaoPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/" element={<HomePage />} />
             <Route path="/flows" element={<FlowsPage />} />
             <Route path="/atendimento" element={<AtendimentoPage />} />
+            <Route path="/instancias" element={<InstanciasPage />} />
             <Route path="/relatorios" element={<RelatoriosPage />} />
             <Route path="/atribuicao" element={<AtribuicaoPage />} />
             <Route path="/configuracoes" element={<ConfiguracoesPage />} />
