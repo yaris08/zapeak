@@ -11,7 +11,7 @@ interface EditorHeaderProps {
   instanceStatus?: "active" | "standby";
 }
 
-const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onSave, hasUnsavedChanges, instanceName, instanceStatus = "active" }) => {
+const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, instanceName, instanceStatus = "active" }) => {
   const navigate = useNavigate();
   const [editing, setEditing] = React.useState(false);
 
