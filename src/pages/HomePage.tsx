@@ -275,7 +275,7 @@ const HomePage: React.FC = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["Horário","Nome","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
+                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
                   <th key={h} className={thClass}>{h}</th>
                 ))}
               </tr>
