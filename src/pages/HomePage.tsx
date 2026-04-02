@@ -232,7 +232,7 @@ const HomePage: React.FC = () => {
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <p className="text-sm font-bold text-foreground p-4 pb-2">Campanhas</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
                 {["Campanha","Investimento","Conversas","Vendas","Faturamento","Ticket Médio","Custo/Compra","ROAS"].map((h) => (
