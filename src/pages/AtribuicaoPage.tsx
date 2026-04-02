@@ -78,7 +78,7 @@ const AtribuicaoPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Target size={20} style={{ color: "#f97316" }} />
+          <Target size={20} className="text-primary" />
           <h1 className="text-lg font-bold text-foreground">Atribuição</h1>
         </div>
         <div className="flex gap-1 rounded-lg p-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
