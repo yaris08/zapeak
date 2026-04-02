@@ -224,11 +224,7 @@ const FlowEditorInner: React.FC = () => {
     } catch {}
   }, [storageKey, setNodes, setEdges]);
 
-  const handleSave = useCallback(() => {
-    localStorage.setItem(storageKey, JSON.stringify({ nodes, edges, flowName }));
-    setHasUnsavedChanges(false);
-    toast.success("✓ Fluxo salvo com sucesso");
-  }, [storageKey, nodes, edges, flowName]);
+  const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
 
   const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
 
