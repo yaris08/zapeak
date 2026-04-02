@@ -112,7 +112,7 @@ const AtribuicaoPage: React.FC = () => {
       <div className="rounded-lg" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
         <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: "#2a2a2a" }}>
           <span className="text-sm font-bold text-foreground">Campanhas</span>
-          <Button size="sm" className="h-7 text-xs" style={{ backgroundColor: "#f97316" }} onClick={() => setShowModal(true)}>
+          <Button size="sm" className="h-7 text-xs bg-primary hover:bg-primary/90" onClick={() => setShowModal(true)}>
             <Plus size={14} /> Nova Campanha
           </Button>
         </div>
