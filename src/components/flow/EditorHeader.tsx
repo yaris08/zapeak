@@ -50,6 +50,16 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onS
         <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
           Rascunho
         </Badge>
+        {instanceName && (
+          <div className={`flex items-center gap-1 px-2 py-0.5 rounded border text-[10px] ${
+            instanceStatus === "active"
+              ? "text-green-400 border-green-800/50 bg-green-900/20"
+              : "text-yellow-400 border-yellow-800/50 bg-yellow-900/20"
+          }`}>
+            <Smartphone size={10} />
+            {instanceName}
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-4">
         <span className="text-xs text-muted-foreground">0 sessões | 0% finalizaram</span>
