@@ -18,6 +18,9 @@ import TagsProperties from "./properties/TagsProperties";
 import ConnectFlowProperties from "./properties/ConnectFlowProperties";
 import NotifyProperties from "./properties/NotifyProperties";
 import PixProperties from "./properties/PixProperties";
+import FigurinhaProperties from "./properties/FigurinhaProperties";
+import RandomizadorProperties from "./properties/RandomizadorProperties";
+import IdentificadorPassagemProperties from "./properties/IdentificadorPassagemProperties";
 
 interface PropertiesPanelProps {
   node: Node | null;
