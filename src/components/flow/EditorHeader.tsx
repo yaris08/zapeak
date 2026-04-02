@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Save, Smartphone } from "lucide-react";
+import { ArrowLeft, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,11 @@ import { useNavigate } from "react-router-dom";
 interface EditorHeaderProps {
   flowName: string;
   onNameChange: (name: string) => void;
-  onSave: () => void;
-  hasUnsavedChanges: boolean;
   instanceName?: string;
   instanceStatus?: "active" | "standby";
 }
 
-const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onSave, hasUnsavedChanges, instanceName, instanceStatus = "active" }) => {
+const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, instanceName, instanceStatus = "active" }) => {
   const navigate = useNavigate();
   const [editing, setEditing] = React.useState(false);
 
@@ -44,9 +42,6 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onS
             {flowName}
           </span>
         )}
-        {hasUnsavedChanges && (
-          <span className="text-xs text-primary font-medium">● Não salvo</span>
-        )}
         <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
           Rascunho
         </Badge>
@@ -64,13 +59,6 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onS
       <div className="flex items-center gap-4">
         <span className="text-xs text-muted-foreground">0 sessões | 0% finalizaram</span>
         <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            className="h-8 text-xs bg-primary hover:bg-primary/90"
-            onClick={onSave}
-          >
-            <Save size={14} className="mr-1" /> Salvar
-          </Button>
           <Button variant="outline" size="sm" className="h-8 text-xs">
             Publicar
           </Button>
