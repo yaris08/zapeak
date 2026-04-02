@@ -117,7 +117,7 @@ const AtribuicaoPage: React.FC = () => {
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[650px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2a2a2a" }}>
                 {["Campanha", "Investimento", "Conversas", "Vendas", "Faturamento", "Ticket Médio", "Custo/Compra", "ROAS"].map(h => (
@@ -167,12 +167,13 @@ const AtribuicaoPage: React.FC = () => {
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[700px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2a2a2a" }}>
-                {["Data/Hora", "Nome", "Telefone", "Campanha", "Valor", "Confiança IA", "Pixel", ""].map(h => (
-                  <th key={h} className="px-4 py-2 text-left text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{h}</th>
-                ))}
+                {["Data/Hora", "Nome", "Telefone", "Campanha", "Valor", "Confiança IA", "Pixel", ""].map(h => {
+                  const hidden = h === "Campanha" ? " hidden sm:table-cell" : "";
+                  return <th key={h} className={"px-4 py-2 text-left text-[10px] uppercase tracking-wider text-muted-foreground font-medium" + hidden}>{h}</th>;
+                })}
               </tr>
             </thead>
             <tbody>
@@ -188,7 +189,7 @@ const AtribuicaoPage: React.FC = () => {
                       <MessageCircle size={12} />{s.phone}
                     </a>
                   </td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{s.campaign}</td>
+                  <td className="px-4 py-2.5 text-muted-foreground hidden sm:table-cell">{s.campaign}</td>
                   <td className="px-4 py-2.5 text-foreground font-medium">{fmtDec(s.valor * m)}</td>
                   <td className="px-4 py-2.5">{confBadge(s.confianca)}</td>
                   <td className="px-4 py-2.5">{s.pixel ? <span style={{ color: "#22c55e" }}>✅</span> : <span style={{ color: "#ef4444" }}>❌</span>}</td>

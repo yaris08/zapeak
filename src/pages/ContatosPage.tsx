@@ -65,7 +65,7 @@ const ContatosPage = () => {
 
       {/* Filtros */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative min-w-0 w-full sm:flex-1 sm:min-w-[200px]">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af]" />
           <Input
             value={search}
@@ -134,7 +134,7 @@ const ContatosPage = () => {
       {/* Tabela */}
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
                 <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider"></th>
@@ -186,7 +186,7 @@ const ContatosPage = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-between px-4 py-3 border-t border-[#2a2a2a]">
+        <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 border-t border-[#2a2a2a] gap-2">
           <span className="text-xs text-[#9ca3af]">Mostrando {filtered.length} de 1.247 contatos</span>
           <div className="flex items-center gap-1">
             <button className="px-3 py-1.5 rounded text-xs text-[#9ca3af] hover:bg-[#2a2a2a] transition-colors">Anterior</button>

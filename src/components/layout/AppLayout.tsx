@@ -103,7 +103,7 @@ const AppLayout: React.FC = () => {
         {/* Mobile Sidebar Overlay */}
         {mobileMenuOpen && (
           <div
-            className="md:hidden fixed inset-0 z-50 bg-black/60"
+            className="md:hidden fixed inset-0 z-40 bg-black/60"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}
@@ -149,7 +149,7 @@ const AppLayout: React.FC = () => {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto w-full min-w-0">
           <Outlet />
         </main>
       </div>

@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
@@ -232,7 +232,7 @@ const HomePage: React.FC = () => {
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <p className="text-sm font-bold text-foreground p-4 pb-2">Campanhas</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
                 {["Campanha","Investimento","Conversas","Vendas","Faturamento","Ticket Médio","Custo/Compra","ROAS"].map((h) => (
@@ -272,12 +272,13 @@ const HomePage: React.FC = () => {
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <p className="text-sm font-bold text-foreground p-4 pb-2">Últimas Vendas Identificadas pela IA</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => (
-                  <th key={h} className={thClass}>{h}</th>
-                ))}
+                {["Horário","Nome","Telefone","Campanha","Valor","Confiança IA","Pixel"].map((h) => {
+                  const hidden = h === "Telefone" ? " hidden sm:table-cell" : "";
+                  return <th key={h} className={thClass + hidden}>{h}</th>;
+                })}
               </tr>
             </thead>
             <tbody>
@@ -285,7 +286,7 @@ const HomePage: React.FC = () => {
                 <tr key={i} className="border-b border-[#2a2a2a] last:border-0 hover:bg-[#222]">
                   <td className={tdClass}>{s.time}</td>
                   <td className="px-4 py-3 text-foreground">{s.name}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 hidden sm:table-cell">
                     <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 no-underline" style={{ color: "#22c55e", fontSize: "12px" }}>
                       <MessageCircle size={12} />
                       {s.phone}
