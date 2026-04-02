@@ -1,105 +1,73 @@
 
 
-# Tornar AppLayout e Páginas Responsivas para Mobile
+# Corrigir Responsividade Mobile — Scroll Horizontal e Layout
 
 ## Arquivos a alterar
 
 | Arquivo | Ação |
 |---------|------|
-| `src/components/layout/AppLayout.tsx` | Editar — menu hamburger, sidebar mobile drawer, overlay |
-| `src/pages/HomePage.tsx` | Editar — padding responsivo, tabelas com scroll |
-| `src/pages/FlowsPage.tsx` | Editar — botão full-width mobile, padding responsivo |
-| `src/pages/AtribuicaoPage.tsx` | Editar — KPIs 2 colunas, padding responsivo |
-| `src/pages/RelatoriosPage.tsx` | Editar — padding responsivo (KPIs já são 2 colunas) |
-| `src/pages/ContatosPage.tsx` | Editar — colunas ocultas, padding responsivo |
-| `src/pages/InstanciasPage.tsx` | Editar — padding responsivo (grid já é responsivo) |
-| `src/pages/AtendimentoPage.tsx` | Editar — layout mobile com drawers |
-| `src/pages/ConfiguracoesPage.tsx` | Editar — tabs scroll horizontal, padding responsivo |
-| `src/pages/FlowEditor.tsx` | Editar — aviso mobile |
+| `src/index.css` | Editar — adicionar `overflow-x: hidden` no html/body |
+| `src/components/layout/AppLayout.tsx` | Editar — ajustar overlay z-index, main width |
+| `src/pages/HomePage.tsx` | Editar — header flex-col mobile, funil responsivo, tabelas min-width |
+| `src/pages/FlowsPage.tsx` | Editar — header flex-col mobile |
+| `src/pages/AtribuicaoPage.tsx` | Editar — tabelas min-width, ocultar coluna mobile |
+| `src/pages/RelatoriosPage.tsx` | Editar — tabelas min-width |
+| `src/pages/ContatosPage.tsx` | Editar — filtros empilháveis, tabela min-width |
+| `src/pages/InstanciasPage.tsx` | OK — já responsivo |
+| `src/pages/ConfiguracoesPage.tsx` | Editar — tabs whitespace-nowrap |
+| `src/pages/AtendimentoPage.tsx` | OK — já com drawers mobile |
+| `src/pages/FlowEditor.tsx` | OK — já com aviso mobile |
 
-## 1. AppLayout.tsx — Responsivo completo
+## 1. index.css — impedir scroll horizontal global
 
-### Estado
-- Adicionar `const [mobileMenuOpen, setMobileMenuOpen] = useState(false)`
-- Importar `Menu, X` de lucide-react
-- `useEffect` com `location.pathname` para fechar menu ao navegar
-- Importar `useIsMobile` de `@/hooks/use-mobile`
+Adicionar ao final do segundo `@layer base`:
+```css
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+```
 
-### Header
-- Nav central: `hidden md:flex`
-- Avatar: `hidden md:flex`
-- Botão hamburger: `md:hidden`, ícone `Menu`, onClick toggle mobileMenuOpen
+## 2. AppLayout.tsx
 
-### Sidebar desktop
-- Wrapper `aside`: adicionar `hidden md:flex` para ocultar no mobile
-
-### Sidebar mobile
-- Overlay: `fixed inset-0 z-50 bg-black/60`, onClick fecha menu, visível apenas quando `mobileMenuOpen`
-- Sidebar: `fixed left-0 top-0 z-50 h-screen w-[80%] max-w-[280px] bg-sidebar border-r border-border flex flex-col`
-- Transição: `transition-transform duration-300`, `translate-x-0` quando aberto, `-translate-x-full` quando fechado
-- Botão X no topo para fechar
-- Sem botão "Recolher" no mobile
-- Links iguais ao sidebarItems
-
-### Main content
-- Ocupa 100% no mobile (sidebar não ocupa espaço)
-
-## 2. Páginas — Padding responsivo
-
-Todas as páginas que usam `p-6` passam a usar `p-3 md:p-6`.
+- Linha 106: overlay z-index de `z-50` para `z-40` (abaixo do drawer)
+- Linha 152: main — adicionar `w-full min-w-0` para impedir overflow
 
 ## 3. HomePage.tsx
-- KPIs grid: já tem `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5` — OK
-- Tabelas Campanhas e Vendas: já têm `overflow-x-auto` — OK
-- Apenas mudar `p-6` → `p-3 md:p-6`
+
+- Header (linha 117): `flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3`
+- Funil (linhas 162-214): cada etapa — adicionar `flex-wrap` e `min-w-0` no container interno; barra de progresso wrapper: `hidden sm:flex` ou largura reduzida via `w-[80px] sm:w-[120px]`
+- Tabela Campanhas (linha 235): adicionar `min-w-[600px]` na `<table>`
+- Tabela Vendas (linha 275): adicionar `min-w-[700px]` na `<table>`, ocultar coluna "Telefone" no mobile com `hidden sm:table-cell`
 
 ## 4. FlowsPage.tsx
-- `p-6` → `p-3 md:p-6`
-- Botão "Novo Fluxo": adicionar `w-full md:w-auto` no mobile
+
+- Header (linha 37): `flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6`
+- O botão já tem `w-full md:w-auto` — OK
 
 ## 5. AtribuicaoPage.tsx
-- `p-6` → `p-3 md:p-6`
-- KPIs: `grid-cols-4` → `grid-cols-2 md:grid-cols-4`
+
+- Tabela campanhas (linha 120): adicionar `min-w-[650px]` na `<table>`
+- Tabela vendas (linha 170): adicionar `min-w-[700px]` na `<table>`
+- Ocultar coluna "Campanha" no mobile: adicionar `hidden sm:table-cell` no th e td da coluna "Campanha" na tabela de vendas
 
 ## 6. RelatoriosPage.tsx
-- `p-6` → `p-3 md:p-6`
-- KPIs já usam `grid-cols-2 md:grid-cols-4` — OK
+
+- Tabela desempenho (linha 157): adicionar `min-w-[600px]` na `<table>`
 
 ## 7. ContatosPage.tsx
-- `p-6` → `p-3 md:p-6`
-- Colunas "Instância" e "Último contato": adicionar `hidden md:table-cell` no `<th>` e `<td>`
 
-## 8. InstanciasPage.tsx
-- `p-6` → `p-3 md:p-6`
-- Grid de cards já tem `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` — OK
-- KPIs: `grid-cols-3` → `grid-cols-1 sm:grid-cols-3`
+- Filtros (linha 67): garantir `flex-wrap` (já tem) e remover `min-w-[200px]` do input de busca → usar `min-w-0 w-full sm:flex-1 sm:min-w-[200px]`
+- Tabela (linha 137): adicionar `min-w-[700px]` na `<table>`
+- Paginação (linha 189-198): `flex flex-col sm:flex-row` para empilhar no mobile
 
-## 9. AtendimentoPage.tsx — Layout mobile com drawers
-- Estado: `showMobileContacts` e `showMobileProfile`
-- Mobile (< md):
-  - Apenas chat visível por padrão
-  - Botão menu no header do chat abre lista de conversas (drawer da esquerda, fixed, z-50, mesma lógica de overlay)
-  - Botão "Ver perfil" abre perfil (drawer da direita)
-  - Contact list: `hidden md:flex` no desktop wrapper; drawer mobile com overlay
-  - Profile panel: `hidden md:block` no desktop wrapper; drawer mobile
-- Desktop: layout 3 colunas inalterado
+## 8. ConfiguracoesPage.tsx
 
-## 10. ConfiguracoesPage.tsx
-- `p-6` → `p-3 md:p-6`
-- Tabs container: `overflow-x-auto` para scroll horizontal
+- Tabs (linha 212): adicionar `flex-nowrap whitespace-nowrap` nos botões de aba
 
-## 11. FlowEditor.tsx — Aviso mobile
-- Importar `useIsMobile` e `Monitor`
-- Estado `dismissedMobileWarning`
-- Se mobile e não dismissed: tela cheia com aviso centralizado
-  - Ícone Monitor grande
-  - Texto "O editor de fluxos funciona melhor no desktop"
-  - Botão "Continuar mesmo assim" que seta dismissed = true
-- Se dismissed ou desktop: editor normal
-
-## Regras
-- Breakpoint `md` (768px) como divisor
+## Regras aplicadas
+- Breakpoint `md`/`sm` como divisor
 - Nenhuma lógica de negócio alterada
-- Cores e design mantidos
-- Apenas classes Tailwind responsivas
+- Desktop inalterado
+- Todas as tabelas com `overflow-x-auto` + `min-width` para scroll horizontal controlado
 
