@@ -30,7 +30,7 @@ const CustomEdge: React.FC<EdgeProps> = ({
           stroke: selected ? "#ff6b35" : "#f97316",
           strokeWidth: selected ? 3 : 2,
           strokeDasharray: "6 4",
-          animation: "dashdraw 0.5s linear infinite",
+          animation: "dashdraw 1.5s linear infinite",
         }}
       />
       <style>{`
