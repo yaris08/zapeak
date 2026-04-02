@@ -85,7 +85,7 @@ const AtribuicaoPage: React.FC = () => {
           {([["today", "Hoje"], ["7d", "7 dias"], ["30d", "30 dias"]] as [Period, string][]).map(([k, l]) => (
             <button key={k} onClick={() => setPeriod(k)}
               className="px-3 py-1 text-xs rounded-md font-medium transition-colors"
-              style={period === k ? { backgroundColor: "#f97316", color: "#fff" } : { color: "#999" }}
+              style={period === k ? { backgroundColor: "hsl(142.1, 71.8%, 45.3%)", color: "#fff" } : { color: "#999" }}
             >{l}</button>
           ))}
         </div>
