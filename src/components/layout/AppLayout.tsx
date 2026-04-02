@@ -30,7 +30,7 @@ const AppLayout: React.FC = () => {
       <header className="h-12 border-b border-border bg-card flex items-center justify-between px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
           <Zap size={20} className="text-primary" />
-          <span className="text-sm font-bold text-foreground">FlowZap</span>
+          <span className="text-sm font-bold text-foreground">ZaPeak</span>
         </div>
         <nav className="flex items-center gap-1">
           {navItems.map((item) => (
