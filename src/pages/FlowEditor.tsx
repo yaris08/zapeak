@@ -101,6 +101,8 @@ const FlowEditor: React.FC = () => {
     []
   );
 
+  const edgeTypes = useMemo(() => ({ custom: CustomEdge }), []);
+
   const wrappedOnNodesChange: typeof onNodesChange = useCallback(
     (changes) => { onNodesChange(changes); markDirty(); },
     [onNodesChange, markDirty]
