@@ -22,7 +22,15 @@ interface Contact {
   messages: Message[];
   tags: { label: string; color: string }[];
   history: { convos: number; firstContact: string; flow: string };
+  instance: string;
 }
+
+const instances = [
+  { id: "all", name: "Todas as instâncias", number: "", status: "" },
+  { id: "principal", name: "Principal", number: "(11) 99999-0001", status: "active" },
+  { id: "vendas", name: "Vendas", number: "(11) 99999-0002", status: "active" },
+  { id: "suporte", name: "Suporte", number: "(11) 99999-0003", status: "standby" },
+];
 
 const contacts: Contact[] = [
   {
