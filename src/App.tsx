@@ -8,6 +8,7 @@ import HomePage from "@/pages/HomePage";
 import FlowsPage from "@/pages/FlowsPage";
 import FlowEditor from "@/pages/FlowEditor";
 import AtendimentoPage from "@/pages/AtendimentoPage";
+import InstanciasPage from "@/pages/InstanciasPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import AtribuicaoPage from "@/pages/AtribuicaoPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
