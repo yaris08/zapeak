@@ -2,7 +2,10 @@ import React, { memo } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
 import { MessageSquare } from "lucide-react";
 
-const TextNode: React.FC<NodeProps> = ({ selected }) => {
+const TextNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const message = data.message || "";
+  const preview = message ? (message.length > 60 ? message.substring(0, 60) + "..." : message) : "Configure a mensagem...";
+
   return (
     <div
       className={`rounded-lg border-2 min-w-[220px] shadow-lg ${
@@ -23,7 +26,7 @@ const TextNode: React.FC<NodeProps> = ({ selected }) => {
         <span className="text-sm font-medium text-foreground">Texto</span>
       </div>
       <div className="p-3">
-        <p className="text-xs text-muted-foreground">Configure a mensagem...</p>
+        <p className={`text-xs ${message ? "text-foreground" : "text-muted-foreground"}`}>{preview}</p>
       </div>
       <div className="px-3 py-2 border-t flex items-center justify-end" style={{ borderColor: "#3b82f630" }}>
         <Handle

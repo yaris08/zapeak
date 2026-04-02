@@ -26,13 +26,13 @@ const initialNodes: Node[] = [
     id: "1",
     type: "start",
     position: { x: 100, y: 200 },
-    data: { label: "Iniciar" },
+    data: { label: "Iniciar", triggerType: "keyword", matchType: "contains", keywords: [] },
   },
   {
     id: "2",
     type: "textNode",
     position: { x: 450, y: 200 },
-    data: { label: "Texto" },
+    data: { label: "Texto", message: "" },
   },
 ];
 
@@ -51,10 +51,12 @@ let nodeId = 3;
 const FlowEditor: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [flowName, setFlowName] = useState("Meu primeiro fluxo");
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+
+  const selectedNode = useMemo(() => nodes.find((n) => n.id === selectedNodeId) || null, [nodes, selectedNodeId]);
 
   const nodeTypes = useMemo(
     () => ({
@@ -77,11 +79,11 @@ const FlowEditor: React.FC = () => {
   );
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
-    setSelectedNode(node);
+    setSelectedNodeId(node.id);
   }, []);
 
   const onPaneClick = useCallback(() => {
-    setSelectedNode(null);
+    setSelectedNodeId(null);
   }, []);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -120,7 +122,7 @@ const FlowEditor: React.FC = () => {
     (id: string) => {
       setNodes((nds) => nds.filter((n) => n.id !== id));
       setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
-      setSelectedNode(null);
+      setSelectedNodeId(null);
     },
     [setNodes, setEdges]
   );
@@ -131,8 +133,18 @@ const FlowEditor: React.FC = () => {
         ...node,
         id: String(nodeId++),
         position: { x: node.position.x + 50, y: node.position.y + 50 },
+        data: { ...node.data },
       };
       setNodes((nds) => nds.concat(newNode));
+    },
+    [setNodes]
+  );
+
+  const handleUpdateNode = useCallback(
+    (id: string, newData: any) => {
+      setNodes((nds) =>
+        nds.map((n) => (n.id === id ? { ...n, data: { ...newData } } : n))
+      );
     },
     [setNodes]
   );
@@ -169,9 +181,10 @@ const FlowEditor: React.FC = () => {
         </div>
         <PropertiesPanel
           node={selectedNode}
-          onClose={() => setSelectedNode(null)}
+          onClose={() => setSelectedNodeId(null)}
           onDelete={handleDeleteNode}
           onDuplicate={handleDuplicateNode}
+          onUpdateNode={handleUpdateNode}
         />
       </div>
     </div>
