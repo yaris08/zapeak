@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 interface EditorHeaderProps {
   flowName: string;
   onNameChange: (name: string) => void;
-  onSave: () => void;
-  hasUnsavedChanges: boolean;
   instanceName?: string;
   instanceStatus?: "active" | "standby";
 }
