@@ -139,13 +139,13 @@ const HomePage: React.FC = () => {
         <KpiCard icon={ShoppingCart} label="Vendas" value={vendas.total.toLocaleString()} color="#22c55e" />
         <KpiCard icon={CreditCard} label="CPA (Custo por Aquisição)" value={fmt(vendas.custoCompra)} color="#ef4444" />
         <KpiCard icon={TrendingUp} label="Lucro" value={fmt(vendas.faturamento - roasData.investimento)} color="#22c55e" />
-        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: (roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444") + "20" }}>
-            <Target size={20} style={{ color: roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444" }} />
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 flex items-center gap-2 min-w-0 overflow-hidden">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: (roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444") + "20" }}>
+            <Target size={16} style={{ color: roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444" }} />
           </div>
-          <div>
-            <p className="text-2xl font-bold text-foreground">{roasData.roas}x</p>
-            <p className="text-xs text-muted-foreground">ROI</p>
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <p className="text-base md:text-2xl font-bold text-foreground truncate">{roasData.roas}x</p>
+            <p className="text-[10px] md:text-xs text-muted-foreground">ROI</p>
           </div>
         </div>
         <KpiCard icon={DollarSign} label="Faturamento" value={fmt(vendas.faturamento)} color="#22c55e" />
