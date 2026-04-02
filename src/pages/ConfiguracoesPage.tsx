@@ -128,24 +128,8 @@ const ConfiguracoesPage: React.FC = () => {
       {activeTab === "pixel" && (
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Pixel ID</Label>
-              <Input value={pixelId} onChange={e => setPixelId(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a]" />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Token de Acesso</Label>
-              <div className="relative">
-                <Input type={showPixelToken ? "text" : "password"} value={pixelToken} onChange={e => setPixelToken(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a] pr-10" />
-                <button onClick={() => setShowPixelToken(!showPixelToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  {showPixelToken ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Dataset ID <span className="text-muted-foreground">(opcional)</span></Label>
-              <Input value={pixelDataset} onChange={e => setPixelDataset(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a]" />
+            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 text-xs text-muted-foreground">
+              As credenciais do Facebook Pixel são configuradas pelo administrador. Aqui você pode ativar ou desativar o envio de eventos.
             </div>
 
             <div className="flex items-center justify-between">
