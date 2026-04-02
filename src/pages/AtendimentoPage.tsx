@@ -331,6 +331,9 @@ const AtendimentoPage: React.FC = () => {
                         {displayBadge.label}
                       </span>
                     )}
+                    <span className="text-[9px] text-muted-foreground bg-[#1a1a1a] px-1.5 py-0.5 rounded">
+                      {instances.find((inst) => inst.id === c.instance)?.name}
+                    </span>
                     {c.unread > 0 && (
                       <span className="ml-auto w-5 h-5 rounded-full bg-[#22c55e] text-[10px] font-bold flex items-center justify-center text-white">
                         {c.unread}
