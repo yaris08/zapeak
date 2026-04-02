@@ -9,6 +9,8 @@ interface EditorHeaderProps {
   onNameChange: (name: string) => void;
   onSave: () => void;
   hasUnsavedChanges: boolean;
+  instanceName?: string;
+  instanceStatus?: "active" | "standby";
 }
 
 const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, onSave, hasUnsavedChanges }) => {
