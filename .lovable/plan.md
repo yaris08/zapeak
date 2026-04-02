@@ -1,34 +1,44 @@
 
 
-# Relatórios Page — Complete Dashboard
+# Chat de Atendimento ao Vivo — AtendimentoPage.tsx
 
-## Arquivo principal
-`src/pages/RelatoriosPage.tsx` — reescrita completa (o arquivo atual é um placeholder com "Em breve")
+## Arquivo único
+`src/pages/AtendimentoPage.tsx` — substituição completa
 
-## Estrutura
+## Layout
+3 colunas `flex` com `h-full`: esquerda (280px fixa), centro (flex-1), direita (260px fixa). Bordas `#2a2a2a` entre colunas. Background `#0f0f0f`.
 
-### State & dados
-- `period: "today" | "7d" | "30d"` com multiplicadores `{today: 1, "7d": 5.2, "30d": 18}`
-- KpiCard inline component (mesmo padrão da HomePage)
-- Dados mockados para gráfico de barras, funil, tabelas
+## State
+- `selectedContact: number` (índice, default 0 = João)
+- `messages: Message[]` (array do chat ativo)
+- `inputValue: string`
+- `activeTab: "todas" | "aguardando" | "resolvidas"`
+- `searchQuery: string`
 
-### Blocos
-1. **KPIs** — grid 4 colunas: Sessões (Activity, azul), Conclusão (CheckCircle, verde), Msgs Enviadas (MessageSquare, ciano), Tempo Médio (Clock, laranja)
-2. **BarChart** (recharts) — 7 dias, barras verdes `#22c55e`, altura 220px, grid `#2a2a2a`
-3. **Funil** — 4 barras horizontais proporcionais (127→98→86→13), estilo igual HomePage
-4. **Tabela Desempenho** — 5 fluxos, badge conclusão colorido (>=70 verde, 50-69 amarelo, <50 vermelho), botão "Exportar CSV"
-5. **Tabela Pico Mensagens** — 5 horários com barras proporcionais verdes
+## Coluna esquerda — Lista de conversas
+- Header com título "Atendimento" + Input de busca (ícone Search)
+- 3 abas com underline verde na ativa
+- 6 contatos mockados com avatar (inicial, bg `#2a2a2a`), nome, preview truncada, horário, badge de não lidas (bolinha verde), badge de etiqueta (pago/lead/suporte)
+- Selecionado: `bg-[#1a1a1a]` + `border-l-2 border-[#22c55e]`
+- Hover: `bg-[#1f1f1f]`
 
-### Imports
-- `recharts`: BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-- `lucide-react`: Activity, CheckCircle, MessageSquare, Clock, Download
-- `toast` de sonner para exportar CSV
+## Coluna central — Chat
+- Header: avatar + nome + telefone + badge + botões "Transferir" (outline) e "Resolver" (verde)
+- Mensagens mockadas da conversa do João (8 msgs) com 4 tipos visuais:
+  - Bot: bolha `#2a2a2a`, esquerda, label "Bot" verde
+  - Contato: bolha `#1a1a1a` borda `#2a2a2a`, esquerda
+  - Atendente (Você): bolha `#1a2a1a` borda `#22c55e20`, direita
+  - Sistema: centralizado, itálico, cinza, fundo `#1a1a1a`
+- Input funcional: textarea + botões (Paperclip, Mic, Send verde). Enter adiciona bolha à direita.
 
-## Arquivos modificados
+## Coluna direita — Perfil
+- Avatar grande centralizado
+- Info: nome, telefone, status badge
+- Etiquetas: chips coloridos + botão "+ Adicionar"
+- Histórico: 3 conversas anteriores, primeiro contato, fluxo
+- Ações: "Iniciar Fluxo" (outline) + "Marcar como Resolvido" (verde)
 
-| Arquivo | Ação |
-|---------|------|
-| `src/pages/RelatoriosPage.tsx` | Reescrever completamente |
-
-`App.tsx` e `AppLayout.tsx` já têm a rota `/relatorios` e o link "Relatórios" registrados — nenhuma alteração necessária nesses arquivos.
+## Imports
+- `lucide-react`: Search, Send, Paperclip, Mic, Phone, Tag, Clock, MessageSquare, ArrowRight, CheckCircle
+- Componentes nativos (sem shadcn extras)
 
