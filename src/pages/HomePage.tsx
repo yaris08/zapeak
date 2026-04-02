@@ -72,18 +72,6 @@ const HomePage: React.FC = () => {
     investimento: Math.round(800 * m),
   }), [m, vendas, traffic]);
 
-  const funnel = useMemo(() => {
-    const c = traffic.conversas;
-    const interagiram = Math.round(c * 0.8);
-    const concluiram = Math.round(c * 0.544);
-    const compraram = vendas.total;
-    return [
-      { label: "Conversas iniciadas", value: c, pct: 100, icon: MessageCircle },
-      { label: "Interagiram com bot", value: interagiram, pct: +((interagiram / c) * 100).toFixed(1), icon: UserCheck },
-      { label: "Concluíram o fluxo", value: concluiram, pct: +((concluiram / c) * 100).toFixed(1), icon: CheckCircle },
-      { label: "Compraram", value: compraram, pct: +((compraram / c) * 100).toFixed(1), icon: ShoppingBag },
-    ];
-  }, [traffic, vendas]);
 
   const hourlyData = useMemo(
     () => baseHourly.map((v, i) => ({ hora: `${String(i).padStart(2, "0")}h`, sessoes: Math.round(v * m) })),
