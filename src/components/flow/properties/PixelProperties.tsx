@@ -22,6 +22,12 @@ const PixelProperties: React.FC<Props> = ({ data, onUpdate }) => {
           onChange={(e) => onUpdate({ ...data, pixelId: e.target.value })} />
       </div>
       <div>
+        <Label className="text-xs text-muted-foreground">Token de Acesso (Conversions API)</Label>
+        <Input className="mt-1 h-8 text-xs bg-background" placeholder="EAAxxxxxxxxxxxxxxx" value={data.pixelToken || ""}
+          onChange={(e) => onUpdate({ ...data, pixelToken: e.target.value })} />
+        <p className="text-[10px] text-muted-foreground mt-1">Necessário para envio de eventos server-side</p>
+      </div>
+      <div>
         <Label className="text-xs text-muted-foreground">Evento</Label>
         <Select value={event} onValueChange={(v) => onUpdate({ ...data, pixelEvent: v })}>
           <SelectTrigger className="mt-1 h-8 text-xs bg-background"><SelectValue /></SelectTrigger>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo } from "react";
+import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -13,6 +13,8 @@ import ReactFlow, {
   BackgroundVariant,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import EditorHeader from "@/components/flow/EditorHeader";
 import ComponentsSidebar from "@/components/flow/ComponentsSidebar";
@@ -21,7 +23,7 @@ import StartNode from "@/components/flow/nodes/StartNode";
 import TextNode from "@/components/flow/nodes/TextNode";
 import GenericNode from "@/components/flow/nodes/GenericNode";
 
-const initialNodes: Node[] = [
+const defaultNodes: Node[] = [
   {
     id: "1",
     type: "start",
@@ -36,7 +38,7 @@ const initialNodes: Node[] = [
   },
 ];
 
-const initialEdges: Edge[] = [
+const defaultEdges: Edge[] = [
   {
     id: "e1-2",
     source: "1",
@@ -49,12 +51,43 @@ const initialEdges: Edge[] = [
 let nodeId = 3;
 
 const FlowEditor: React.FC = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { id: flowId } = useParams<{ id: string }>();
+  const storageKey = `flowzap_flow_${flowId || "default"}`;
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [flowName, setFlowName] = useState("Meu primeiro fluxo");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+  const initialized = useRef(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.nodes) setNodes(parsed.nodes);
+        if (parsed.edges) setEdges(parsed.edges);
+        if (parsed.flowName) setFlowName(parsed.flowName);
+        // Update nodeId counter
+        const maxId = Math.max(...(parsed.nodes || []).map((n: Node) => parseInt(n.id) || 0), 2);
+        nodeId = maxId + 1;
+      }
+    } catch {}
+  }, [storageKey, setNodes, setEdges]);
+
+  const handleSave = useCallback(() => {
+    localStorage.setItem(storageKey, JSON.stringify({ nodes, edges, flowName }));
+    setHasUnsavedChanges(false);
+    toast.success("✓ Fluxo salvo com sucesso");
+  }, [storageKey, nodes, edges, flowName]);
+
+  const markDirty = useCallback(() => setHasUnsavedChanges(true), []);
 
   const selectedNode = useMemo(() => nodes.find((n) => n.id === selectedNodeId) || null, [nodes, selectedNodeId]);
 
@@ -67,15 +100,27 @@ const FlowEditor: React.FC = () => {
     []
   );
 
+  const wrappedOnNodesChange: typeof onNodesChange = useCallback(
+    (changes) => { onNodesChange(changes); markDirty(); },
+    [onNodesChange, markDirty]
+  );
+
+  const wrappedOnEdgesChange: typeof onEdgesChange = useCallback(
+    (changes) => { onEdgesChange(changes); markDirty(); },
+    [onEdgesChange, markDirty]
+  );
+
   const onConnect = useCallback(
-    (params: Connection) =>
+    (params: Connection) => {
       setEdges((eds) =>
         addEdge(
           { ...params, animated: true, style: { stroke: "#f97316", strokeDasharray: "5 5" } },
           eds
         )
-      ),
-    [setEdges]
+      );
+      markDirty();
+    },
+    [setEdges, markDirty]
   );
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -114,8 +159,9 @@ const FlowEditor: React.FC = () => {
       };
 
       setNodes((nds) => nds.concat(newNode));
+      markDirty();
     },
-    [reactFlowInstance, setNodes]
+    [reactFlowInstance, setNodes, markDirty]
   );
 
   const handleDeleteNode = useCallback(
@@ -123,8 +169,9 @@ const FlowEditor: React.FC = () => {
       setNodes((nds) => nds.filter((n) => n.id !== id));
       setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
       setSelectedNodeId(null);
+      markDirty();
     },
-    [setNodes, setEdges]
+    [setNodes, setEdges, markDirty]
   );
 
   const handleDuplicateNode = useCallback(
@@ -136,8 +183,9 @@ const FlowEditor: React.FC = () => {
         data: { ...node.data },
       };
       setNodes((nds) => nds.concat(newNode));
+      markDirty();
     },
-    [setNodes]
+    [setNodes, markDirty]
   );
 
   const handleUpdateNode = useCallback(
@@ -145,21 +193,32 @@ const FlowEditor: React.FC = () => {
       setNodes((nds) =>
         nds.map((n) => (n.id === id ? { ...n, data: { ...newData } } : n))
       );
+      markDirty();
     },
-    [setNodes]
+    [setNodes, markDirty]
   );
+
+  const handleNameChange = useCallback((name: string) => {
+    setFlowName(name);
+    setHasUnsavedChanges(true);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <EditorHeader flowName={flowName} onNameChange={setFlowName} />
+      <EditorHeader
+        flowName={flowName}
+        onNameChange={handleNameChange}
+        onSave={handleSave}
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
       <div className="flex flex-1 overflow-hidden">
         <ComponentsSidebar />
         <div className="flex-1" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodesChange={wrappedOnNodesChange}
+            onEdgesChange={wrappedOnEdgesChange}
             onConnect={onConnect}
             onNodeClick={onNodeClick}
             onPaneClick={onPaneClick}
