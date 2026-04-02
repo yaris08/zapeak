@@ -17,6 +17,7 @@ import PaymentProperties from "./properties/PaymentProperties";
 import TagsProperties from "./properties/TagsProperties";
 import ConnectFlowProperties from "./properties/ConnectFlowProperties";
 import NotifyProperties from "./properties/NotifyProperties";
+import PixProperties from "./properties/PixProperties";
 
 interface PropertiesPanelProps {
   node: Node | null;
