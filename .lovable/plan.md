@@ -1,32 +1,33 @@
 
 
-# 3 Correções no Editor de Fluxo
+# Dashboard Completo — HomePage.tsx
 
-## 1. Pixel — Campo Token de Acesso
-**Arquivo:** `src/components/flow/properties/PixelProperties.tsx`
-- Adicionar campo `pixelToken` logo após o campo "Pixel ID" (linha 23)
-- Input text com placeholder "EAAxxxxxxxxxxxxxxx"
-- Texto de ajuda cinza abaixo: "Necessário para envio de eventos server-side"
+## O que será feito
+Substituir completamente `src/pages/HomePage.tsx` por um dashboard funcional com seletor de período, 6 KPIs, gráfico de sessões (recharts), e 2 tabelas (Top Campanhas e Fluxos Ativos).
 
-## 2. Áudio — Tipo e Player Preview
-**Arquivo:** `src/components/flow/properties/MediaUploadProperties.tsx`
-- Adicionar prop opcional `isAudio?: boolean` (ou detectar via `title === "Enviar Áudio"`)
-- **Antes do upload:** Select com 2 opções — "Gravado (mensagem de voz)" / "Encaminhado (arquivo de áudio)", salva em `data.audioType`, padrão `"forwarded"`
-- **Após upload:** Guardar `file` como Object URL em `data.fileUrl` via `URL.createObjectURL(file)`. Se `fileName` existir e `isAudio`, renderizar `<audio controls src={data.fileUrl} />` com texto "Preview do áudio"
-- Atualizar `handleFileChange` para gerar e salvar a URL do blob
+## Arquivo único a modificar
+`src/pages/HomePage.tsx` — reescrita completa
 
-## 3. Salvar Fluxo — Persistência localStorage
-**Arquivos:** `src/pages/FlowEditor.tsx` + `src/components/flow/EditorHeader.tsx`
+## Estrutura do componente
 
-### FlowEditor.tsx
-- Extrair `flowId` de `useParams()` (rota já é `/flows/:id/editor`)
-- No mount (`useEffect`), checar `localStorage.getItem("flowzap_flow_{id}")` — se existir, restaurar `nodes`, `edges` e `flowName` via `setNodes`/`setEdges`
-- Criar `handleSave` que serializa `{ nodes, edges, flowName }` no localStorage e exibe `toast.success("✓ Fluxo salvo com sucesso")`
-- Adicionar state `hasUnsavedChanges` (boolean) — set `true` em qualquer `onNodesChange`, `onEdgesChange`, `onConnect`, `onDrop`, `handleUpdateNode`, `handleDeleteNode`, `handleDuplicateNode`; set `false` após salvar
-- Passar `onSave`, `hasUnsavedChanges` como props ao `EditorHeader`
+### State
+- `period`: `"today" | "7d" | "30d"` — controla o seletor de período
+- Dados mockados variam por período (multiplicadores simples sobre os valores base)
 
-### EditorHeader.tsx
-- Receber props `onSave: () => void` e `hasUnsavedChanges: boolean`
-- Botão "Salvar" chama `onSave` em vez de toast direto
-- Se `hasUnsavedChanges`, exibir `<span className="text-primary">● Não salvo</span>` ao lado do nome do fluxo
+### Layout (de cima para baixo)
+1. **Header**: título "Dashboard" à esquerda, 3 botões de período à direita (ativo = bg `#F97316`)
+2. **KPIs**: grid 3 colunas, 2 linhas — 6 cards com ícone colorido, valor e label
+3. **Gráfico**: `LineChart` do recharts (já instalado), 24 pontos simulando pico comercial, linha laranja, altura 200px, fundo `#1a1a1a` com borda `#2a2a2a`
+4. **Tabela Top Campanhas**: 5 colunas, 3 linhas mockadas, ROAS em badge colorido
+5. **Tabela Fluxos Ativos**: 4 colunas, 3 linhas mockadas, Status em badge verde/cinza
+
+### Detalhes visuais
+- Tabelas: fundo `#1a1a1a`, bordas `#2a2a2a`, header uppercase cinza pequeno, hover sutil nas linhas
+- ROAS badge: verde `>2x`, amarelo `1-2x`, vermelho `<1x`
+- Ícones via Lucide: `GitBranch`, `MessageSquare`, `BarChart3`, `DollarSign`, `ShoppingCart`, `TrendingUp`
+- Gráfico usa `ResponsiveContainer`, `LineChart`, `Line`, `XAxis`, `YAxis`, `Tooltip`, `CartesianGrid` do recharts
+
+### Dependências
+- `recharts` — já disponível no projeto (usado pelo componente `chart.tsx`)
+- Lucide React — já instalado
 
