@@ -32,6 +32,7 @@ const App = () => (
             <Route path="/relatorios" element={<RelatoriosPage />} />
             <Route path="/atribuicao" element={<AtribuicaoPage />} />
             <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+            <Route path="/contatos" element={<ContatosPage />} />
           </Route>
           <Route path="/flows/:id/editor" element={<FlowEditor />} />
           <Route path="*" element={<NotFound />} />
