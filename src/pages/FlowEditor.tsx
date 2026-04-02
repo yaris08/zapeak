@@ -22,6 +22,7 @@ import PropertiesPanel from "@/components/flow/PropertiesPanel";
 import StartNode from "@/components/flow/nodes/StartNode";
 import TextNode from "@/components/flow/nodes/TextNode";
 import GenericNode from "@/components/flow/nodes/GenericNode";
+import CustomEdge from "@/components/flow/edges/CustomEdge";
 
 const defaultNodes: Node[] = [
   {
@@ -43,12 +44,11 @@ const defaultEdges: Edge[] = [
     id: "e1-2",
     source: "1",
     target: "2",
-    animated: true,
-    style: { stroke: "#f97316", strokeDasharray: "5 5" },
+    type: "custom",
+    animated: false,
+    style: { stroke: "#f97316" },
   },
 ];
-
-let nodeId = 3;
 
 const FlowEditor: React.FC = () => {
   const { id: flowId } = useParams<{ id: string }>();
@@ -57,6 +57,7 @@ const FlowEditor: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [flowName, setFlowName] = useState("Meu primeiro fluxo");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -74,9 +75,7 @@ const FlowEditor: React.FC = () => {
         if (parsed.nodes) setNodes(parsed.nodes);
         if (parsed.edges) setEdges(parsed.edges);
         if (parsed.flowName) setFlowName(parsed.flowName);
-        // Update nodeId counter
-        const maxId = Math.max(...(parsed.nodes || []).map((n: Node) => parseInt(n.id) || 0), 2);
-        nodeId = maxId + 1;
+        // IDs now use timestamps, no counter needed
       }
     } catch {}
   }, [storageKey, setNodes, setEdges]);
@@ -100,6 +99,8 @@ const FlowEditor: React.FC = () => {
     []
   );
 
+  const edgeTypes = useMemo(() => ({ custom: CustomEdge }), []);
+
   const wrappedOnNodesChange: typeof onNodesChange = useCallback(
     (changes) => { onNodesChange(changes); markDirty(); },
     [onNodesChange, markDirty]
@@ -114,7 +115,7 @@ const FlowEditor: React.FC = () => {
     (params: Connection) => {
       setEdges((eds) =>
         addEdge(
-          { ...params, animated: true, style: { stroke: "#f97316", strokeDasharray: "5 5" } },
+          { ...params, type: "custom", animated: false, style: { stroke: "#f97316" } },
           eds
         )
       );
@@ -125,10 +126,17 @@ const FlowEditor: React.FC = () => {
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedNodeId(node.id);
+    setSelectedEdgeId(null);
+  }, []);
+
+  const onEdgeClick = useCallback((_: React.MouseEvent, edge: Edge) => {
+    setSelectedEdgeId(edge.id);
+    setSelectedNodeId(null);
   }, []);
 
   const onPaneClick = useCallback(() => {
     setSelectedNodeId(null);
+    setSelectedEdgeId(null);
   }, []);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -152,7 +160,7 @@ const FlowEditor: React.FC = () => {
       });
 
       const newNode: Node = {
-        id: String(nodeId++),
+        id: `node_${Date.now()}`,
         type: "generic",
         position,
         data: { label: name, type, color },
@@ -178,8 +186,8 @@ const FlowEditor: React.FC = () => {
     (node: Node) => {
       const newNode: Node = {
         ...node,
-        id: String(nodeId++),
-        position: { x: node.position.x + 50, y: node.position.y + 50 },
+        id: `node_${Date.now()}`,
+        position: { x: node.position.x + 180, y: node.position.y + 80 },
         data: { ...node.data },
       };
       setNodes((nds) => nds.concat(newNode));
@@ -221,11 +229,13 @@ const FlowEditor: React.FC = () => {
             onEdgesChange={wrappedOnEdgesChange}
             onConnect={onConnect}
             onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
             onPaneClick={onPaneClick}
             onInit={setReactFlowInstance}
             onDragOver={onDragOver}
             onDrop={onDrop}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             fitView
             proOptions={{ hideAttribution: true }}
           >
