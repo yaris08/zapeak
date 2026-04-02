@@ -154,7 +154,7 @@ const RelatoriosPage: React.FC = () => {
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
                 {["Fluxo", "Sessões", "Conclusão %", "Msgs Enviadas", "Tempo Médio", "Conversões", "Último Disparo"].map(h => (

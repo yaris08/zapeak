@@ -190,7 +190,7 @@ const AtribuicaoPage: React.FC = () => {
                       <MessageCircle size={12} />{s.phone}
                     </a>
                   </td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{s.campaign}</td>
+                  <td className="px-4 py-2.5 text-muted-foreground hidden sm:table-cell">{s.campaign}</td>
                   <td className="px-4 py-2.5 text-foreground font-medium">{fmtDec(s.valor * m)}</td>
                   <td className="px-4 py-2.5">{confBadge(s.confianca)}</td>
                   <td className="px-4 py-2.5">{s.pixel ? <span style={{ color: "#22c55e" }}>✅</span> : <span style={{ color: "#ef4444" }}>❌</span>}</td>

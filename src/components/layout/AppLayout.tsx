@@ -149,7 +149,7 @@ const AppLayout: React.FC = () => {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto w-full min-w-0">
           <Outlet />
         </main>
       </div>
