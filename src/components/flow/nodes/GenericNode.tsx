@@ -44,6 +44,14 @@ const getPreview = (data: any): string => {
       return data.adminPhone || "Configure a notificação...";
     case "pix":
       return data.pixKey || "Configure a chave PIX...";
+    case "sticker":
+      return data.stickerUrl ? "Figurinha configurada" : "Selecione uma figurinha...";
+    case "randomizer": {
+      const pc = data.randomPaths?.length ?? 2;
+      return `${pc} caminhos | ${Math.round(100 / pc)}% cada`;
+    }
+    case "passage-id":
+      return data.passageLabel || "Configure o identificador...";
     default:
       return "Configure este componente...";
   }
@@ -175,6 +183,26 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
           <p className="text-[10px] text-muted-foreground">{groups} grupo{groups > 1 ? "s" : ""} de respostas</p>
         </div>
       );
+    }
+
+    // Sticker preview
+    if (data.type === "sticker") {
+      return data.stickerUrl ? (
+        <img src={data.stickerUrl} alt="figurinha" className="w-10 h-10 object-contain mx-auto" onError={(e) => (e.currentTarget.style.display = "none")} />
+      ) : (
+        <p className="text-xs text-muted-foreground">Selecione uma figurinha...</p>
+      );
+    }
+
+    // Randomizer preview
+    if (data.type === "randomizer") {
+      const pc = data.randomPaths?.length ?? 2;
+      return <p className="text-xs text-foreground">{pc} caminhos | {Math.round(100 / pc)}% cada</p>;
+    }
+
+    // Passage ID preview
+    if (data.type === "passage-id") {
+      return <p className={`text-xs ${data.passageLabel ? "text-foreground" : "text-muted-foreground"}`}>{data.passageLabel || "Configure o identificador..."}</p>;
     }
 
     // Default text preview

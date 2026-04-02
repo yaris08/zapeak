@@ -18,6 +18,9 @@ import TagsProperties from "./properties/TagsProperties";
 import ConnectFlowProperties from "./properties/ConnectFlowProperties";
 import NotifyProperties from "./properties/NotifyProperties";
 import PixProperties from "./properties/PixProperties";
+import FigurinhaProperties from "./properties/FigurinhaProperties";
+import RandomizadorProperties from "./properties/RandomizadorProperties";
+import IdentificadorPassagemProperties from "./properties/IdentificadorPassagemProperties";
 
 interface PropertiesPanelProps {
   node: Node | null;
@@ -83,6 +86,12 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ node, onClose, onDele
         return <NotifyProperties data={node.data} onUpdate={handleUpdate} />;
       case "pix":
         return <PixProperties data={node.data} onUpdate={handleUpdate} />;
+      case "sticker":
+        return <FigurinhaProperties data={node.data} onUpdate={handleUpdate} />;
+      case "randomizer":
+        return <RandomizadorProperties data={node.data} onUpdate={handleUpdate} />;
+      case "passage-id":
+        return <IdentificadorPassagemProperties data={node.data} onUpdate={handleUpdate} />;
       default:
         return (
           <div className="space-y-3">
