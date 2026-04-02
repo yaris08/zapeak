@@ -46,7 +46,7 @@ const defaultEdges: Edge[] = [
     target: "2",
     type: "custom",
     animated: false,
-    style: { stroke: "#f97316" },
+    style: { stroke: "#22c55e" },
   },
 ];
 
