@@ -490,6 +490,7 @@ const FlowEditorInner: React.FC = () => {
   const isMobile = useIsMobile();
   const [dismissedMobileWarning, setDismissedMobileWarning] = useState(false);
   const { id: flowId } = useParams<{ id: string }>();
+  const storageKey = `zapeak_flow_${flowId || "default"}`;
 
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
