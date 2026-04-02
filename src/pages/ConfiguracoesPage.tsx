@@ -101,21 +101,7 @@ const ConfiguracoesPage: React.FC = () => {
               <div className="w-2 h-2 rounded-full bg-red-500" />
               <span className="text-sm text-red-400">Desconectado</span>
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">URL da Instância</Label>
-              <Input value={waUrl} onChange={e => setWaUrl(e.target.value)} placeholder="https://sua-instancia.evolution.com" className="bg-[#0f0f0f] border-[#2a2a2a]" />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Token de Autenticação</Label>
-              <div className="relative">
-                <Input type={showWaToken ? "text" : "password"} value={waToken} onChange={e => setWaToken(e.target.value)} className="bg-[#0f0f0f] border-[#2a2a2a] pr-10" />
-                <button onClick={() => setShowWaToken(!showWaToken)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  {showWaToken ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
+            <p className="text-xs text-muted-foreground">A conexão é configurada pelo administrador do sistema.</p>
 
             <div className="flex flex-col items-center gap-2">
               <div className="w-[180px] h-[180px] bg-[#1a1a1a] border-2 border-dashed border-[#2a2a2a] rounded-lg flex flex-col items-center justify-center gap-2">
