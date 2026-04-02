@@ -68,6 +68,7 @@ const contacts: Contact[] = [
     unread: 1,
     badge: { label: "lead", color: "bg-blue-500/20 text-blue-400" },
     tags: [{ label: "lead", color: "bg-blue-500/20 text-blue-400" }],
+    instance: "principal",
     history: { convos: 1, firstContact: "02/04/2026", flow: "Qualificação" },
     messages: [
       { id: 1, sender: "bot", text: "Olá Maria! Como posso ajudar?", time: "14:10" },
