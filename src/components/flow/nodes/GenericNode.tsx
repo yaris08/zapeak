@@ -73,14 +73,37 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
       return <img src={data.fileUrl} className="w-full h-24 object-cover rounded-md mt-1" alt="preview" />;
     }
 
-    // Audio with player
+    // Audio with WhatsApp-style player
     if (data.type === "audio" && data.fileUrl) {
       return (
-        <div>
-          <audio controls src={data.fileUrl} className="w-full h-8 mt-1" style={{ accentColor: "#f97316" }} />
-          <span className="inline-block mt-1 text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
-            {data.audioType === "recorded" ? "🎙 Voz" : "🎵 Áudio"}
-          </span>
+        <div className="mt-1">
+          <div className="flex items-center gap-2 bg-[#1a1a1a] rounded-lg p-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const audio = document.getElementById(`audio-${data.fileUrl}`) as HTMLAudioElement;
+                if (audio) audio.paused ? audio.play() : audio.pause();
+              }}
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ backgroundColor: "#f97316" }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                <polygon points="5,3 19,12 5,21" />
+              </svg>
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="h-1 bg-[#2a2a2a] rounded-full overflow-hidden">
+                <div className="h-full w-0 rounded-full" style={{ backgroundColor: "#f97316" }} />
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[10px] text-muted-foreground">0:00</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                  {data.audioType === "recorded" ? "🎙 Voz" : "🎵 Áudio"}
+                </span>
+              </div>
+            </div>
+          </div>
+          <audio id={`audio-${data.fileUrl}`} src={data.fileUrl} className="hidden" />
         </div>
       );
     }
