@@ -164,6 +164,19 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
       );
     }
 
+    if (data.type === "wait") {
+      const val = data.waitValue ?? 2;
+      const unit = data.waitUnit || "hours";
+      const unitMap: Record<string, string> = { minutes: "Min", hours: "Horas", days: "Dias" };
+      const groups = data.responseGroups?.length || 1;
+      return (
+        <div className="space-y-1 py-1">
+          <p className="text-xs text-foreground font-medium">Esperar {val} {unitMap[unit] || unit}</p>
+          <p className="text-[10px] text-muted-foreground">{groups} grupo{groups > 1 ? "s" : ""} de respostas</p>
+        </div>
+      );
+    }
+
     // Default text preview
     return <p className={`text-xs ${hasData ? "text-foreground" : "text-muted-foreground"}`}>{preview}</p>;
   };
