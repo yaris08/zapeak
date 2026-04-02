@@ -165,7 +165,7 @@ const HomePage: React.FC = () => {
             <Users size={14} color="#22c55e" style={{ flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Conversas iniciadas</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "100%", height: "100%", background: "#22c55e", borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(500 * m)}</div>
