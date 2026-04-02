@@ -183,7 +183,11 @@ const AtribuicaoPage: React.FC = () => {
                 >
                   <td className="px-4 py-2.5 text-muted-foreground">{s.date}</td>
                   <td className="px-4 py-2.5 text-foreground">{s.name}</td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{s.phone}</td>
+                  <td className="px-4 py-2.5">
+                    <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5" style={{ color: "#22c55e", fontSize: "12px", textDecoration: "none" }}>
+                      <MessageCircle size={12} />{s.phone}
+                    </a>
+                  </td>
                   <td className="px-4 py-2.5 text-muted-foreground">{s.campaign}</td>
                   <td className="px-4 py-2.5 text-foreground font-medium">{fmtDec(s.valor * m)}</td>
                   <td className="px-4 py-2.5">{confBadge(s.confianca)}</td>
