@@ -18,8 +18,9 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
   Plus, Minus, Maximize2, Expand, Play, Square,
-  Phone, Video, X, Paperclip, Send, RotateCcw,
+  Phone, Video, X, Paperclip, Send, RotateCcw, Monitor,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import EditorHeader from "@/components/flow/EditorHeader";
 import ComponentsSidebar from "@/components/flow/ComponentsSidebar";
