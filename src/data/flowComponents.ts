@@ -1,4 +1,4 @@
-import { MessageSquare, Sparkles, Image, Mic, Video, FileText, Smile, User, LayoutList, Clock, MessageCircle, Bot, GitBranch, Shuffle, Zap, ScanLine, Tag, CreditCard, QrCode, Receipt, Bell, ArrowRightLeft } from "lucide-react";
+import { MessageSquare, Sparkles, Image, Mic, Video, FileText, Smile, Clock, MessageCircle, Bot, GitBranch, Shuffle, Zap, ScanLine, Tag, CreditCard, QrCode, Bell, ArrowRightLeft } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface ComponentItem {
@@ -19,8 +19,6 @@ export const componentItems: ComponentItem[] = [
   { id: "video", name: "Vídeo", icon: Video, color: "#ef4444", section: "MENSAGENS", type: "video" },
   { id: "documento", name: "Documento", icon: FileText, color: "#ef4444", section: "MENSAGENS", type: "document" },
   { id: "figurinha", name: "Figurinha", icon: Smile, color: "#22c55e", section: "MENSAGENS", type: "sticker" },
-  { id: "contato", name: "Contato", icon: User, color: "#22c55e", section: "MENSAGENS", type: "contact" },
-  { id: "interativa", name: "Msg Interativa", icon: LayoutList, color: "#3b82f6", section: "MENSAGENS", type: "interactive" },
   
   // CONTROLE
   { id: "delay", name: "Delay", icon: Clock, color: "#eab308", section: "CONTROLE", type: "delay" },
@@ -34,7 +32,6 @@ export const componentItems: ComponentItem[] = [
   { id: "etiquetas", name: "Etiquetas", icon: Tag, color: "#f97316", section: "AÇÕES", type: "tags" },
   { id: "pagamento", name: "Id. Pagamento", icon: CreditCard, color: "#22c55e", section: "AÇÕES", type: "payment" },
   { id: "pix", name: "Enviar Chave PIX", icon: QrCode, color: "#22c55e", section: "AÇÕES", type: "pix" },
-  { id: "cobranca", name: "Enviar Cobrança", icon: Receipt, color: "#22c55e", section: "AÇÕES", type: "billing" },
   { id: "notificar", name: "Notificar Admin", icon: Bell, color: "#ef4444", section: "AÇÕES", type: "notify" },
   { id: "conectar-fluxo", name: "Conectar Fluxo", icon: ArrowRightLeft, color: "#3b82f6", section: "AÇÕES", type: "connect-flow" },
   { id: "etiqueta-wa", name: "Etiqueta WhatsApp", icon: Tag, color: "#22c55e", section: "AÇÕES", type: "wa-tag" },
