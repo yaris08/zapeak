@@ -1,44 +1,63 @@
 
 
-# Chat de Atendimento ao Vivo — AtendimentoPage.tsx
+# Funcionalidades no AtendimentoPage.tsx
 
 ## Arquivo único
-`src/pages/AtendimentoPage.tsx` — substituição completa
+`src/pages/AtendimentoPage.tsx` — edições no componente existente
 
-## Layout
-3 colunas `flex` com `h-full`: esquerda (280px fixa), centro (flex-1), direita (260px fixa). Bordas `#2a2a2a` entre colunas. Background `#0f0f0f`.
+## Alterações
 
-## State
-- `selectedContact: number` (índice, default 0 = João)
-- `messages: Message[]` (array do chat ativo)
-- `inputValue: string`
-- `activeTab: "todas" | "aguardando" | "resolvidas"`
-- `searchQuery: string`
+### Imports adicionais
+- `lucide-react`: `StopCircle, Play, DollarSign, Bot`
+- `sonner`: `toast`
+- `Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter` de `@/components/ui/dialog`
+- `AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction` de `@/components/ui/alert-dialog`
 
-## Coluna esquerda — Lista de conversas
-- Header com título "Atendimento" + Input de busca (ícone Search)
-- 3 abas com underline verde na ativa
-- 6 contatos mockados com avatar (inicial, bg `#2a2a2a`), nome, preview truncada, horário, badge de não lidas (bolinha verde), badge de etiqueta (pago/lead/suporte)
-- Selecionado: `bg-[#1a1a1a]` + `border-l-2 border-[#22c55e]`
-- Hover: `bg-[#1f1f1f]`
+### Novos states
+- `showFlowModal: boolean`
+- `selectedFlow: number | null`
+- `showStopModal: boolean`
+- `activeFlow: string | null` (inicia com `"Boas-vindas"`)
+- `showPaymentModal: boolean`
+- `paymentValue: string`
+- `paymentNote: string`
+- `paymentCampaign: string`
+- `contactTags: Record<number, {label, color}[]>` — cópia local dos tags para poder adicionar "pago"
 
-## Coluna central — Chat
-- Header: avatar + nome + telefone + badge + botões "Transferir" (outline) e "Resolver" (verde)
-- Mensagens mockadas da conversa do João (8 msgs) com 4 tipos visuais:
-  - Bot: bolha `#2a2a2a`, esquerda, label "Bot" verde
-  - Contato: bolha `#1a1a1a` borda `#2a2a2a`, esquerda
-  - Atendente (Você): bolha `#1a2a1a` borda `#22c55e20`, direita
-  - Sistema: centralizado, itálico, cinza, fundo `#1a1a1a`
-- Input funcional: textarea + botões (Paperclip, Mic, Send verde). Enter adiciona bolha à direita.
+### 1. Modal "Iniciar Fluxo"
+- Usa `Dialog` do shadcn
+- Lista 4 fluxos mockados como cards clicáveis (Boas-vindas, Qualificação Lead, Suporte Automático, Recuperação Carrinho)
+- Card selecionado: `border-[#22c55e] bg-[#1a2a1a]`
+- Botões: Cancelar (fecha) | Disparar Fluxo (verde) — ao confirmar:
+  - `setActiveFlow(nome do fluxo)`
+  - Toast `✓ Fluxo disparado para {nome}`
+  - Adiciona mensagem sistema `🤖 Fluxo '{nome}' iniciado manualmente`
+  - Fecha modal
 
-## Coluna direita — Perfil
-- Avatar grande centralizado
-- Info: nome, telefone, status badge
-- Etiquetas: chips coloridos + botão "+ Adicionar"
-- Histórico: 3 conversas anteriores, primeiro contato, fluxo
-- Ações: "Iniciar Fluxo" (outline) + "Marcar como Resolvido" (verde)
+### 2. Botão "Parar Fluxo" no header do chat
+- Inserido entre "Transferir" e "Resolver"
+- Outline pequeno com ícone `StopCircle` vermelho
+- Só aparece quando `activeFlow !== null`
+- Ao clicar: abre `AlertDialog` de confirmação
+- Ao confirmar:
+  - `setActiveFlow(null)`
+  - Toast `✓ Fluxo pausado`
+  - Mensagem sistema `⏹ Fluxo interrompido manualmente`
 
-## Imports
-- `lucide-react`: Search, Send, Paperclip, Mic, Phone, Tag, Clock, MessageSquare, ArrowRight, CheckCircle
-- Componentes nativos (sem shadcn extras)
+### 3. Botão "Marcar como Pago" no painel direito
+- Inserido entre "Iniciar Fluxo" e "Marcar como Resolvido"
+- Outline verde, ícone `DollarSign`, largura total
+- Ao clicar: abre `Dialog` com inputs valor, observação, select campanha
+- Ao confirmar:
+  - Toast `✓ Pagamento de R$ X,XX registrado`
+  - Adiciona badge "pago" ao contato se não tiver
+  - Mensagem sistema `💰 Pagamento de R$ X,XX registrado manualmente`
+
+### 4. Indicador de Fluxo Ativo
+- Abaixo do nome/telefone no header do chat
+- `activeFlow`: ícone `Bot` (12px) verde + texto `Fluxo ativo: {nome}` em cinza pequeno
+- Sem fluxo: ícone `Bot` cinza + `Sem fluxo ativo`
+
+### 5. Shift+Enter
+- Já funciona — o `handleKeyDown` atual só envia em Enter sem Shift. Textarea com `resize-none` já suporta multiline. Nada a mudar aqui.
 
