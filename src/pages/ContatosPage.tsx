@@ -137,9 +137,14 @@ const ContatosPage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
-                {["", "NOME", "TELEFONE", "ETIQUETAS", "INSTÂNCIA", "ÚLTIMO CONTATO", "STATUS", "AÇÕES"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">{h}</th>
-                ))}
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider"></th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">NOME</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">TELEFONE</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">ETIQUETAS</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden md:table-cell">INSTÂNCIA</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider hidden md:table-cell">ÚLTIMO CONTATO</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">STATUS</th>
+                <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider">AÇÕES</th>
               </tr>
             </thead>
             <tbody>
