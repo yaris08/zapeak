@@ -175,7 +175,7 @@ const HomePage: React.FC = () => {
           <div style={{ marginLeft: "12px", width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 2 */}
           <div style={{ background: "#22c55e0e", border: "0.5px solid #22c55e30", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "8px" }}>
-            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", opacity: 0.8, flexShrink: 0 }} />
+            <Bot size={14} color="#22c55e" style={{ opacity: 0.8, flexShrink: 0 }} />
             <div style={{ flex: 1, fontSize: "13px" }}>Interagiram com bot</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div style={{ width: "120px", height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
