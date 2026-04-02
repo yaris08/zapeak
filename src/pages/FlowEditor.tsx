@@ -231,6 +231,7 @@ const FlowEditor: React.FC = () => {
             onEdgesChange={wrappedOnEdgesChange}
             onConnect={onConnect}
             onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
             onPaneClick={onPaneClick}
             onInit={setReactFlowInstance}
             onDragOver={onDragOver}
