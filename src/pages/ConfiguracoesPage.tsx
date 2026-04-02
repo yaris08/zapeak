@@ -357,6 +357,11 @@ const ConfiguracoesPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="border-t border-[#2a2a2a] pt-4 flex justify-end">
+              <button onClick={handleSave} className="px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2">
+                <Save size={14} /> Salvar configurações
+              </button>
+            </div>
           </div>
         </div>
       )}
