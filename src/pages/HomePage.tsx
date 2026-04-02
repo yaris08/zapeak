@@ -198,7 +198,7 @@ const HomePage: React.FC = () => {
               <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>54%</div>
             </div>
           </div>
-          <div style={{ marginLeft: "36px", width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
+          <div className="ml-4 md:ml-9" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 4 */}
           <div className="overflow-hidden" style={{ background: "#22c55e05", border: "0.5px solid #22c55e15", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "24px" }}>
             <ShoppingCart size={14} color="#22c55e" style={{ opacity: 0.4, flexShrink: 0 }} />
