@@ -204,7 +204,7 @@ const HomePage: React.FC = () => {
             <ShoppingCart size={14} color="#22c55e" style={{ opacity: 0.4, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Compraram</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div className="w-20 md:w-[120px] hidden sm:block" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
+              <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{ width: "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
               </div>
               <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(51 * m)}</div>
