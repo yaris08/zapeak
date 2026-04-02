@@ -378,17 +378,81 @@ const ConfiguracoesPage: React.FC = () => {
                 <Switch checked={notifTimeout} onCheckedChange={setNotifTimeout} />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs text-muted-foreground">Número para notificações</Label>
-              <Input type="tel" value={notifPhone} onChange={e => setNotifPhone(e.target.value)} placeholder="+55 11 99999-9999" className="bg-[#0f0f0f] border-[#2a2a2a]" />
-              <p className="text-[10px] text-muted-foreground">As notificações serão enviadas via WhatsApp</p>
+
+            {/* Números de Admin */}
+            <div className="space-y-3 pt-2 border-t border-[#2a2a2a]">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-foreground">Números de Admin</p>
+                <button onClick={() => { setEditingAdmin(null); setAdminForm({ name: "", phone: "", active: true }); setShowAdminModal(true); }}
+                  className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-[#22c55e] text-white hover:bg-[#22c55e]/90 transition-colors">
+                  <Plus size={12} /> Adicionar Número
+                </button>
+              </div>
+              <div className="space-y-2">
+                {adminNumbers.map(admin => (
+                  <div key={admin.id} className="flex items-center justify-between bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg p-3">
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <p className="text-sm text-foreground font-medium">{admin.name}</p>
+                        <p className="text-xs text-muted-foreground">{admin.phone}</p>
+                      </div>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${admin.active ? "bg-green-900/30 text-green-400 border border-green-800/50" : "bg-gray-900/30 text-gray-400 border border-gray-800/50"}`}>
+                        {admin.active ? "Ativo" : "Inativo"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => { setEditingAdmin(admin); setAdminForm({ name: admin.name, phone: admin.phone, active: admin.active }); setShowAdminModal(true); }}
+                        className="p-1.5 rounded hover:bg-[#2a2a2a] text-muted-foreground transition-colors"><Pencil size={14} /></button>
+                      <button onClick={() => { setAdminNumbers(prev => prev.filter(a => a.id !== admin.id)); toast.success("Número removido"); }}
+                        className="p-1.5 rounded hover:bg-[#2a2a2a] text-muted-foreground hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
             <div className="bg-yellow-900/20 border border-yellow-800/30 rounded-lg p-3 text-xs text-yellow-300">
               ⚠️ Configure um número válido para receber alertas. Certifique-se que o número está salvo em seus contatos.
             </div>
           </div>
         </div>
       )}
+
+      {/* Modal Admin Number */}
+      <Dialog open={showAdminModal} onOpenChange={setShowAdminModal}>
+        <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingAdmin ? "Editar Número" : "Adicionar Número"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-xs text-muted-foreground">Nome</Label>
+              <Input value={adminForm.name} onChange={e => setAdminForm(f => ({ ...f, name: e.target.value }))} placeholder="Ex: Principal, Backup, Sócio..." className="mt-1 bg-[#0f0f0f] border-[#2a2a2a]" />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Número WhatsApp</Label>
+              <Input type="tel" value={adminForm.phone} onChange={e => setAdminForm(f => ({ ...f, phone: e.target.value }))} placeholder="+55 11 99999-9999" className="mt-1 bg-[#0f0f0f] border-[#2a2a2a]" />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-foreground">Ativo</Label>
+              <Switch checked={adminForm.active} onCheckedChange={v => setAdminForm(f => ({ ...f, active: v }))} />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setShowAdminModal(false)} className="px-4 py-2 text-sm rounded-lg border border-[#2a2a2a] text-muted-foreground hover:bg-[#2a2a2a] transition-colors">Cancelar</button>
+              <button onClick={() => {
+                if (!adminForm.name || !adminForm.phone) return toast.error("Preencha todos os campos");
+                if (editingAdmin) {
+                  setAdminNumbers(prev => prev.map(a => a.id === editingAdmin.id ? { ...a, ...adminForm } : a));
+                } else {
+                  setAdminNumbers(prev => [...prev, { id: Date.now().toString(), ...adminForm }]);
+                }
+                toast.success("✓ Número salvo");
+                setShowAdminModal(false);
+              }} className="px-4 py-2 text-sm rounded-lg bg-[#22c55e] text-white hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <button onClick={handleSave}
         className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50">

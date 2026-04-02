@@ -32,7 +32,6 @@ export const componentItems: ComponentItem[] = [
   { id: "etiquetas", name: "Etiquetas", icon: Tag, color: "#f97316", section: "AÇÕES", type: "tags" },
   { id: "pagamento", name: "Id. Pagamento", icon: CreditCard, color: "#22c55e", section: "AÇÕES", type: "payment" },
   { id: "pix", name: "Enviar Chave PIX", icon: QrCode, color: "#22c55e", section: "AÇÕES", type: "pix" },
-  { id: "cobranca", name: "Enviar Cobrança", icon: Receipt, color: "#22c55e", section: "AÇÕES", type: "billing" },
   { id: "notificar", name: "Notificar Admin", icon: Bell, color: "#ef4444", section: "AÇÕES", type: "notify" },
   { id: "conectar-fluxo", name: "Conectar Fluxo", icon: ArrowRightLeft, color: "#3b82f6", section: "AÇÕES", type: "connect-flow" },
   { id: "etiqueta-wa", name: "Etiqueta WhatsApp", icon: Tag, color: "#22c55e", section: "AÇÕES", type: "wa-tag" },
