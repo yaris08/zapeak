@@ -188,8 +188,8 @@ const FlowEditor: React.FC = () => {
     (node: Node) => {
       const newNode: Node = {
         ...node,
-        id: String(nodeId++),
-        position: { x: node.position.x + 50, y: node.position.y + 50 },
+        id: `node_${Date.now()}`,
+        position: { x: node.position.x + 180, y: node.position.y + 80 },
         data: { ...node.data },
       };
       setNodes((nds) => nds.concat(newNode));
