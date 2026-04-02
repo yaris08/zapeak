@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Save, Smartphone } from "lucide-react";
+import { ArrowLeft, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
