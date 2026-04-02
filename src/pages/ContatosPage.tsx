@@ -134,7 +134,7 @@ const ContatosPage = () => {
       {/* Tabela */}
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-[#2a2a2a]">
                 <th className="px-4 py-3 text-left text-[10px] font-medium text-[#9ca3af] uppercase tracking-wider"></th>
