@@ -86,6 +86,12 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ node, onClose, onDele
         return <NotifyProperties data={node.data} onUpdate={handleUpdate} />;
       case "pix":
         return <PixProperties data={node.data} onUpdate={handleUpdate} />;
+      case "sticker":
+        return <FigurinhaProperties data={node.data} onUpdate={handleUpdate} />;
+      case "randomizer":
+        return <RandomizadorProperties data={node.data} onUpdate={handleUpdate} />;
+      case "passage-id":
+        return <IdentificadorPassagemProperties data={node.data} onUpdate={handleUpdate} />;
       default:
         return (
           <div className="space-y-3">

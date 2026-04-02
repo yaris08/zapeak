@@ -185,6 +185,26 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
       );
     }
 
+    // Sticker preview
+    if (data.type === "sticker") {
+      return data.stickerUrl ? (
+        <img src={data.stickerUrl} alt="figurinha" className="w-10 h-10 object-contain mx-auto" onError={(e) => (e.currentTarget.style.display = "none")} />
+      ) : (
+        <p className="text-xs text-muted-foreground">Selecione uma figurinha...</p>
+      );
+    }
+
+    // Randomizer preview
+    if (data.type === "randomizer") {
+      const pc = data.randomPaths?.length ?? 2;
+      return <p className="text-xs text-foreground">{pc} caminhos | {Math.round(100 / pc)}% cada</p>;
+    }
+
+    // Passage ID preview
+    if (data.type === "passage-id") {
+      return <p className={`text-xs ${data.passageLabel ? "text-foreground" : "text-muted-foreground"}`}>{data.passageLabel || "Configure o identificador..."}</p>;
+    }
+
     // Default text preview
     return <p className={`text-xs ${hasData ? "text-foreground" : "text-muted-foreground"}`}>{preview}</p>;
   };
