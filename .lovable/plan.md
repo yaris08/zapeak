@@ -1,63 +1,46 @@
 
 
-# Funcionalidades no AtendimentoPage.tsx
+# Corrigir Alinhamento das Mensagens — WhatsApp Style
 
 ## Arquivo único
-`src/pages/AtendimentoPage.tsx` — edições no componente existente
+`src/pages/AtendimentoPage.tsx` — editar bloco de renderização de mensagens (linhas 363-398)
 
 ## Alterações
 
-### Imports adicionais
-- `lucide-react`: `StopCircle, Play, DollarSign, Bot`
-- `sonner`: `toast`
-- `Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter` de `@/components/ui/dialog`
-- `AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction` de `@/components/ui/alert-dialog`
+### Mensagens do sistema (linhas 365-372)
+- Adicionar `mb-3` no wrapper
+- Mudar texto para `text-[11px]`
 
-### Novos states
-- `showFlowModal: boolean`
-- `selectedFlow: number | null`
-- `showStopModal: boolean`
-- `activeFlow: string | null` (inicia com `"Boas-vindas"`)
-- `showPaymentModal: boolean`
-- `paymentValue: string`
-- `paymentNote: string`
-- `paymentCampaign: string`
-- `contactTags: Record<number, {label, color}[]>` — cópia local dos tags para poder adicionar "pago"
+### Mensagens contact/bot/agent (linhas 374-397)
+Substituir toda a estrutura por:
 
-### 1. Modal "Iniciar Fluxo"
-- Usa `Dialog` do shadcn
-- Lista 4 fluxos mockados como cards clicáveis (Boas-vindas, Qualificação Lead, Suporte Automático, Recuperação Carrinho)
-- Card selecionado: `border-[#22c55e] bg-[#1a2a1a]`
-- Botões: Cancelar (fecha) | Disparar Fluxo (verde) — ao confirmar:
-  - `setActiveFlow(nome do fluxo)`
-  - Toast `✓ Fluxo disparado para {nome}`
-  - Adiciona mensagem sistema `🤖 Fluxo '{nome}' iniciado manualmente`
-  - Fecha modal
+**Contact** (esquerda):
+- `flex items-start gap-2 mb-3`
+- Avatar circular (inicial, bg `#2a2a2a`, 28px) à esquerda
+- Label com nome do contato acima (apenas na primeira msg consecutiva do mesmo sender — verificar `prevMsg`)
+- Bolha: `bg-[#2a2a2a] rounded-2xl rounded-tl-sm max-w-xs lg:max-w-md px-3 py-2`
+- Horário abaixo em `text-[10px]`
 
-### 2. Botão "Parar Fluxo" no header do chat
-- Inserido entre "Transferir" e "Resolver"
-- Outline pequeno com ícone `StopCircle` vermelho
-- Só aparece quando `activeFlow !== null`
-- Ao clicar: abre `AlertDialog` de confirmação
-- Ao confirmar:
-  - `setActiveFlow(null)`
-  - Toast `✓ Fluxo pausado`
-  - Mensagem sistema `⏹ Fluxo interrompido manualmente`
+**Bot** (esquerda):
+- `flex items-start gap-2 mb-3`
+- Sem avatar (spacer de 28px para alinhar com contact)
+- Label "Bot" em verde `#22c55e` acima
+- Bolha: `bg-[#1e2a1e] rounded-2xl rounded-tl-sm max-w-xs lg:max-w-md px-3 py-2`
+- Horário abaixo
 
-### 3. Botão "Marcar como Pago" no painel direito
-- Inserido entre "Iniciar Fluxo" e "Marcar como Resolvido"
-- Outline verde, ícone `DollarSign`, largura total
-- Ao clicar: abre `Dialog` com inputs valor, observação, select campanha
-- Ao confirmar:
-  - Toast `✓ Pagamento de R$ X,XX registrado`
-  - Adiciona badge "pago" ao contato se não tiver
-  - Mensagem sistema `💰 Pagamento de R$ X,XX registrado manualmente`
+**Agent** (direita):
+- `flex items-start justify-end gap-2 mb-3`
+- `flex-col items-end`
+- Bolha: `bg-[#22c55e]/20 border border-[#22c55e]/30 rounded-2xl rounded-tr-sm max-w-xs lg:max-w-md px-3 py-2`
+- Horário abaixo à direita
 
-### 4. Indicador de Fluxo Ativo
-- Abaixo do nome/telefone no header do chat
-- `activeFlow`: ícone `Bot` (12px) verde + texto `Fluxo ativo: {nome}` em cinza pequeno
-- Sem fluxo: ícone `Bot` cinza + `Sem fluxo ativo`
+### Lógica de label consecutivo
+Antes do map, verificar índice anterior para mostrar label apenas na primeira mensagem consecutiva do mesmo sender:
+```
+const prevMsg = index > 0 ? currentMessages[index - 1] : null;
+const showLabel = prevMsg?.sender !== msg.sender;
+```
 
-### 5. Shift+Enter
-- Já funciona — o `handleKeyDown` atual só envia em Enter sem Shift. Textarea com `resize-none` já suporta multiline. Nada a mudar aqui.
+### Nenhuma outra alteração
+Layout, funcionalidades, modais, inputs — tudo mantido.
 
