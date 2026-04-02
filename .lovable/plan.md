@@ -1,33 +1,44 @@
 
 
-# Dashboard Completo — HomePage.tsx
+# Dashboard Completo — HomePage.tsx (Reescrita)
 
-## O que será feito
-Substituir completamente `src/pages/HomePage.tsx` por um dashboard funcional com seletor de período, 6 KPIs, gráfico de sessões (recharts), e 2 tabelas (Top Campanhas e Fluxos Ativos).
+## Arquivo único
+`src/pages/HomePage.tsx` — substituição completa
 
-## Arquivo único a modificar
-`src/pages/HomePage.tsx` — reescrita completa
+## Estrutura
 
-## Estrutura do componente
+### State e dados
+- `period`: `"today" | "7d" | "30d"` com multiplicadores `{today: 1, "7d": 5.2, "30d": 18}`
+- Todos os valores base escalados por multiplicador ao trocar período
+- Helper `fmt()` para BRL, `roasColor()` para regra de cores ROAS (vermelho < 1.5, amarelo 1.5-1.9, verde >= 2.0), `confidenceColor()` para IA (verde >= 80%, amarelo 60-79%, vermelho < 60%)
 
-### State
-- `period`: `"today" | "7d" | "30d"` — controla o seletor de período
-- Dados mockados variam por período (multiplicadores simples sobre os valores base)
+### Layout (7 blocos, top-down)
 
-### Layout (de cima para baixo)
-1. **Header**: título "Dashboard" à esquerda, 3 botões de período à direita (ativo = bg `#F97316`)
-2. **KPIs**: grid 3 colunas, 2 linhas — 6 cards com ícone colorido, valor e label
-3. **Gráfico**: `LineChart` do recharts (já instalado), 24 pontos simulando pico comercial, linha laranja, altura 200px, fundo `#1a1a1a` com borda `#2a2a2a`
-4. **Tabela Top Campanhas**: 5 colunas, 3 linhas mockadas, ROAS em badge colorido
-5. **Tabela Fluxos Ativos**: 4 colunas, 3 linhas mockadas, Status em badge verde/cinza
+1. **Header** — "Dashboard" + seletor período (3 botões, ativo = `bg-[#F97316]`)
 
-### Detalhes visuais
-- Tabelas: fundo `#1a1a1a`, bordas `#2a2a2a`, header uppercase cinza pequeno, hover sutil nas linhas
-- ROAS badge: verde `>2x`, amarelo `1-2x`, vermelho `<1x`
-- Ícones via Lucide: `GitBranch`, `MessageSquare`, `BarChart3`, `DollarSign`, `ShoppingCart`, `TrendingUp`
-- Gráfico usa `ResponsiveContainer`, `LineChart`, `Line`, `XAxis`, `YAxis`, `Tooltip`, `CartesianGrid` do recharts
+2. **Tráfego** — grid 4 cols: Conversas Iniciadas (Users, azul), Taxa Resposta Bot (MessageSquare, ciano), Taxa Conclusão (CheckCircle, laranja), Custo/Conversa (MousePointer, roxo)
+
+3. **Vendas** — grid 4 cols: Total Vendas (ShoppingCart, verde), Faturamento (DollarSign, verde), Ticket Médio (TrendingUp, azul), Custo/Compra (CreditCard, laranja)
+
+4. **ROAS** — grid 3 cols: ROAS Médio (badge colorido), Taxa Conversão (10.2%), Investimento Total
+
+5. **Funil** — Card com 4 etapas verticais, cada uma com label + valor + % + barra de progresso laranja (`div` com width dinâmico)
+
+6. **Gráfico** — LineChart recharts, 24h, linha `#F97316`, altura 180px
+
+7. **Tabela Campanhas** — 8 colunas com ROAS badge + linha de totais bold no rodapé
+
+8. **Vendas Recentes** — 6 colunas, 5 linhas, badges de confiança IA + ícone Pixel ✅/❌
 
 ### Dependências
-- `recharts` — já disponível no projeto (usado pelo componente `chart.tsx`)
-- Lucide React — já instalado
+- `recharts` (já instalado) — ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid
+- Lucide: Users, MessageSquare, CheckCircle, MousePointer, ShoppingCart, DollarSign, TrendingUp, CreditCard, Target, Percent, Wallet, MessageCircle, UserCheck, ShoppingBag
+- Componentes nativos (sem shadcn extras necessários)
+
+### Detalhes visuais
+- Cards: `bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg`
+- Hover tabelas: `hover:bg-[#222]`
+- Headers tabela: `text-[10px] uppercase tracking-wider text-muted-foreground`
+- Funil: barras com `bg-[#F97316]` e width percentual, fundo `bg-[#2a2a2a]`
+- Espaçamento: `space-y-6`, padding `p-6`
 
