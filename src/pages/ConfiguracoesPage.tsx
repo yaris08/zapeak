@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Loader2, Check } from "lucide-react";
+import { Loader2, Check, Eye, EyeOff, Save } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -26,10 +26,18 @@ const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("pixel");
 
   // Pixel
+  const [pixelId, setPixelId] = useState("");
+  const [pixelToken, setPixelToken] = useState("");
+  const [pixelDataset, setPixelDataset] = useState("");
+  const [showPixelToken, setShowPixelToken] = useState(false);
   const [pixelServerSide, setPixelServerSide] = useState(true);
   const [pixelTestStatus, setPixelTestStatus] = useState<null | "loading" | "success">(null);
+  const [pixelSaved, setPixelSaved] = useState(false);
 
   // IA
+  const [iaApiKey, setIaApiKey] = useState("");
+  const [showIaKey, setShowIaKey] = useState(false);
+  const [iaSaved, setIaSaved] = useState(false);
   const [iaModel, setIaModel] = useState("sonnet");
   const [iaPrompt, setIaPrompt] = useState("");
   const [iaVendas, setIaVendas] = useState(true);
@@ -45,18 +53,69 @@ const ConfiguracoesPage: React.FC = () => {
 
   useEffect(() => {
     const px = loadSettings("pixel");
-    if (px) { setPixelServerSide(px.serverSide ?? true); }
+    if (px) {
+      setPixelId(px.pixelId || "");
+      setPixelDataset(px.pixelDataset || "");
+      setPixelServerSide(px.serverSide ?? true);
+      if (px.pixelToken) setPixelSaved(true);
+    }
     const ia = loadSettings("ia");
-    if (ia) { setIaModel(ia.model || "sonnet"); setIaPrompt(ia.prompt || ""); setIaVendas(ia.vendas ?? true); setIaPix(ia.pix ?? true); setIaNotify(ia.notify ?? true); }
+    if (ia) {
+      setIaModel(ia.model || "sonnet");
+      setIaPrompt(ia.prompt || "");
+      setIaVendas(ia.vendas ?? true);
+      setIaPix(ia.pix ?? true);
+      setIaNotify(ia.notify ?? true);
+      if (ia.apiKey) setIaSaved(true);
+    }
     const nt = loadSettings("notificacoes");
-    if (nt) { setNotifVenda(nt.venda ?? true); setNotifConversa(nt.conversa ?? true); setNotifPixel(nt.pixel ?? true); setNotifTimeout(nt.timeout ?? true); setNotifPhone(nt.phone || ""); }
+    if (nt) {
+      setNotifVenda(nt.venda ?? true);
+      setNotifConversa(nt.conversa ?? true);
+      setNotifPixel(nt.pixel ?? true);
+      setNotifTimeout(nt.timeout ?? true);
+      setNotifPhone(nt.phone || "");
+    }
   }, []);
 
+  const maskedPixelId = pixelSaved && !pixelId && loadSettings("pixel")?.pixelId
+    ? loadSettings("pixel").pixelId.replace(/^(.{4}).*(.{2})$/, "$1•••••••••$2")
+    : "";
+
   const handleSave = () => {
-    
-    if (activeTab === "pixel") localStorage.setItem("zapeak_settings_pixel", JSON.stringify({ serverSide: pixelServerSide }));
-    if (activeTab === "ia") localStorage.setItem("zapeak_settings_ia", JSON.stringify({ model: iaModel, prompt: iaPrompt, vendas: iaVendas, pix: iaPix, notify: iaNotify }));
-    if (activeTab === "notificacoes") localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({ venda: notifVenda, conversa: notifConversa, pixel: notifPixel, timeout: notifTimeout, phone: notifPhone }));
+    if (activeTab === "pixel") {
+      const prev = loadSettings("pixel") || {};
+      localStorage.setItem("zapeak_settings_pixel", JSON.stringify({
+        pixelId: pixelId || prev.pixelId || "",
+        pixelToken: pixelToken || prev.pixelToken || "",
+        pixelDataset: pixelDataset || prev.pixelDataset || "",
+        serverSide: pixelServerSide,
+      }));
+      if (pixelId || pixelToken) setPixelSaved(true);
+      setPixelToken("");
+    }
+    if (activeTab === "ia") {
+      const prev = loadSettings("ia") || {};
+      localStorage.setItem("zapeak_settings_ia", JSON.stringify({
+        apiKey: iaApiKey || prev.apiKey || "",
+        model: iaModel,
+        prompt: iaPrompt,
+        vendas: iaVendas,
+        pix: iaPix,
+        notify: iaNotify,
+      }));
+      if (iaApiKey) setIaSaved(true);
+      setIaApiKey("");
+    }
+    if (activeTab === "notificacoes") {
+      localStorage.setItem("zapeak_settings_notificacoes", JSON.stringify({
+        venda: notifVenda,
+        conversa: notifConversa,
+        pixel: notifPixel,
+        timeout: notifTimeout,
+        phone: notifPhone,
+      }));
+    }
     toast.success("✓ Configurações salvas");
   };
 
@@ -96,8 +155,44 @@ const ConfiguracoesPage: React.FC = () => {
       {activeTab === "pixel" && (
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 text-xs text-muted-foreground">
-              As credenciais do Facebook Pixel são configuradas pelo administrador. Aqui você pode ativar ou desativar o envio de eventos.
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Pixel ID</Label>
+              <Input
+                value={pixelId}
+                onChange={e => setPixelId(e.target.value)}
+                placeholder={maskedPixelId || "123456789012345"}
+                className="bg-[#0f0f0f] border-[#2a2a2a]"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Token de Acesso (Conversions API)</Label>
+              <div className="relative">
+                <Input
+                  type={showPixelToken ? "text" : "password"}
+                  value={pixelToken}
+                  onChange={e => setPixelToken(e.target.value)}
+                  placeholder={pixelSaved ? "Token salvo — insira novo para alterar" : "Insira seu token de acesso"}
+                  className="bg-[#0f0f0f] border-[#2a2a2a] pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPixelToken(!showPixelToken)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPixelToken ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Dataset ID (opcional)</Label>
+              <Input
+                value={pixelDataset}
+                onChange={e => setPixelDataset(e.target.value)}
+                placeholder="dataset_id"
+                className="bg-[#0f0f0f] border-[#2a2a2a]"
+              />
             </div>
 
             <div className="flex items-center justify-between">
@@ -119,8 +214,6 @@ const ConfiguracoesPage: React.FC = () => {
               💡 O Token de Acesso é necessário para enviar eventos server-side com maior precisão e sem bloqueio de navegadores.
             </div>
           </div>
-
-          <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
         </div>
       )}
 
@@ -128,6 +221,27 @@ const ConfiguracoesPage: React.FC = () => {
       {activeTab === "ia" && (
         <div className="space-y-4">
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 space-y-4">
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Chave API Anthropic</Label>
+              <div className="relative">
+                <Input
+                  type={showIaKey ? "text" : "password"}
+                  value={iaApiKey}
+                  onChange={e => setIaApiKey(e.target.value)}
+                  placeholder={iaSaved ? "Chave salva — insira nova para alterar" : "Insira sua chave da API"}
+                  className="bg-[#0f0f0f] border-[#2a2a2a] pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowIaKey(!showIaKey)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showIaKey ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+              <p className="text-[10px] text-muted-foreground">Sua chave é armazenada de forma segura e nunca exibida.</p>
+            </div>
+
             <div className="space-y-2">
               <Label className="text-xs text-muted-foreground">Modelo</Label>
               <Select value={iaModel} onValueChange={setIaModel}>
@@ -165,8 +279,6 @@ const ConfiguracoesPage: React.FC = () => {
               🤖 A IA analisa cada mensagem recebida em busca de confirmações de pagamento e comprovantes de PIX enviados pelos leads.
             </div>
           </div>
-
-          <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
         </div>
       )}
 
@@ -203,10 +315,16 @@ const ConfiguracoesPage: React.FC = () => {
               ⚠️ Configure um número válido para receber alertas. Certifique-se que o número está salvo em seus contatos.
             </div>
           </div>
-
-          <button onClick={handleSave} className="w-full py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors">Salvar</button>
         </div>
       )}
+
+      {/* Botão Salvar fixo */}
+      <button
+        onClick={handleSave}
+        className="fixed bottom-6 right-6 px-6 py-2 rounded-lg bg-[#22c55e] text-white text-sm font-medium hover:bg-[#22c55e]/90 transition-colors flex items-center gap-2 shadow-lg shadow-black/30 z-50"
+      >
+        <Save size={14} /> Salvar configurações
+      </button>
     </div>
   );
 };
