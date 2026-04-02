@@ -1,44 +1,45 @@
 
 
-# Criar Properties para 3 nós + registrar no painel + previews
+# 2 Correções: Randomizador multi-saída + Figurinha upload
 
 ## Arquivos
 
 | Arquivo | Ação |
 |---------|------|
-| `src/components/flow/properties/FigurinhaProperties.tsx` | Criar |
-| `src/components/flow/properties/RandomizadorProperties.tsx` | Criar |
-| `src/components/flow/properties/IdentificadorPassagemProperties.tsx` | Criar |
-| `src/components/flow/PropertiesPanel.tsx` | Editar — importar + 3 cases no switch |
-| `src/components/flow/nodes/GenericNode.tsx` | Editar — 3 previews no renderContent + 3 cases no getPreview |
+| `src/components/flow/nodes/GenericNode.tsx` | Editar — randomizer com múltiplos handles |
+| `src/components/flow/properties/FigurinhaProperties.tsx` | Editar — adicionar upload de arquivo |
 
-## 1. Criar 3 componentes de propriedades
+## 1. GenericNode.tsx — Randomizador com múltiplas saídas
 
-Conteúdo exatamente como fornecido pelo usuário:
-- **FigurinhaProperties**: input URL WebP + preview da imagem
-- **RandomizadorProperties**: lista dinâmica de caminhos com add/remove + probabilidade calculada
-- **IdentificadorPassagemProperties**: input nome + tag opcional + 2 switches (contar uma vez, disparar pixel)
+### Rodapé do nó (linhas 236-291)
 
-## 2. PropertiesPanel.tsx
+Adicionar `data.type === "randomizer"` como novo branch no ternário, entre `payment` e o default (linha 282):
 
-- Importar os 3 componentes (linhas 20-22)
-- Adicionar 3 cases no switch antes do `default` (após linha 85):
-  - `case "sticker"` → `<FigurinhaProperties />`
-  - `case "randomizer"` → `<RandomizadorProperties />`
-  - `case "passage-id"` → `<IdentificadorPassagemProperties />`
+```tsx
+) : data.type === "randomizer" ? (
+  <div className="px-3 py-2 border-t flex flex-col gap-2" style={{ borderColor: color + "30" }}>
+    {(data.randomPaths || ["Caminho A", "Caminho B"]).map((path: string, i: number) => (
+      <div key={i} className="flex items-center justify-between">
+        <span className="text-[10px] text-muted-foreground">{path}</span>
+        <Handle
+          type="source"
+          position={Position.Right}
+          id={`path-${i}`}
+          className="!w-3 !h-3 !border-2 !border-background"
+          style={{ backgroundColor: color, position: "relative", right: "-8px", top: 0, transform: "none" }}
+        />
+      </div>
+    ))}
+  </div>
+) : (
+```
 
-## 3. GenericNode.tsx — getPreview (linhas 11-49)
+O randomizer não usará mais o handle único padrão.
 
-Adicionar antes do `default`:
-- `case "sticker"` → `data.stickerUrl ? "Figurinha configurada" : "Selecione uma figurinha..."`
-- `case "randomizer"` → `` `${(data.randomPaths?.length ?? 2)} caminhos | ${Math.round(100 / (data.randomPaths?.length ?? 2))}% cada` ``
-- `case "passage-id"` → `data.passageLabel || "Configure o identificador..."`
+## 2. FigurinhaProperties.tsx — Upload + URL com tabs
 
-## 4. GenericNode.tsx — renderContent (linhas 70-182)
+### Substituir conteúdo completo por:
 
-Adicionar antes do default text preview:
-
-- **sticker**: se `data.stickerUrl` → `<img>` 40×40 object-contain; senão texto placeholder
-- **randomizer**: mostrar `"X caminhos | Y% cada"`
-- **passage-id**: mostrar `data.passageLabel` ou placeholder
-
+- Imports: `useRef`, `useState`, `Upload` de lucide-react, `Label`, `Input`
+- State local: `mode` = `data.stickerType || "url"` (controlado por dois botões tipo tab)
+- `fileUrlRef` para ger
