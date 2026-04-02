@@ -27,7 +27,7 @@ const CustomEdge: React.FC<EdgeProps> = ({
         d={edgePath}
         fill="none"
         style={{
-          stroke: selected ? "#ff6b35" : "#f97316",
+          stroke: selected ? "#16a34a" : "#22c55e",
           strokeWidth: selected ? 3 : 2,
           strokeDasharray: "6 4",
           animation: "dashdraw 1.5s linear infinite",

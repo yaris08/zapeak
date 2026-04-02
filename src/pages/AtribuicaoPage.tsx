@@ -241,7 +241,7 @@ const AtribuicaoPage: React.FC = () => {
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <Button variant="outline" size="sm" className="text-xs" onClick={() => setShowModal(false)}>Cancelar</Button>
-              <Button size="sm" className="text-xs" style={{ backgroundColor: "#f97316" }} onClick={() => { setShowModal(false); toast("Campanha criada!"); setCampaignName(""); setInvestment(""); setStartDate(""); setEndDate(""); }}>
+              <Button size="sm" className="text-xs bg-primary hover:bg-primary/90" onClick={() => { setShowModal(false); toast("Campanha criada!"); setCampaignName(""); setInvestment(""); setStartDate(""); setEndDate(""); }}>
                 Criar Campanha
               </Button>
             </div>

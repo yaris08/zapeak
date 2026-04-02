@@ -203,7 +203,7 @@ const HomePage: React.FC = () => {
             <XAxis dataKey="hora" tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 8, color: "#fff" }} labelStyle={{ color: "#9ca3af" }} />
-            <Line type="monotone" dataKey="sessoes" stroke="#f97316" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="sessoes" stroke="#22c55e" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
