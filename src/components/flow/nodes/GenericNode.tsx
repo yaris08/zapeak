@@ -44,6 +44,14 @@ const getPreview = (data: any): string => {
       return data.adminPhone || "Configure a notificação...";
     case "pix":
       return data.pixKey || "Configure a chave PIX...";
+    case "sticker":
+      return data.stickerUrl ? "Figurinha configurada" : "Selecione uma figurinha...";
+    case "randomizer": {
+      const pc = data.randomPaths?.length ?? 2;
+      return `${pc} caminhos | ${Math.round(100 / pc)}% cada`;
+    }
+    case "passage-id":
+      return data.passageLabel || "Configure o identificador...";
     default:
       return "Configure este componente...";
   }
