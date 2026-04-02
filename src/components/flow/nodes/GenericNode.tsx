@@ -279,6 +279,21 @@ const GenericNode: React.FC<NodeProps> = ({ data, selected }) => {
             />
           </div>
         </div>
+      ) : data.type === "randomizer" ? (
+        <div className="px-3 py-2 border-t flex flex-col gap-2" style={{ borderColor: color + "30" }}>
+          {(data.randomPaths || ["Caminho A", "Caminho B"]).map((path: string, i: number) => (
+            <div key={i} className="flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground">{path}</span>
+              <Handle
+                type="source"
+                position={Position.Right}
+                id={`path-${i}`}
+                className="!w-3 !h-3 !border-2 !border-background"
+                style={{ backgroundColor: color, position: "relative", right: "-8px", top: 0, transform: "none" }}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="px-3 py-2 border-t flex items-center justify-end" style={{ borderColor: color + "30" }}>
           <Handle
