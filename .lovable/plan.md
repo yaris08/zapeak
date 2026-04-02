@@ -1,57 +1,76 @@
 
 
-# Aba IA — Chave API com detecção de provedor + Select dinâmico
+# 2 Alterações: Gerenciador de Pixels + Node Pixel Select
 
-## Arquivo único
-`src/pages/ConfiguracoesPage.tsx`
+## Arquivos
 
-## Remover
-- State: `iaPrompt`, `iaVendas`, `iaPix`, `iaNotify`
-- Imports: `Textarea` (se não usado em outro lugar)
-- Na aba IA: textarea "Persona / Prompt base" (linhas 258-261), 3 toggles (linhas 263-276), info box verde (linhas 278-280)
-- No `handleSave` IA: remover `prompt`, `vendas`, `pix`, `notify` do JSON salvo
-- No `useEffect` load IA: remover carregamento de `prompt`, `vendas`, `pix`, `notify`
+| Arquivo | Ação |
+|---------|------|
+| `src/pages/ConfiguracoesPage.tsx` | Editar — substituir aba Pixel por gerenciador multi-pixel |
+| `src/components/flow/properties/PixelProperties.tsx` | Editar — substituir campos por select de pixel cadastrado |
 
-## Adicionar
+## 1. ConfiguracoesPage.tsx — Aba Facebook Pixel
 
-### Lógica de detecção de provedor
-Função derivada (não state):
+### Remover
+- States: `pixelId`, `pixelToken`, `pixelDataset`, `showPixelToken`, `pixelSaved`, `maskedPixelId`
+- Campos individuais de Pixel ID, Token, Dataset ID, toggle server-side
+- Lógica de save/load relacionada ao pixel individual
+
+### Adicionar
+
+**Imports**: `Pencil, Trash2, Plus` de lucide-react; `Dialog, DialogContent, DialogHeader, DialogTitle` de shadcn
+
+**Interface Pixel**:
 ```
-const detectProvider = (key: string) => {
-  if (key.startsWith("sk-ant")) return "anthropic";
-  if (key.startsWith("sk-")) return "openai";
-  if (key.startsWith("AIza")) return "gemini";
-  if (key.length > 0) return "unknown";
-  return null;
-};
-const detectedProvider = detectProvider(iaApiKey);
+{ id: string; name: string; pixelId: string; token: string; datasetId: string; serverSide: boolean; active: boolean }
 ```
 
-### Badge de provedor (abaixo do input, antes do helper text)
-- `anthropic` → `🟣 Anthropic detectado`
-- `openai` → `🟢 OpenAI detectado`
-- `gemini` → `🔵 Google Gemini detectado`
-- `unknown` → `⚪ Provedor não reconhecido`
-- `null` → não renderiza badge
+**States**:
+- `pixels`: array de Pixel, inicializado com 2 mockados (Principal "1234567890" e Vendas "9876543210")
+- `showPixelModal`: boolean
+- `editingPixel`: Pixel | null (null = novo)
+- `modalForm`: { name, pixelId, token, datasetId, serverSide, showToken }
 
-Estilo: `text-xs px-2 py-1 rounded bg-[#2a2a2a] inline-flex`
+**Renderização da aba**:
+1. Header: "Pixels Cadastrados" + botão "Adicionar Pixel" (verde, pequeno, ícone Plus)
+2. Lista de cards para cada pixel:
+   - Nome + ID + badge "Ativo"/"Inativo" (verde/cinza)
+   - Toggle ativar/desativar
+   - Botões Pencil (editar) e Trash2 (excluir)
+   - Estilo: `bg-[#0f0f0f] border-[#2a2a2a] rounded-lg p-3`
+3. Botão "Testar Conexão" (mantido)
+4. Info box azul (mantido)
 
-### Label do input
-Mudar de "Chave API Anthropic" para "Chave API"
-Placeholder: "Cole sua chave API aqui..."
+**Modal Adicionar/Editar Pixel**:
+- Campos: Nome, Pixel ID, Token (password + eye), Dataset ID, toggle server-side
+- Botões: Cancelar | Salvar Pixel (verde)
+- Ao salvar: adiciona/atualiza no array `pixels`, toast "✓ Pixel salvo com sucesso"
+- Ao editar: preenche form com dados existentes (token fica vazio, placeholder "Token salvo")
 
-### Select de modelo — dinâmico
-Substituir options fixas por mapeamento:
-- **anthropic**: `claude-sonnet-4.5` "Claude Sonnet 4.5 (Recomendado)" | `claude-haiku-4.5` "Claude Haiku 4.5 (Rápido)"
-- **openai**: `gpt-4o` "GPT-4o (Recomendado)" | `gpt-4o-mini` "GPT-4o Mini (Rápido)" | `gpt-4-turbo` "GPT-4 Turbo"
-- **gemini**: `gemini-1.5-pro` "Gemini 1.5 Pro (Recomendado)" | `gemini-1.5-flash` "Gemini 1.5 Flash (Rápido)"
-- **unknown/null**: Select desabilitado, placeholder "Detectando provedor..."
+**Persistência**: salvar/carregar array `pixels` em `zapeak_settings_pixels` via localStorage no handleSave global e useEffect
 
-Ao mudar de provedor, resetar `iaModel` para o primeiro valor do novo provedor.
+### handleSave
+- Aba pixel: salvar array `pixels` no localStorage
 
-### handleSave IA
-Salvar: `apiKey`, `model`, `provider` (string detectada). Remover campos removidos.
+## 2. PixelProperties.tsx — Select de Pixel
 
-### useEffect load IA
-Carregar `model`; se `apiKey` existia → `iaSaved=true`; carregar `provider` para eventual uso.
+### Remover
+- Campos "Pixel ID" e "Token de Acesso"
+
+### Substituir por
+- Select "Selecionar Pixel" com opções mockadas:
+  - `"principal"` → "Pixel Principal (1234567890)"
+  - `"vendas"` → "Pixel Vendas (9876543210)"
+  - `"new"` → "+ Cadastrar novo pixel →"
+- Ao selecionar "new": `window.location.href = "/configuracoes"` (ou `useNavigate`)
+- Salva em `data.selectedPixelId`
+
+### Manter
+- Select Evento (5 opções)
+- Input Valor (opcional)
+- Select Moeda (BRL/USD/EUR)
+- Toggle "Usar dados do contato"
+
+### Imports adicionais
+- `useNavigate` de react-router-dom
 
