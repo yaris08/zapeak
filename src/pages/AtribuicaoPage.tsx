@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DollarSign, ShoppingCart, TrendingUp, CreditCard, Copy, Plus, Download, Target } from "lucide-react";
+import { DollarSign, ShoppingCart, TrendingUp, CreditCard, Copy, Plus, Download, Target, MessageCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,11 +26,11 @@ const campaignsBase = [
 ];
 
 const salesBase = [
-  { date: "02/04 14:32", name: "João Silva", phone: "(11) 9xxxx-1234", campaign: "Páscoa 2024", valor: 97, confianca: 94, pixel: true },
-  { date: "02/04 13:15", name: "Maria Souza", phone: "(11) 9xxxx-5678", campaign: "Black Friday", valor: 197, confianca: 88, pixel: true },
-  { date: "02/04 12:40", name: "Carlos Lima", phone: "(11) 9xxxx-9012", campaign: "Lead Quente", valor: 47, confianca: 76, pixel: true },
-  { date: "02/04 11:22", name: "Ana Paula", phone: "(11) 9xxxx-3456", campaign: "Páscoa 2024", valor: 97, confianca: 91, pixel: true },
-  { date: "02/04 10:05", name: "Pedro Costa", phone: "(11) 9xxxx-7890", campaign: "Black Friday", valor: 297, confianca: 62, pixel: false },
+  { date: "02/04 14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", valor: 97, confianca: 94, pixel: true },
+  { date: "02/04 13:15", name: "Maria Souza", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", campaign: "Black Friday", valor: 197, confianca: 88, pixel: true },
+  { date: "02/04 12:40", name: "Carlos Lima", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", campaign: "Lead Quente", valor: 47, confianca: 76, pixel: true },
+  { date: "02/04 11:22", name: "Ana Paula", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", campaign: "Páscoa 2024", valor: 97, confianca: 91, pixel: true },
+  { date: "02/04 10:05", name: "Pedro Costa", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", campaign: "Black Friday", valor: 297, confianca: 62, pixel: false },
 ];
 
 const roasBadge = (v: number) => {
@@ -183,7 +183,11 @@ const AtribuicaoPage: React.FC = () => {
                 >
                   <td className="px-4 py-2.5 text-muted-foreground">{s.date}</td>
                   <td className="px-4 py-2.5 text-foreground">{s.name}</td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{s.phone}</td>
+                  <td className="px-4 py-2.5">
+                    <a href={s.wa} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5" style={{ color: "#22c55e", fontSize: "12px", textDecoration: "none" }}>
+                      <MessageCircle size={12} />{s.phone}
+                    </a>
+                  </td>
                   <td className="px-4 py-2.5 text-muted-foreground">{s.campaign}</td>
                   <td className="px-4 py-2.5 text-foreground font-medium">{fmtDec(s.valor * m)}</td>
                   <td className="px-4 py-2.5">{confBadge(s.confianca)}</td>
