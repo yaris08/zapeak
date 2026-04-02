@@ -10,6 +10,7 @@ import FlowEditor from "@/pages/FlowEditor";
 import AtendimentoPage from "@/pages/AtendimentoPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import AtribuicaoPage from "@/pages/AtribuicaoPage";
+import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
