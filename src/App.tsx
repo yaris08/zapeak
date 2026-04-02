@@ -12,6 +12,7 @@ import InstanciasPage from "@/pages/InstanciasPage";
 import RelatoriosPage from "@/pages/RelatoriosPage";
 import AtribuicaoPage from "@/pages/AtribuicaoPage";
 import ConfiguracoesPage from "@/pages/ConfiguracoesPage";
+import ContatosPage from "@/pages/ContatosPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/relatorios" element={<RelatoriosPage />} />
             <Route path="/atribuicao" element={<AtribuicaoPage />} />
             <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+            <Route path="/contatos" element={<ContatosPage />} />
           </Route>
           <Route path="/flows/:id/editor" element={<FlowEditor />} />
           <Route path="*" element={<NotFound />} />
