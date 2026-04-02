@@ -1,17 +1,396 @@
-import React from "react";
-import { MessageSquare } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus } from "lucide-react";
 
-const AtendimentoPage: React.FC = () => (
-  <div className="p-6">
-    <h1 className="text-xl font-bold text-foreground mb-1">Atendimento</h1>
-    <p className="text-sm text-muted-foreground mb-6">Central de atendimento ao cliente</p>
-    <div className="flex items-center justify-center h-64 bg-card border border-border rounded-lg">
-      <div className="text-center">
-        <MessageSquare size={40} className="mx-auto text-muted-foreground mb-3" />
-        <p className="text-sm text-muted-foreground">Em breve</p>
+interface Message {
+  id: number;
+  sender: "bot" | "contact" | "agent" | "system";
+  text: string;
+  time: string;
+}
+
+interface Contact {
+  name: string;
+  phone: string;
+  lastMsg: string;
+  time: string;
+  unread: number;
+  badge?: { label: string; color: string };
+  messages: Message[];
+  tags: { label: string; color: string }[];
+  history: { convos: number; firstContact: string; flow: string };
+}
+
+const contacts: Contact[] = [
+  {
+    name: "João Silva",
+    phone: "(11) 9xxxx-1234",
+    lastMsg: "Acabei de fazer o pix!",
+    time: "14:32",
+    unread: 2,
+    badge: { label: "pago", color: "bg-green-500/20 text-green-400" },
+    tags: [
+      { label: "pago", color: "bg-green-500/20 text-green-400" },
+      { label: "cliente", color: "bg-blue-500/20 text-blue-400" },
+    ],
+    history: { convos: 3, firstContact: "01/04/2026", flow: "Boas-vindas" },
+    messages: [
+      { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo. Como posso te ajudar?", time: "14:20" },
+      { id: 2, sender: "contact", text: "Quero comprar o produto", time: "14:21" },
+      { id: 3, sender: "bot", text: "Perfeito! O valor é R$ 97,00. Vou te enviar a chave PIX.", time: "14:21" },
+      { id: 4, sender: "bot", text: "Chave PIX: 11999999999", time: "14:22" },
+      { id: 5, sender: "contact", text: "Paguei! Segue o comprovante 📎", time: "14:31" },
+      { id: 6, sender: "system", text: "✅ Pagamento de R$ 97,00 identificado pela IA (94% confiança)", time: "14:32" },
+      { id: 7, sender: "bot", text: "✅ Pagamento confirmado! Obrigado João!", time: "14:32" },
+      { id: 8, sender: "agent", text: "Olá João! Vi que você pagou. Vou processar seu pedido agora.", time: "14:35" },
+    ],
+  },
+  {
+    name: "Maria Souza",
+    phone: "(11) 9xxxx-5678",
+    lastMsg: "Qual o prazo de entrega?",
+    time: "14:15",
+    unread: 1,
+    badge: { label: "lead", color: "bg-blue-500/20 text-blue-400" },
+    tags: [{ label: "lead", color: "bg-blue-500/20 text-blue-400" }],
+    history: { convos: 1, firstContact: "02/04/2026", flow: "Qualificação" },
+    messages: [
+      { id: 1, sender: "bot", text: "Olá Maria! Como posso ajudar?", time: "14:10" },
+      { id: 2, sender: "contact", text: "Qual o prazo de entrega?", time: "14:15" },
+    ],
+  },
+  {
+    name: "Carlos Lima",
+    phone: "(11) 9xxxx-9012",
+    lastMsg: "Olá, tudo bem?",
+    time: "13:40",
+    unread: 0,
+    tags: [],
+    history: { convos: 2, firstContact: "28/03/2026", flow: "Suporte" },
+    messages: [
+      { id: 1, sender: "contact", text: "Olá, tudo bem?", time: "13:40" },
+    ],
+  },
+  {
+    name: "Ana Paula",
+    phone: "(11) 9xxxx-3456",
+    lastMsg: "Quero saber mais sobre...",
+    time: "13:22",
+    unread: 0,
+    badge: { label: "pago", color: "bg-green-500/20 text-green-400" },
+    tags: [{ label: "pago", color: "bg-green-500/20 text-green-400" }],
+    history: { convos: 5, firstContact: "15/03/2026", flow: "Boas-vindas" },
+    messages: [
+      { id: 1, sender: "contact", text: "Quero saber mais sobre o curso", time: "13:22" },
+    ],
+  },
+  {
+    name: "Pedro Costa",
+    phone: "(11) 9xxxx-7890",
+    lastMsg: "Não recebi o produto",
+    time: "12:05",
+    unread: 3,
+    badge: { label: "suporte", color: "bg-yellow-500/20 text-yellow-400" },
+    tags: [{ label: "suporte", color: "bg-yellow-500/20 text-yellow-400" }],
+    history: { convos: 4, firstContact: "20/03/2026", flow: "Suporte Automático" },
+    messages: [
+      { id: 1, sender: "contact", text: "Não recebi o produto", time: "12:05" },
+    ],
+  },
+  {
+    name: "Fernanda Reis",
+    phone: "(11) 9xxxx-4321",
+    lastMsg: "Obrigada!",
+    time: "11:30",
+    unread: 0,
+    tags: [],
+    history: { convos: 1, firstContact: "02/04/2026", flow: "Pesquisa" },
+    messages: [
+      { id: 1, sender: "contact", text: "Obrigada!", time: "11:30" },
+    ],
+  },
+];
+
+const tabs = [
+  { key: "todas", label: "Todas" },
+  { key: "aguardando", label: "Aguardando" },
+  { key: "resolvidas", label: "Resolvidas" },
+] as const;
+
+const AtendimentoPage: React.FC = () => {
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState<"todas" | "aguardando" | "resolvidas">("todas");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [chatMessages, setChatMessages] = useState<Record<number, Message[]>>(
+    Object.fromEntries(contacts.map((c, i) => [i, [...c.messages]]))
+  );
+  const [inputValue, setInputValue] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const selected = contacts[selectedIdx];
+  const currentMessages = chatMessages[selectedIdx] || [];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [currentMessages.length]);
+
+  const handleSend = () => {
+    const text = inputValue.trim();
+    if (!text) return;
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    setChatMessages((prev) => ({
+      ...prev,
+      [selectedIdx]: [
+        ...(prev[selectedIdx] || []),
+        { id: Date.now(), sender: "agent", text, time },
+      ],
+    }));
+    setInputValue("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const filtered = contacts.filter((c) =>
+    c.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="flex h-[calc(100vh-56px)] bg-[#0f0f0f]">
+      {/* Left — Contact List */}
+      <div className="w-[280px] min-w-[280px] border-r border-[#2a2a2a] flex flex-col">
+        <div className="p-4 space-y-3">
+          <h1 className="text-lg font-bold text-foreground">Atendimento</h1>
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar..."
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-md pl-8 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#22c55e]"
+            />
+          </div>
+          <div className="flex gap-1">
+            {tabs.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setActiveTab(t.key)}
+                className={`flex-1 text-xs py-1.5 border-b-2 transition-colors ${
+                  activeTab === t.key
+                    ? "border-[#22c55e] text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {filtered.map((c, i) => {
+            const realIdx = contacts.indexOf(c);
+            return (
+              <button
+                key={i}
+                onClick={() => setSelectedIdx(realIdx)}
+                className={`w-full flex items-start gap-3 px-4 py-3 border-b border-[#2a2a2a] text-left transition-colors ${
+                  realIdx === selectedIdx
+                    ? "bg-[#1a1a1a] border-l-2 border-l-[#22c55e]"
+                    : "hover:bg-[#1f1f1f] border-l-2 border-l-transparent"
+                }`}
+              >
+                <div className="w-9 h-9 min-w-[36px] rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
+                  {c.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-foreground truncate">{c.name}</span>
+                    <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{c.time}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate mt-0.5">{c.lastMsg}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    {c.badge && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${c.badge.color}`}>
+                        {c.badge.label}
+                      </span>
+                    )}
+                    {c.unread > 0 && (
+                      <span className="ml-auto w-5 h-5 rounded-full bg-[#22c55e] text-[10px] font-bold flex items-center justify-center text-white">
+                        {c.unread}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Center — Chat */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Chat Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2a2a]">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#2a2a2a] flex items-center justify-center text-sm font-semibold text-foreground">
+              {selected.name.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-foreground">{selected.name}</span>
+                {selected.badge && (
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${selected.badge.color}`}>
+                    {selected.badge.label}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground">{selected.phone}</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button className="text-xs px-3 py-1.5 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
+              Transferir
+            </button>
+            <button className="text-xs px-3 py-1.5 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors">
+              Resolver
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          {currentMessages.map((msg) => {
+            if (msg.sender === "system") {
+              return (
+                <div key={msg.id} className="flex justify-center">
+                  <span className="text-xs text-muted-foreground italic bg-[#1a1a1a] px-3 py-1.5 rounded-full">
+                    {msg.text}
+                  </span>
+                </div>
+              );
+            }
+            const isAgent = msg.sender === "agent";
+            const isBot = msg.sender === "bot";
+            return (
+              <div key={msg.id} className={`flex ${isAgent ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[70%] ${isAgent ? "items-end" : "items-start"} flex flex-col`}>
+                  {isBot && <span className="text-[10px] text-[#22c55e] font-medium mb-0.5 ml-1">Bot</span>}
+                  {msg.sender === "contact" && (
+                    <span className="text-[10px] text-muted-foreground font-medium mb-0.5 ml-1">{selected.name.split(" ")[0]}</span>
+                  )}
+                  <div
+                    className={`px-3 py-2 rounded-xl text-sm ${
+                      isAgent
+                        ? "bg-[#1a2a1a] border border-[#22c55e]/20 text-foreground"
+                        : isBot
+                        ? "bg-[#2a2a2a] text-foreground"
+                        : "bg-[#1a1a1a] border border-[#2a2a2a] text-foreground"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground mt-0.5 mx-1">{msg.time}</span>
+                </div>
+              </div>
+            );
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <div className="p-3 border-t border-[#2a2a2a]">
+          <div className="flex items-end gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-2">
+            <textarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Digite uma mensagem..."
+              rows={1}
+              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none min-h-[24px] max-h-[96px]"
+            />
+            <div className="flex items-center gap-1 shrink-0">
+              <button className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+                <Paperclip size={16} />
+              </button>
+              <button className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+                <Mic size={16} />
+              </button>
+              <button
+                onClick={handleSend}
+                className="p-1.5 bg-[#22c55e] rounded-lg text-white hover:bg-[#16a34a] transition-colors"
+              >
+                <Send size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right — Profile */}
+      <div className="w-[260px] min-w-[260px] border-l border-[#2a2a2a] overflow-y-auto">
+        <div className="p-4 space-y-5">
+          <h2 className="text-sm font-semibold text-foreground">Perfil do Contato</h2>
+
+          {/* Avatar + Info */}
+          <div className="flex flex-col items-center text-center space-y-2">
+            <div className="w-16 h-16 rounded-full bg-[#2a2a2a] flex items-center justify-center text-2xl font-bold text-foreground">
+              {selected.name.charAt(0)}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">{selected.name}</p>
+              <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <Phone size={10} /> {selected.phone}
+              </p>
+            </div>
+            {selected.badge && (
+              <span className={`text-[10px] px-2 py-0.5 rounded-full ${selected.badge.color}`}>
+                {selected.badge.label}
+              </span>
+            )}
+          </div>
+
+          {/* Tags */}
+          <div className="space-y-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Etiquetas</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {selected.tags.map((t, i) => (
+                <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${t.color}`}>
+                  {t.label}
+                </span>
+              ))}
+              <button className="text-[10px] px-2 py-0.5 rounded-full border border-[#2a2a2a] text-muted-foreground hover:text-foreground flex items-center gap-0.5 transition-colors">
+                <Plus size={8} /> Adicionar
+              </button>
+            </div>
+          </div>
+
+          {/* History */}
+          <div className="space-y-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Histórico</h3>
+            <div className="space-y-1.5 text-xs text-muted-foreground">
+              <p className="flex items-center gap-1.5"><Clock size={10} /> {selected.history.convos} conversas anteriores</p>
+              <p className="flex items-center gap-1.5"><Tag size={10} /> Primeiro contato: {selected.history.firstContact}</p>
+              <p className="flex items-center gap-1.5"><ArrowRight size={10} /> Fluxo: {selected.history.flow}</p>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="space-y-2">
+            <button className="w-full text-xs py-2 rounded-md border border-[#2a2a2a] text-muted-foreground hover:text-foreground transition-colors">
+              Iniciar Fluxo
+            </button>
+            <button className="w-full text-xs py-2 rounded-md bg-[#22c55e] text-white hover:bg-[#16a34a] transition-colors flex items-center justify-center gap-1.5">
+              <CheckCircle size={12} /> Marcar como Resolvido
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default AtendimentoPage;
