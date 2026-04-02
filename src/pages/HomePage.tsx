@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
             <Target size={16} style={{ color: roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444" }} />
           </div>
           <div className="min-w-0 flex-1 overflow-hidden">
-            <p className="text-base md:text-2xl font-bold text-foreground truncate">{roasData.roas}x</p>
+            <p className="text-sm md:text-lg font-bold text-foreground truncate">{roasData.roas}x</p>
             <p className="text-[10px] md:text-xs text-muted-foreground">ROI</p>
           </div>
         </div>
