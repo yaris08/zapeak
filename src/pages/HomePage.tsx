@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
