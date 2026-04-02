@@ -360,38 +360,65 @@ const AtendimentoPage: React.FC = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {currentMessages.map((msg) => {
+        <div className="flex-1 overflow-y-auto p-4">
+          {currentMessages.map((msg, index) => {
+            const prevMsg = index > 0 ? currentMessages[index - 1] : null;
+            const showLabel = prevMsg?.sender !== msg.sender;
+
             if (msg.sender === "system") {
               return (
-                <div key={msg.id} className="flex justify-center">
-                  <span className="text-xs text-muted-foreground italic bg-[#1a1a1a] px-3 py-1.5 rounded-full">
+                <div key={msg.id} className="flex justify-center mb-3">
+                  <span className="text-[11px] text-muted-foreground italic bg-[#1a1a1a] px-3 py-1 rounded-full">
                     {msg.text}
                   </span>
                 </div>
               );
             }
-            const isAgent = msg.sender === "agent";
-            const isBot = msg.sender === "bot";
+
+            if (msg.sender === "contact") {
+              return (
+                <div key={msg.id} className="flex items-start gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-[#2a2a2a] flex items-center justify-center text-[11px] font-bold text-foreground shrink-0 mt-0.5">
+                    {selected.name.charAt(0)}
+                  </div>
+                  <div>
+                    {showLabel && (
+                      <span className="text-[10px] text-muted-foreground font-medium mb-0.5 block">{selected.name.split(" ")[0]}</span>
+                    )}
+                    <div className="bg-[#2a2a2a] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
+                      {msg.text}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
+                  </div>
+                </div>
+              );
+            }
+
+            if (msg.sender === "bot") {
+              return (
+                <div key={msg.id} className="flex items-start gap-2 mb-3">
+                  <div className="w-7 shrink-0" />
+                  <div>
+                    {showLabel && (
+                      <span className="text-[10px] text-[#22c55e] font-medium mb-0.5 block">Bot</span>
+                    )}
+                    <div className="bg-[#1e2a1e] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
+                      {msg.text}
+                    </div>
+                    <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
+                  </div>
+                </div>
+              );
+            }
+
+            // agent
             return (
-              <div key={msg.id} className={`flex ${isAgent ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[70%] ${isAgent ? "items-end" : "items-start"} flex flex-col`}>
-                  {isBot && <span className="text-[10px] text-[#22c55e] font-medium mb-0.5 ml-1">Bot</span>}
-                  {msg.sender === "contact" && (
-                    <span className="text-[10px] text-muted-foreground font-medium mb-0.5 ml-1">{selected.name.split(" ")[0]}</span>
-                  )}
-                  <div
-                    className={`px-3 py-2 rounded-xl text-sm ${
-                      isAgent
-                        ? "bg-[#1a2a1a] border border-[#22c55e]/20 text-foreground"
-                        : isBot
-                        ? "bg-[#2a2a2a] text-foreground"
-                        : "bg-[#1a1a1a] border border-[#2a2a2a] text-foreground"
-                    }`}
-                  >
+              <div key={msg.id} className="flex items-start justify-end gap-2 mb-3">
+                <div className="flex flex-col items-end">
+                  <div className="bg-[#22c55e]/20 border border-[#22c55e]/30 text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tr-sm px-3 py-2 text-sm">
                     {msg.text}
                   </div>
-                  <span className="text-[10px] text-muted-foreground mt-0.5 mx-1">{msg.time}</span>
+                  <span className="text-[10px] text-muted-foreground mt-1">{msg.time}</span>
                 </div>
               </div>
             );
