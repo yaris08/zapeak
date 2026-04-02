@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import {
   Users, MessageSquare, MousePointer, Bot, CheckCircle,
   ShoppingCart, DollarSign, TrendingUp, CreditCard,
-  Target, Percent, Wallet, Receipt,
+  Target, Percent, Wallet, Receipt, MessageCircle,
 } from "lucide-react";
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
