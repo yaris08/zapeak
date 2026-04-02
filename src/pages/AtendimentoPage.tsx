@@ -9,6 +9,7 @@ interface Message {
   sender: "bot" | "contact" | "agent" | "system";
   text: string;
   time: string;
+  audio?: { duration: string };
 }
 
 interface Contact {
