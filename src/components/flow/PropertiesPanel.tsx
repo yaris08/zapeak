@@ -100,9 +100,6 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ node, onClose, onDele
     <div className="w-[280px] min-w-[280px] h-full border-l border-border bg-card overflow-y-auto flex flex-col">
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <h3 className="text-sm font-semibold text-foreground">Propriedades</h3>
-        <Button size="sm" className="h-7 bg-success hover:bg-success/90 text-success-foreground text-xs">
-          Salvar
-        </Button>
       </div>
 
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">

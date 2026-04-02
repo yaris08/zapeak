@@ -9,6 +9,7 @@ interface Message {
   sender: "bot" | "contact" | "agent" | "system";
   text: string;
   time: string;
+  audio?: { duration: string };
 }
 
 interface Contact {
@@ -37,14 +38,17 @@ const contacts: Contact[] = [
     ],
     history: { convos: 3, firstContact: "01/04/2026", flow: "Boas-vindas" },
     messages: [
-      { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo. Como posso te ajudar?", time: "14:20" },
-      { id: 2, sender: "contact", text: "Quero comprar o produto", time: "14:21" },
-      { id: 3, sender: "bot", text: "Perfeito! O valor é R$ 97,00. Vou te enviar a chave PIX.", time: "14:21" },
-      { id: 4, sender: "bot", text: "Chave PIX: 11999999999", time: "14:22" },
-      { id: 5, sender: "contact", text: "Paguei! Segue o comprovante 📎", time: "14:31" },
-      { id: 6, sender: "system", text: "✅ Pagamento de R$ 97,00 identificado pela IA (94% confiança)", time: "14:32" },
-      { id: 7, sender: "bot", text: "✅ Pagamento confirmado! Obrigado João!", time: "14:32" },
-      { id: 8, sender: "agent", text: "Olá João! Vi que você pagou. Vou processar seu pedido agora.", time: "14:35" },
+      { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo! Como posso te ajudar?", time: "14:20" },
+      { id: 2, sender: "contact", text: "Oi! Quero comprar o produto", time: "14:21" },
+      { id: 3, sender: "bot", text: "Perfeito! O valor é R$ 97,00. Vou te enviar o áudio explicando.", time: "14:21" },
+      { id: 4, sender: "bot", text: "", audio: { duration: "0:42" }, time: "14:22" },
+      { id: 5, sender: "contact", text: "Entendi! Vou pagar agora", time: "14:28" },
+      { id: 6, sender: "bot", text: "Ótimo! Aqui está a chave PIX: 11999999999", time: "14:28" },
+      { id: 7, sender: "contact", text: "Paguei! Segue o comprovante 📎", time: "14:31" },
+      { id: 8, sender: "system", text: "✅ Pagamento de R$ 97,00 identificado pela IA (94% confiança)", time: "14:32" },
+      { id: 9, sender: "bot", text: "✅ Pagamento confirmado! Obrigado João! 🎉", time: "14:32" },
+      { id: 10, sender: "contact", text: "", audio: { duration: "0:08" }, time: "14:33" },
+      { id: 11, sender: "agent", text: "Oi João! Vi seu pagamento. Processando agora 👍", time: "14:35" },
     ],
   },
   {
@@ -375,6 +379,27 @@ const AtendimentoPage: React.FC = () => {
               );
             }
 
+            const renderBubbleContent = (msg: Message) => {
+              if (msg.audio) {
+                const isAgent = msg.sender === "agent";
+                const btnBg = isAgent ? "#22c55e" : "#444";
+                return (
+                  <div className="flex items-center gap-2 w-[200px]">
+                    <button className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: btnBg }}>
+                      <Play size={14} fill="white" className="text-white ml-0.5" />
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-[3px] bg-[#555] rounded-full overflow-hidden">
+                        <div className="h-full w-[60%] rounded-full" style={{ backgroundColor: isAgent ? "#22c55e" : "#888" }} />
+                      </div>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground shrink-0">{msg.audio.duration}</span>
+                  </div>
+                );
+              }
+              return <>{msg.text}</>;
+            };
+
             if (msg.sender === "contact") {
               return (
                 <div key={msg.id} className="flex items-start gap-2 mb-3">
@@ -386,7 +411,7 @@ const AtendimentoPage: React.FC = () => {
                       <span className="text-[10px] text-muted-foreground font-medium mb-0.5 block">{selected.name.split(" ")[0]}</span>
                     )}
                     <div className="bg-[#2a2a2a] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
-                      {msg.text}
+                      {renderBubbleContent(msg)}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
                   </div>
@@ -403,7 +428,7 @@ const AtendimentoPage: React.FC = () => {
                       <span className="text-[10px] text-[#22c55e] font-medium mb-0.5 block">Bot</span>
                     )}
                     <div className="bg-[#1e2a1e] text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tl-sm px-3 py-2 text-sm">
-                      {msg.text}
+                      {renderBubbleContent(msg)}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-1 block">{msg.time}</span>
                   </div>
@@ -416,7 +441,7 @@ const AtendimentoPage: React.FC = () => {
               <div key={msg.id} className="flex items-start justify-end gap-2 mb-3">
                 <div className="flex flex-col items-end">
                   <div className="bg-[#22c55e]/20 border border-[#22c55e]/30 text-foreground max-w-xs lg:max-w-md rounded-2xl rounded-tr-sm px-3 py-2 text-sm">
-                    {msg.text}
+                    {renderBubbleContent(msg)}
                   </div>
                   <span className="text-[10px] text-muted-foreground mt-1">{msg.time}</span>
                 </div>
