@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
 import {
-  Users, MessageSquare, CheckCircle, MousePointer,
+  Users, MessageSquare, MousePointer,
   ShoppingCart, DollarSign, TrendingUp, CreditCard,
-  Target, Percent, Wallet, MessageCircle, UserCheck, ShoppingBag, Receipt,
+  Target, Percent, Wallet, Receipt,
 } from "lucide-react";
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
