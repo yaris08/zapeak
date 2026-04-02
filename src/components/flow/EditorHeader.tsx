@@ -59,13 +59,6 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, ins
       <div className="flex items-center gap-4">
         <span className="text-xs text-muted-foreground">0 sessões | 0% finalizaram</span>
         <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            className="h-8 text-xs bg-primary hover:bg-primary/90"
-            onClick={onSave}
-          >
-            <Save size={14} className="mr-1" /> Salvar
-          </Button>
           <Button variant="outline" size="sm" className="h-8 text-xs">
             Publicar
           </Button>

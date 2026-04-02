@@ -308,8 +308,6 @@ const FlowEditorInner: React.FC = () => {
       <EditorHeader
         flowName={flowName}
         onNameChange={handleNameChange}
-        onSave={handleSave}
-        hasUnsavedChanges={hasUnsavedChanges}
         instanceName="Principal"
         instanceStatus="active"
       />
