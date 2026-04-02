@@ -174,7 +174,6 @@ const AtribuicaoPage: React.FC = () => {
                   const hidden = h === "Campanha" ? " hidden sm:table-cell" : "";
                   return <th key={h} className={"px-4 py-2 text-left text-[10px] uppercase tracking-wider text-muted-foreground font-medium" + hidden}>{h}</th>;
                 })}
-                ))}
               </tr>
             </thead>
             <tbody>
