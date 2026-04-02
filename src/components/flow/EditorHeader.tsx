@@ -42,9 +42,6 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({ flowName, onNameChange, ins
             {flowName}
           </span>
         )}
-        {hasUnsavedChanges && (
-          <span className="text-xs text-primary font-medium">● Não salvo</span>
-        )}
         <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
           Rascunho
         </Badge>
