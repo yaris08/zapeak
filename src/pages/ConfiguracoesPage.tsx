@@ -26,16 +26,7 @@ function loadSettings(tab: string) {
 const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("whatsapp");
 
-  // WhatsApp
-  const [waUrl, setWaUrl] = useState("");
-  const [waToken, setWaToken] = useState("");
-  const [showWaToken, setShowWaToken] = useState(false);
-
   // Pixel
-  const [pixelId, setPixelId] = useState("");
-  const [pixelToken, setPixelToken] = useState("");
-  const [showPixelToken, setShowPixelToken] = useState(false);
-  const [pixelDataset, setPixelDataset] = useState("");
   const [pixelServerSide, setPixelServerSide] = useState(true);
   const [pixelTestStatus, setPixelTestStatus] = useState<null | "loading" | "success">(null);
 
