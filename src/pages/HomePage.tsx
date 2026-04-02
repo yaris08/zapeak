@@ -200,7 +200,7 @@ const HomePage: React.FC = () => {
           </div>
           <div className="ml-4 md:ml-9" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
           {/* Etapa 4 */}
-          <div className="overflow-hidden" style={{ background: "#22c55e05", border: "0.5px solid #22c55e15", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px", marginLeft: "24px" }}>
+          <div className="overflow-hidden ml-3 md:ml-6" style={{ background: "#22c55e05", border: "0.5px solid #22c55e15", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <ShoppingCart size={14} color="#22c55e" style={{ opacity: 0.4, flexShrink: 0 }} />
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Compraram</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
