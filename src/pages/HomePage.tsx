@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import {
-  Users, MessageSquare, MousePointer,
+  Users, MessageSquare, MousePointer, Bot, CheckCircle,
   ShoppingCart, DollarSign, TrendingUp, CreditCard,
   Target, Percent, Wallet, Receipt,
 } from "lucide-react";
