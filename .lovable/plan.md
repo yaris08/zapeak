@@ -1,57 +1,63 @@
 
 
-# FlowZap — Plataforma de Automação WhatsApp
+# Formulários Específicos no Painel de Propriedades
 
-## Visão Geral
-Editor visual de fluxos de automação WhatsApp com canvas drag-and-drop usando React Flow, tema dark com laranja como cor primária.
+## Resumo
+Reescrever o `PropertiesPanel` com formulários dedicados para cada tipo de nó, com state funcional que atualiza os dados do nó no canvas em tempo real.
 
-## Tema Visual
-- Dark theme: bg `#0f0f0f`, cards `#1a1a1a`, sidebar `#141414`, bordas `#2a2a2a`
-- Primária: `#F97316` (laranja), verde ativo: `#22c55e`
-- Fonte Inter, ícones Lucide React
+## Arquitetura
 
-## Estrutura de Páginas
+### 1. Adicionar `onUpdateNode` callback ao FlowEditor
+- Nova prop `onUpdateNode: (id: string, data: any) => void` no `PropertiesPanel`
+- No `FlowEditor`, implementar `handleUpdateNode` que usa `setNodes` para atualizar `node.data`
+- Manter `selectedNode` sincronizado: ao clicar num nó, buscar a versão atual do array `nodes`
 
-### 1. Layout Global
-- **Header topo**: Logo "FlowZap" à esquerda, nav central (Home | Fluxos | Atendimento | Relatórios), avatar à direita
-- **Sidebar lateral colapsável** com ícones + labels para navegação
+### 2. Reescrever PropertiesPanel com formulários por tipo
+Criar sub-componentes em `src/components/flow/properties/` para cada tipo de nó:
 
-### 2. Editor de Fluxo (`/flows/:id/editor`) — Página Principal
+- **StartProperties** — Selects para gatilho/correspondência, input com chips de palavras-chave (Enter ou botão + adiciona, X remove)
+- **TextProperties** — Textarea com contador 0/1000, chips clicáveis de variáveis que inserem no cursor
+- **AITextProperties** (`ai-text`) — Textarea prompt, Select modelo, Toggle histórico
+- **ImageProperties** (`image`) — Upload area dashed, input legenda
+- **AudioProperties** (`audio`) — Upload area (MP3/OGG/M4A), input legenda
+- **VideoProperties** (`video`) — Upload area (MP4/AVI/MOV), input legenda
+- **DocumentProperties** (`document`) — Upload area (PDF/DOC/XLS), input legenda
+- **DelayProperties** (`delay`) — Input numérico + Select unidade (Segundos/Minutos/Horas)
+- **WaitResponseProperties** (`wait`) — Input numérico + Select unidade, Textarea timeout
+- **AIRespondProperties** (`ai-respond`) — Textarea persona, 2 Toggles
+- **ConditionProperties** (`condition`) — 3 campos (variável, operador, valor) + info texto
+- **PixelProperties** (`pixel`) — Input ID, Select evento, Input valor, Select moeda, Toggle dados
+- **PaymentProperties** (`payment`) — Toggle IA, Select ação, Input etiqueta
+- **TagsProperties** (`tags`) — Input autocomplete, Toggle adicionar/remover
+- **ConnectFlowProperties** (`connect-flow`) — Select com fluxos mockados
+- **NotifyProperties** (`notify`) — Input tel, Textarea mensagem
+- **DefaultProperties** — Fallback genérico com campo Nome
 
-#### Header do Editor
-- Botão "← Fluxos", nome do fluxo editável inline, badge de status (Rascunho/Ativo)
-- Métricas compactas: "0 sessões | 0% finalizaram"
-- Botões "Salvar" (laranja) e "Publicar" (outline)
+### 3. Atualizar nós do canvas para refletir dados
+- **TextNode**: mostrar `data.message` truncado em vez de "Configure a mensagem..."
+- **StartNode**: mostrar chips de palavras-chave do `data.keywords`
+- **GenericNode**: mostrar preview contextual baseado em `data` (ex: delay mostra "5 Segundos")
 
-#### Sidebar Esquerda — Componentes (220px)
-- Itens arrastáveis organizados em 3 seções: **Mensagens** (10 itens), **Controle** (7 itens), **Ações** (7 itens)
-- Cada item: card com ícone colorido + nome, hover effect, draggable para o canvas
+### 4. Componentes UI utilizados
+- `Select` (shadcn), `Input`, `Textarea`, `Switch` (como Toggle), `Badge` (para chips/tags)
+- Tudo com state local sincronizado via `onUpdateNode` no `onChange`/`onBlur`
 
-#### Canvas Central (React Flow)
-- Grid de pontos, zoom/pan, minimap
-- 2 nós de exemplo pré-posicionados:
-  - **Iniciar** (verde): gatilho com dropdowns e input de palavras-chave
-  - **Texto** (azul): placeholder de mensagem
-- Conexão pontilhada laranja entre os nós
-- Barra de controles inferior (zoom, undo, grid, play)
-- Arrastar componente da sidebar cria novo nó no canvas
+## Arquivos modificados/criados
+| Arquivo | Ação |
+|---------|------|
+| `src/components/flow/properties/*.tsx` | Criar ~16 sub-componentes |
+| `src/components/flow/PropertiesPanel.tsx` | Reescrever — mapear tipo → sub-componente |
+| `src/pages/FlowEditor.tsx` | Adicionar `handleUpdateNode`, sincronizar `selectedNode` |
+| `src/components/flow/nodes/TextNode.tsx` | Exibir `data.message` |
+| `src/components/flow/nodes/StartNode.tsx` | Exibir `data.keywords` como chips |
+| `src/components/flow/nodes/GenericNode.tsx` | Preview contextual por tipo |
 
-#### Painel Direito — Propriedades (280px)
-- Aparece ao selecionar um nó, fecha ao clicar fora
-- Formulário dinâmico por tipo de nó (ex: upload de imagem, campo de texto)
-- Botões "Duplicar" e "Excluir" no rodapé
-
-#### Interações
-- Drag da sidebar → cria nó no canvas
-- Clique em nó → abre painel de propriedades
-- Conectar nós via handles de saída/entrada
-- Salvar → toast de confirmação
-
-### 3. Páginas Placeholder
-- Home, Fluxos (lista), Atendimento, Relatórios — páginas simples com layout aplicado
-
-## Dependências
-- `reactflow` para o canvas visual
-- Componentes shadcn/ui existentes
-- Dados mockados/estáticos
+## Fluxo de dados
+```text
+PropertiesPanel (form change)
+  → onUpdateNode(nodeId, newData)
+    → FlowEditor.setNodes(update node.data)
+      → React Flow re-renders node
+        → Node component reads updated data
+```
 
