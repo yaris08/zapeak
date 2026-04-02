@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { QrCode, Eye, EyeOff, Loader2, Check, X } from "lucide-react";
+import { QrCode, Loader2, Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
