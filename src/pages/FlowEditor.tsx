@@ -57,6 +57,7 @@ const FlowEditor: React.FC = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(defaultEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [flowName, setFlowName] = useState("Meu primeiro fluxo");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
