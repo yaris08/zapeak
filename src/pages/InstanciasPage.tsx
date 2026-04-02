@@ -25,13 +25,13 @@ const mockInstances: Instance[] = [
 const typeOptions = ["Principal", "Vendas", "Suporte", "Marketing", "Outro"];
 
 const KpiCard = ({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number; color: string }) => (
-  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
-      <Icon size={20} />
+  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 flex items-center gap-2 min-w-0 overflow-hidden">
+    <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
+      <Icon size={16} />
     </div>
-    <div>
-      <p className="text-2xl font-bold text-foreground">{value}</p>
-      <p className="text-xs text-muted-foreground">{label}</p>
+    <div className="min-w-0 flex-1 overflow-hidden">
+      <p className="text-xl md:text-2xl font-bold text-foreground truncate">{value}</p>
+      <p className="text-[10px] md:text-xs text-muted-foreground leading-tight">{label}</p>
     </div>
   </div>
 );

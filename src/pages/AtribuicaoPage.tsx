@@ -97,12 +97,12 @@ const AtribuicaoPage: React.FC = () => {
           const Icon = k.icon;
           const val = k.label === "Ticket Médio" || k.label === "Custo por Compra" ? k.base : k.base * m;
           return (
-            <div key={k.label} className="rounded-lg p-4" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
+            <div key={k.label} className="rounded-lg p-3 md:p-4 min-w-0 overflow-hidden" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
               <div className="flex items-center gap-2 mb-2">
-                <Icon size={16} style={{ color: k.color }} />
-                <span className="text-[11px] text-muted-foreground">{k.label}</span>
+                <Icon size={16} style={{ color: k.color }} className="shrink-0" />
+                <span className="text-[11px] text-muted-foreground truncate">{k.label}</span>
               </div>
-              <p className="text-xl font-bold text-foreground">{k.format(val)}</p>
+              <p className="text-lg md:text-xl font-bold text-foreground truncate">{k.format(val)}</p>
             </div>
           );
         })}
