@@ -21,7 +21,7 @@ export const componentItems: ComponentItem[] = [
   { id: "figurinha", name: "Figurinha", icon: Smile, color: "#22c55e", section: "MENSAGENS", type: "sticker" },
   { id: "contato", name: "Contato", icon: User, color: "#22c55e", section: "MENSAGENS", type: "contact" },
   { id: "interativa", name: "Msg Interativa", icon: LayoutList, color: "#3b82f6", section: "MENSAGENS", type: "interactive" },
-  { id: "carrossel", name: "Carrossel", icon: GalleryHorizontal, color: "#3b82f6", section: "MENSAGENS", type: "carousel" },
+  
   // CONTROLE
   { id: "delay", name: "Delay", icon: Clock, color: "#eab308", section: "CONTROLE", type: "delay" },
   { id: "aguardar", name: "Aguardar Resposta", icon: MessageCircle, color: "#06b6d4", section: "CONTROLE", type: "wait" },
