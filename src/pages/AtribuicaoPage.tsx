@@ -167,11 +167,13 @@ const AtribuicaoPage: React.FC = () => {
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs min-w-[700px]">
             <thead>
               <tr style={{ borderBottom: "1px solid #2a2a2a" }}>
-                {["Data/Hora", "Nome", "Telefone", "Campanha", "Valor", "Confiança IA", "Pixel", ""].map(h => (
-                  <th key={h} className="px-4 py-2 text-left text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{h}</th>
+                {["Data/Hora", "Nome", "Telefone", "Campanha", "Valor", "Confiança IA", "Pixel", ""].map(h => {
+                  const hidden = h === "Campanha" ? " hidden sm:table-cell" : "";
+                  return <th key={h} className={"px-4 py-2 text-left text-[10px] uppercase tracking-wider text-muted-foreground font-medium" + hidden}>{h}</th>;
+                })}
                 ))}
               </tr>
             </thead>
