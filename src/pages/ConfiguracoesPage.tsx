@@ -127,7 +127,7 @@ const ConfiguracoesPage: React.FC = () => {
       setNotifConversa(nt.conversa ?? true);
       setNotifPixel(nt.pixel ?? true);
       setNotifTimeout(nt.timeout ?? true);
-      setNotifPhone(nt.phone || "");
+      if (nt.adminNumbers) setAdminNumbers(nt.adminNumbers);
     }
   }, []);
 
