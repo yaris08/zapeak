@@ -42,7 +42,7 @@ const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string
       <Icon size={16} style={{ color }} />
     </div>
     <div className="min-w-0 flex-1 overflow-hidden">
-      <p className="text-base md:text-2xl font-bold text-foreground truncate">{value}</p>
+      <p className="text-sm md:text-lg font-bold text-foreground truncate">{value}</p>
       <p className="text-[10px] md:text-xs text-muted-foreground leading-tight">{label}</p>
     </div>
   </div>
