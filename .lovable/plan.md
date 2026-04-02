@@ -1,44 +1,41 @@
 
 
-# Dashboard Completo — HomePage.tsx (Reescrita)
+# 3 Correções no FlowEditor
 
-## Arquivo único
-`src/pages/HomePage.tsx` — substituição completa
+## 1. Duplicar nó sem sobrepor
+**Arquivo:** `src/pages/FlowEditor.tsx`
+- Em `handleDuplicateNode`: alterar offset para `x + 180, y + 80`
+- Alterar geração de ID para `` `node_${Date.now()}` ``
+- Também alterar ID no `onDrop` para consistência
 
-## Estrutura
+## 2. Deletar conexão ao clicar
+**Arquivos:** `src/pages/FlowEditor.tsx` + novo `src/components/flow/edges/CustomEdge.tsx`
 
-### State e dados
-- `period`: `"today" | "7d" | "30d"` com multiplicadores `{today: 1, "7d": 5.2, "30d": 18}`
-- Todos os valores base escalados por multiplicador ao trocar período
-- Helper `fmt()` para BRL, `roasColor()` para regra de cores ROAS (vermelho < 1.5, amarelo 1.5-1.9, verde >= 2.0), `confidenceColor()` para IA (verde >= 80%, amarelo 60-79%, vermelho < 60%)
+### CustomEdge.tsx (novo)
+- Edge customizado com `getBezierPath`
+- Quando `selected`, renderiza botão circular vermelho com ícone `Trash2` no centro da edge
+- Clique no botão remove a edge via `setEdges`
 
-### Layout (7 blocos, top-down)
+### FlowEditor.tsx
+- Adicionar state `selectedEdgeId`
+- Adicionar `onEdgeClick` handler (seleciona edge, limpa nó)
+- Limpar `selectedEdgeId` no `onPaneClick`
+- Registrar `edgeTypes = { custom: CustomEdge }` via `useMemo`
+- Passar `edgeTypes` e `onEdgeClick` ao `<ReactFlow>`
+- Alterar `defaultEdges` para usar `type: 'custom'`, `animated: false`, `style: { stroke: '#f97316' }`
+- Alterar `onConnect` para usar `type: 'custom'`, `animated: false`
 
-1. **Header** — "Dashboard" + seletor período (3 botões, ativo = `bg-[#F97316]`)
+## 3. Nó Condição com 2 saídas
+**Arquivo:** `src/components/flow/nodes/GenericNode.tsx`
+- Quando `data.type === 'condition'`, substituir o handle source único por dois handles:
+  - Handle `id="true"` posicionado no terço superior direito, com label "Sim" em verde `#22c55e`
+  - Handle `id="false"` posicionado no terço inferior direito, com label "Não" em vermelho `#ef4444`
+- Para todos os outros tipos, manter o handle source único atual
 
-2. **Tráfego** — grid 4 cols: Conversas Iniciadas (Users, azul), Taxa Resposta Bot (MessageSquare, ciano), Taxa Conclusão (CheckCircle, laranja), Custo/Conversa (MousePointer, roxo)
-
-3. **Vendas** — grid 4 cols: Total Vendas (ShoppingCart, verde), Faturamento (DollarSign, verde), Ticket Médio (TrendingUp, azul), Custo/Compra (CreditCard, laranja)
-
-4. **ROAS** — grid 3 cols: ROAS Médio (badge colorido), Taxa Conversão (10.2%), Investimento Total
-
-5. **Funil** — Card com 4 etapas verticais, cada uma com label + valor + % + barra de progresso laranja (`div` com width dinâmico)
-
-6. **Gráfico** — LineChart recharts, 24h, linha `#F97316`, altura 180px
-
-7. **Tabela Campanhas** — 8 colunas com ROAS badge + linha de totais bold no rodapé
-
-8. **Vendas Recentes** — 6 colunas, 5 linhas, badges de confiança IA + ícone Pixel ✅/❌
-
-### Dependências
-- `recharts` (já instalado) — ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid
-- Lucide: Users, MessageSquare, CheckCircle, MousePointer, ShoppingCart, DollarSign, TrendingUp, CreditCard, Target, Percent, Wallet, MessageCircle, UserCheck, ShoppingBag
-- Componentes nativos (sem shadcn extras necessários)
-
-### Detalhes visuais
-- Cards: `bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg`
-- Hover tabelas: `hover:bg-[#222]`
-- Headers tabela: `text-[10px] uppercase tracking-wider text-muted-foreground`
-- Funil: barras com `bg-[#F97316]` e width percentual, fundo `bg-[#2a2a2a]`
-- Espaçamento: `space-y-6`, padding `p-6`
+## Arquivos modificados
+| Arquivo | Ação |
+|---------|------|
+| `src/pages/FlowEditor.tsx` | Editar (duplicar offset, IDs, edge types, handlers) |
+| `src/components/flow/edges/CustomEdge.tsx` | Criar |
+| `src/components/flow/nodes/GenericNode.tsx` | Editar (condição 2 saídas) |
 
