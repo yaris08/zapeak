@@ -110,6 +110,7 @@ const contacts: Contact[] = [
     unread: 3,
     badge: { label: "suporte", color: "bg-yellow-500/20 text-yellow-400" },
     tags: [{ label: "suporte", color: "bg-yellow-500/20 text-yellow-400" }],
+    instance: "suporte",
     history: { convos: 4, firstContact: "20/03/2026", flow: "Suporte Automático" },
     messages: [
       { id: 1, sender: "contact", text: "Não recebi o produto", time: "12:05" },
