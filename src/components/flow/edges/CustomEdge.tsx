@@ -15,11 +15,30 @@ const CustomEdge: React.FC<EdgeProps> = ({
   return (
     <>
       <path
+        d={edgePath}
+        fill="none"
+        stroke="transparent"
+        strokeWidth={20}
+        style={{ cursor: "pointer" }}
+      />
+      <path
         id={id}
         className="react-flow__edge-path"
         d={edgePath}
-        style={{ stroke: "#f97316", strokeWidth: 2 }}
+        fill="none"
+        style={{
+          stroke: selected ? "#ff6b35" : "#f97316",
+          strokeWidth: selected ? 3 : 2,
+          strokeDasharray: "6 4",
+          animation: "dashdraw 0.5s linear infinite",
+        }}
       />
+      <style>{`
+        @keyframes dashdraw {
+          from { stroke-dashoffset: 20; }
+          to { stroke-dashoffset: 0; }
+        }
+      `}</style>
       {selected && (
         <EdgeLabelRenderer>
           <div
