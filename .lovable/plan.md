@@ -1,90 +1,105 @@
 
 
-# Simulador de Fluxo Real
+# Tornar AppLayout e Páginas Responsivas para Mobile
 
-## Arquivo único
-`src/pages/FlowEditor.tsx`
+## Arquivos a alterar
 
-## Alterações
+| Arquivo | Ação |
+|---------|------|
+| `src/components/layout/AppLayout.tsx` | Editar — menu hamburger, sidebar mobile drawer, overlay |
+| `src/pages/HomePage.tsx` | Editar — padding responsivo, tabelas com scroll |
+| `src/pages/FlowsPage.tsx` | Editar — botão full-width mobile, padding responsivo |
+| `src/pages/AtribuicaoPage.tsx` | Editar — KPIs 2 colunas, padding responsivo |
+| `src/pages/RelatoriosPage.tsx` | Editar — padding responsivo (KPIs já são 2 colunas) |
+| `src/pages/ContatosPage.tsx` | Editar — colunas ocultas, padding responsivo |
+| `src/pages/InstanciasPage.tsx` | Editar — padding responsivo (grid já é responsivo) |
+| `src/pages/AtendimentoPage.tsx` | Editar — layout mobile com drawers |
+| `src/pages/ConfiguracoesPage.tsx` | Editar — tabs scroll horizontal, padding responsivo |
+| `src/pages/FlowEditor.tsx` | Editar — aviso mobile |
 
-### 1. Import adicional
-Adicionar `RotateCcw` ao import de lucide-react.
+## 1. AppLayout.tsx — Responsivo completo
 
-### 2. Tipo Message expandido
-Adicionar tipo `"system"` ao `from`, e campos opcionais para conteúdo rico:
+### Estado
+- Adicionar `const [mobileMenuOpen, setMobileMenuOpen] = useState(false)`
+- Importar `Menu, X` de lucide-react
+- `useEffect` com `location.pathname` para fechar menu ao navegar
+- Importar `useIsMobile` de `@/hooks/use-mobile`
 
-```ts
-type Message = {
-  from: "lead" | "bot" | "system";
-  text: string;
-  time: string;
-  imageUrl?: string;
-  audioUrl?: string;
-  buttons?: { label: string; value: string }[];
-};
-```
+### Header
+- Nav central: `hidden md:flex`
+- Avatar: `hidden md:flex`
+- Botão hamburger: `md:hidden`, ícone `Menu`, onClick toggle mobileMenuOpen
 
-### 3. SimulatorPanel — receber nodes e edges como props
-```ts
-const SimulatorPanel: React.FC<{ 
-  onClose: () => void; 
-  nodes: Node[]; 
-  edges: Edge[] 
-}>
-```
+### Sidebar desktop
+- Wrapper `aside`: adicionar `hidden md:flex` para ocultar no mobile
 
-Passar `nodes={nodes} edges={edges}` no JSX (linha 337).
+### Sidebar mobile
+- Overlay: `fixed inset-0 z-50 bg-black/60`, onClick fecha menu, visível apenas quando `mobileMenuOpen`
+- Sidebar: `fixed left-0 top-0 z-50 h-screen w-[80%] max-w-[280px] bg-sidebar border-r border-border flex flex-col`
+- Transição: `transition-transform duration-300`, `translate-x-0` quando aberto, `-translate-x-full` quando fechado
+- Botão X no topo para fechar
+- Sem botão "Recolher" no mobile
+- Links iguais ao sidebarItems
 
-### 4. Funções de navegação dentro do SimulatorPanel
+### Main content
+- Ocupa 100% no mobile (sidebar não ocupa espaço)
 
-**getNextNode(currentId, handleId?)** — busca nas edges por `source === currentId`, filtra por `sourceHandle` se fornecido, retorna o nó target.
+## 2. Páginas — Padding responsivo
 
-**processNode(node)** — switch no tipo do nó (`node.data.type` ou `node.type`):
-- `start` → silencioso, avança imediatamente
-- `text` / `textNode` → bolha bot com `data.message` ou "[Mensagem não configurada]"
-- `delay` → mensagem sistema "⏱ Aguardando...", aguarda `Math.min(val * multiplier, 3000)`ms
-- `image` → bolha bot com `<img>` ou "[Imagem não configurada]"
-- `audio` → bolha bot com player WhatsApp-style ou "[Áudio não configurado]"
-- `wait` → mensagem sistema + botões de keywords dos responseGroups + "Outra resposta"; **pausa execução**
-- `condition` → mensagem sistema + 2 botões (Verdadeiro/Falso); **pausa execução**, segue handle `true`/`false`
-- `payment` → mensagem sistema + 2 botões (Simular Pagamento/Não pagou); **pausa execução**, segue handle `paid`/`unpaid`
-- `ai-respond` → bolha bot "[IA] prompt..."
-- `pixel` → mensagem sistema "📊 Evento Pixel disparado: ..."
-- `pix` → bolha bot com chave e tipo
-- `notify` → mensagem sistema "🔔 Admin notificado: ..."
-- `connect-flow` → mensagem sistema "🔗 Conectando ao fluxo: ...", encerrar
-- `randomizer` → mensagem sistema "🎲 Randomizador", escolher path aleatório, seguir handle `path-N`
+Todas as páginas que usam `p-6` passam a usar `p-3 md:p-6`.
 
-**runFromNode(nodeId)** — loop assíncrono:
-- Processa nó atual com 800ms delay entre nós
-- Se nó interativo → para e aguarda callback de botão
-- Se sem próximo nó → mensagem sistema "✅ Fluxo concluído!"
+## 3. HomePage.tsx
+- KPIs grid: já tem `grid-cols-2 sm:grid-cols-3 lg:grid-cols-5` — OK
+- Tabelas Campanhas e Vendas: já têm `overflow-x-auto` — OK
+- Apenas mudar `p-6` → `p-3 md:p-6`
 
-### 5. startTest reescrito
-- Limpa mensagens, busca nó `start`, chama `runFromNode(startNodeId)`
+## 4. FlowsPage.tsx
+- `p-6` → `p-3 md:p-6`
+- Botão "Novo Fluxo": adicionar `w-full md:w-auto` no mobile
 
-### 6. sendMessage reescrito
-- Se aguardando resposta de nó `wait`: adiciona bolha lead, chama continuação
-- Se não aguardando nada: comportamento atual mantido
+## 5. AtribuicaoPage.tsx
+- `p-6` → `p-3 md:p-6`
+- KPIs: `grid-cols-4` → `grid-cols-2 md:grid-cols-4`
 
-### 7. Renderização de mensagens expandida
-- `from === "system"` → centralizado, bg `#1a1a1a`, texto cinza, fontSize 12, italic
-- Botões interativos renderizados como chips abaixo da mensagem sistema (bg `#2a2a2a`, hover `#333`, rounded-full, fontSize 12)
-- `imageUrl` → `<img>` dentro da bolha bot
-- `audioUrl` → mini player dentro da bolha bot
+## 6. RelatoriosPage.tsx
+- `p-6` → `p-3 md:p-6`
+- KPIs já usam `grid-cols-2 md:grid-cols-4` — OK
 
-### 8. Botão Reiniciar no header
-Ao lado do X, ícone `RotateCcw` (size 14) — onClick limpa messages, reseta started, reseta estado de espera.
+## 7. ContatosPage.tsx
+- `p-6` → `p-3 md:p-6`
+- Colunas "Instância" e "Último contato": adicionar `hidden md:table-cell` no `<th>` e `<td>`
 
-### 9. Estado de espera interativa
-```ts
-const [waitingFor, setWaitingFor] = useState<{
-  type: "wait" | "condition" | "payment";
-  nodeId: string;
-} | null>(null);
-```
-Quando nó interativo encontrado: seta `waitingFor`. Quando botão clicado ou mensagem enviada em modo wait: resolve a continuação com o handleId correto.
+## 8. InstanciasPage.tsx
+- `p-6` → `p-3 md:p-6`
+- Grid de cards já tem `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` — OK
+- KPIs: `grid-cols-3` → `grid-cols-1 sm:grid-cols-3`
 
-### Visual
-Manter todo o visual atual (cores, bordas, layout). Mensagens de sistema são o único elemento novo visualmente — centralizadas com estilo distinto.
+## 9. AtendimentoPage.tsx — Layout mobile com drawers
+- Estado: `showMobileContacts` e `showMobileProfile`
+- Mobile (< md):
+  - Apenas chat visível por padrão
+  - Botão menu no header do chat abre lista de conversas (drawer da esquerda, fixed, z-50, mesma lógica de overlay)
+  - Botão "Ver perfil" abre perfil (drawer da direita)
+  - Contact list: `hidden md:flex` no desktop wrapper; drawer mobile com overlay
+  - Profile panel: `hidden md:block` no desktop wrapper; drawer mobile
+- Desktop: layout 3 colunas inalterado
+
+## 10. ConfiguracoesPage.tsx
+- `p-6` → `p-3 md:p-6`
+- Tabs container: `overflow-x-auto` para scroll horizontal
+
+## 11. FlowEditor.tsx — Aviso mobile
+- Importar `useIsMobile` e `Monitor`
+- Estado `dismissedMobileWarning`
+- Se mobile e não dismissed: tela cheia com aviso centralizado
+  - Ícone Monitor grande
+  - Texto "O editor de fluxos funciona melhor no desktop"
+  - Botão "Continuar mesmo assim" que seta dismissed = true
+- Se dismissed ou desktop: editor normal
+
+## Regras
+- Breakpoint `md` (768px) como divisor
+- Nenhuma lógica de negócio alterada
+- Cores e design mantidos
+- Apenas classes Tailwind responsivas
 
