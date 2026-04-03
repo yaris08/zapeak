@@ -1,79 +1,99 @@
 
 
-# Corrigir Responsividade Mobile — Overflow e Truncamento
+# 3 Funcionalidades: Login, Notificações, Estados Vazios
 
-## Arquivos a alterar
+## Arquivos
 
 | Arquivo | Ação |
 |---------|------|
-| `src/index.css` | Editar — adicionar `box-sizing: border-box` e `width: 100%` |
-| `src/pages/HomePage.tsx` | Editar — KpiCard responsivo, ROI card responsivo, funil progress bar responsivo |
-| `src/pages/AtribuicaoPage.tsx` | Editar — KPI cards com min-w-0/overflow-hidden/truncate |
-| `src/pages/InstanciasPage.tsx` | Editar — KPI cards responsivos |
+| `src/pages/LoginPage.tsx` | Criar — tela de login simulada |
+| `src/components/ui/EmptyState.tsx` | Criar — componente reutilizável |
+| `src/App.tsx` | Editar — auth guard, rota /login |
+| `src/components/layout/AppLayout.tsx` | Editar — sino de notificações, dropdown, logout no avatar |
+| `src/pages/FlowsPage.tsx` | Editar — estado vazio |
+| `src/pages/ContatosPage.tsx` | Editar — estado vazio |
+| `src/pages/AtendimentoPage.tsx` | Editar — estado vazio na lista |
+| `src/pages/InstanciasPage.tsx` | Editar — estado vazio |
+| `src/pages/HomePage.tsx` | Editar — toggle "simular vazio" + KPIs zerados |
 
-`AppLayout.tsx` já está correto — main tem `flex-1 overflow-auto w-full min-w-0`.
+## 1. LoginPage.tsx (criar)
 
-## 1. index.css
+- Layout: fundo `#0a0a0a`, centralizado vertical e horizontal, sem AppLayout
+- Card: `bg-[#1a1a1a]`, `border border-[#2a2a2a]`, `rounded-xl`, `p-10`, `max-w-[400px] w-full`
+- Logo Zap verde + "ZaPeak", subtítulo, separador
+- Inputs email + senha (com toggle show/hide via Eye/EyeOff)
+- Link "Esqueci minha senha" alinhado à direita, verde
+- Botão "Entrar" verde full-width
+- Texto "Não tem conta? Fale conosco" com link verde
+- Ao submit: `localStorage.setItem("zapeak_auth", "true")`, navegar para `/`
 
-Adicionar `*, *::before, *::after { box-sizing: border-box; }` e `width: 100%` ao html/body/`#root`:
+## 2. App.tsx — auth guard
 
-```css
-@layer base {
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
-  }
-  html, body, #root {
-    overflow-x: hidden;
-    max-width: 100%;
-    width: 100%;
-  }
+- Estado `isAuthenticated` lido de `localStorage.getItem("zapeak_auth") === "true"`
+- Listener `storage` event para sync entre abas
+- Rota `/login` → `<LoginPage />`
+- Todas as rotas do `AppLayout` e `/flows/:id/editor`: se não autenticado, `<Navigate to="/login" />`
+- Rota `/login` com autenticado → `<Navigate to="/" />`
+
+## 3. AppLayout.tsx — notificações + logout
+
+### Notificações
+- Estado `notifications` com array mockado (4 itens conforme especificado)
+- Estado `showNotifications` para toggle dropdown
+- Ícone `Bell` (18px) antes do avatar, com badge vermelho contando não-lidas
+- Dropdown: `absolute right-0 top-full`, `bg-[#1a1a1a]`, `border border-[#2a2a2a]`, `rounded-lg`, `w-80`, `z-50`
+- Header: "Notificações" + botão "Marcar todas como lidas"
+- Lista: ícone por tipo (DollarSign/verde, MessageSquare/azul, Zap/roxo), título bold, desc cinza, time
+- Não-lidas: `bg-[#1f1f1f]`, lidas: transparent
+- Footer: "Ver todas"
+- Fechar ao clicar fora (useEffect com click listener)
+
+### Logout
+- Avatar clicável → dropdown com "Sair"
+- Ao clicar: `localStorage.removeItem("zapeak_auth")`, navegar para `/login`
+
+### Imports adicionais
+- `Bell, DollarSign, LogOut, Eye` de lucide-react
+- `useNavigate` de react-router-dom
+
+## 4. EmptyState.tsx (criar)
+
+```tsx
+interface EmptyStateProps {
+  icon: React.ElementType;
+  title: string;
+  subtitle: string;
+  buttonLabel?: string;
+  onButtonClick?: () => void;
 }
 ```
+- Centralizado, flex-col items-center, gap-3
+- Ícone 48px com opacity 0.5 e cor verde
+- Título bold, subtítulo cinza, texto centralizado max-w-sm
+- Botão verde opcional
 
-## 2. HomePage.tsx
+## 5. Estados vazios nas páginas
 
-### KpiCard (linhas 39-49)
-Replace with responsive version:
-```tsx
-const KpiCard = ({ icon: Icon, label, value, color }: ...) => (
-  <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 flex items-center gap-2 min-w-0 overflow-hidden">
-    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0"
-         style={{ backgroundColor: color + "20" }}>
-      <Icon size={16} style={{ color }} />
-    </div>
-    <div className="min-w-0 flex-1 overflow-hidden">
-      <p className="text-base md:text-2xl font-bold text-foreground truncate">{value}</p>
-      <p className="text-[10px] md:text-xs text-muted-foreground leading-tight">{label}</p>
-    </div>
-  </div>
-)
-```
+### FlowsPage.tsx
+- Se `flows.length === 0`: `<EmptyState icon={GitBranch} title="Nenhum fluxo criado ainda" subtitle="Crie seu primeiro fluxo..." buttonLabel="Criar primeiro fluxo" onButtonClick={() => setShowNewFlow(true)} />`
+- Dados mockados existem, então: adicionar estado `simulateEmpty` ou simplesmente mostrar quando array vazio (o componente está pronto para quando dados reais chegarem)
+- Como os dados são hardcoded, usar lógica condicional: `const displayFlows = flows` (sem toggle aqui, empty state fica preparado)
 
-### ROI card inline (linhas 142-150)
-Apply same responsive classes: `p-3`, `gap-2`, `min-w-0 overflow-hidden`, icon `w-8 h-8 md:w-10 md:h-10 shrink-0`, value `text-base md:text-2xl truncate`, label `text-[10px] md:text-xs`.
+### ContatosPage.tsx
+- Se `filteredContacts.length === 0` e sem busca ativa: EmptyState com Users, "Nenhum contato ainda"
+- Se com busca sem resultados: texto "Nenhum resultado para..."
 
-### Funil progress bars (linhas 164-213)
-Each row's progress bar wrapper: change `style={{ width: "120px" }}` to `className="w-20 md:w-[120px]"` (remove the inline width style). Add `overflow-hidden` to each funnel row's outer div. Add `shrink-0` to the number and percentage divs.
+### AtendimentoPage.tsx
+- Na lista de conversas, se filtradas === 0: ícone MessageSquare 40px cinza + "Nenhuma conversa ainda"
 
-## 3. AtribuicaoPage.tsx
+### InstanciasPage.tsx
+- Se `instances.length === 0`: EmptyState com Smartphone, "Nenhuma instância conectada", botão "Criar instância"
 
-### KPI cards (linhas 100-106)
-Add `min-w-0 overflow-hidden` to outer div, value: `text-lg md:text-xl font-bold truncate`.
+### HomePage.tsx
+- Estado `simulateEmpty` (default false)
+- Toggle discreto no canto: texto cinza pequeno "Simular vazio" com Switch
+- Se ativo: KPIs mostram "—", funil com barras zeradas, tabelas com texto "Sem dados"
 
-## 4. InstanciasPage.tsx
-
-### KpiCard (linhas 27-37)
-Add responsive classes: `p-3`, `gap-2`, `min-w-0 overflow-hidden`, icon `w-8 h-8 md:w-10 md:h-10`, value `text-xl md:text-2xl truncate`.
-
-## Rules
-- No `md:` or `lg:` classes removed
-- No business logic changed
-- Desktop appearance unchanged
+## Consideração de segurança
+A autenticação via localStorage é simulada (mock) conforme solicitado. Não há validação real — qualquer email/senha funciona. Quando backend estiver pronto, substituir por autenticação real via Supabase.
 
