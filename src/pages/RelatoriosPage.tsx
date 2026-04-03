@@ -35,13 +35,7 @@ const baseFunnel = [
 
 const baseFlows: any[] = [];
 
-const basePeaks = [
-  { hora: "10:00 - 11:00", msgs: 342 },
-  { hora: "14:00 - 15:00", msgs: 298 },
-  { hora: "09:00 - 10:00", msgs: 276 },
-  { hora: "15:00 - 16:00", msgs: 241 },
-  { hora: "11:00 - 12:00", msgs: 198 },
-];
+const basePeaks: any[] = [];
 
 const conclusaoBadge = (val: number) => {
   const cls = val >= 70 ? "bg-green-500/10 text-green-500" : val >= 50 ? "bg-yellow-500/10 text-yellow-500" : "bg-red-500/10 text-red-500";
