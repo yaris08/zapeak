@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot, Menu, X, User } from "lucide-react";
+import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot, Menu, X, User, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
