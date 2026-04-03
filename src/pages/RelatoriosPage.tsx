@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Activity, CheckCircle, MessageSquare, Clock, Download } from "lucide-react";
+import { Activity, CheckCircle, MessageSquare, Clock, Download, BarChart3 } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 
