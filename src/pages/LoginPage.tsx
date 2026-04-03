@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Zap, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -43,8 +43,12 @@ const LoginPage: React.FC = () => {
 
         {/* Title */}
         <div className="text-center mb-6">
-          <h1 className="text-[22px] font-bold text-foreground">Bem-vindo de volta</h1>
-          <p className="text-sm text-muted-foreground mt-1">Faça login para continuar</p>
+          <h1 className="text-[22px] font-bold text-foreground">
+            {activeTab === "login" ? "Bem-vindo de volta" : "Bem-vindo"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {activeTab === "login" ? "Faça login para continuar" : "Crie sua conta"}
+          </p>
         </div>
 
         {/* Tabs */}
@@ -76,23 +80,6 @@ const LoginPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {activeTab === "register" && (
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Nome completo</label>
-              <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Digite seu nome"
-                  className={inputClass}
-                  style={inputStyle}
-                  required
-                />
-              </div>
-            </div>
-          )}
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground">Email</label>
@@ -174,6 +161,12 @@ const LoginPage: React.FC = () => {
             {activeTab === "login" ? "Entrar" : "Criar conta"}
             <ArrowRight size={16} />
           </button>
+
+          {activeTab === "register" && (
+            <p className="text-xs text-muted-foreground text-center mt-3">
+              Mais de <span className="font-bold" style={{ color: "#22c55e" }}>2.417</span> usuários cadastrados
+            </p>
+          )}
         </form>
       </div>
     </div>
