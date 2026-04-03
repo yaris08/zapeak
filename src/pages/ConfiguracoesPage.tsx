@@ -225,7 +225,9 @@ const ConfiguracoesPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              {pixels.map(pixel => (
+              {pixels.length === 0 ? (
+                <EmptyState icon={Activity} title="Nenhum pixel cadastrado" subtitle="Adicione seu primeiro pixel do Facebook" />
+              ) : pixels.map(pixel => (
                 <div key={pixel.id} className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg p-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Switch checked={pixel.active} onCheckedChange={() => togglePixelActive(pixel.id)} />
