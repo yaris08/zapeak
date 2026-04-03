@@ -80,23 +80,6 @@ const LoginPage: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {activeTab === "register" && (
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Nome completo</label>
-              <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Digite seu nome"
-                  className={inputClass}
-                  style={inputStyle}
-                  required
-                />
-              </div>
-            </div>
-          )}
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground">Email</label>
