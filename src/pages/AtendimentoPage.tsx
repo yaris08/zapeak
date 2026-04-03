@@ -39,7 +39,7 @@ const tabs = [
 
 const mockFlows: any[] = [];
 
-const campaigns = ["Páscoa 2024", "Black Friday", "Lead Quente", "Sem campanha"];
+const campaigns: string[] = [];
 
 const AtendimentoPage: React.FC = () => {
   const [selectedIdx, setSelectedIdx] = useState(0);
