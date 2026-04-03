@@ -1,20 +1,23 @@
 
 
-# Aumentar tamanho do texto da sidebar
+# Substituir texto "ZaPeak" pela logo em imagem
 
-## Arquivo
-`src/components/layout/AppLayout.tsx`
+## O que será feito
+Copiar a logo enviada para o projeto e substituir o texto "ZaPeak" (ícone Zap + texto) pela imagem da logo nos 3 locais visuais onde aparece.
 
-## Alterações
+## Arquivo de imagem
+Copiar `user-uploads://ZaPeak_1.png` → `src/assets/zapeak-logo.png`
 
-### Sidebar desktop (colapsável)
-- Linha 208: Trocar `text-xs` por `text-sm` nos links de navegação da sidebar
+## Arquivos a alterar
 
-### Navbar desktop (header)
-- Linha 105: Trocar `text-xs` por `text-sm` nos links do header
+| Arquivo | Alteração |
+|---------|-----------|
+| `src/pages/LoginPage.tsx` | Substituir `<Zap>` + `<span>ZaPeak</span>` por `<img>` da logo (~28px altura) |
+| `src/components/layout/AppLayout.tsx` | Substituir nos 2 locais (header desktop + drawer mobile) o `<Zap>` + `<span>ZaPeak</span>` por `<img>` da logo (~20px altura) |
 
-### Botão "Recolher"
-- Linha 222: Trocar `text-[10px]` por `text-xs`
-
-Nenhuma outra alteração.
+## O que NÃO muda
+- Chaves localStorage (`zapeak_auth`, `zapeak_user_email`, etc.)
+- Título do `index.html`
+- Metatags OG/Twitter
+- Nenhuma lógica de negócio
 
