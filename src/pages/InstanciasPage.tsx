@@ -183,6 +183,7 @@ const InstanciasPage: React.FC = () => {
           </div>
         ))}
       </div>
+      )}
 
       {/* Modal — Nova Instância */}
       <Dialog open={showNewModal} onOpenChange={setShowNewModal}>
