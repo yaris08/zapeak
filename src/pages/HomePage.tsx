@@ -116,9 +116,18 @@ const HomePage: React.FC = () => {
     <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
+          </div>
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" checked={simulateEmpty} onChange={(e) => setSimulateEmpty(e.target.checked)} className="sr-only" />
+            <div className={`w-7 h-4 rounded-full transition-colors ${simulateEmpty ? "bg-[#22c55e]" : "bg-[#2a2a2a]"}`}>
+              <div className={`w-3 h-3 rounded-full bg-white mt-0.5 transition-transform ${simulateEmpty ? "translate-x-3.5" : "translate-x-0.5"}`} />
+            </div>
+            <span className="text-[10px] text-muted-foreground">Simular vazio</span>
+          </label>
         </div>
         <div className="flex gap-1 bg-[#1a1a1a] rounded-lg p-1 border border-[#2a2a2a]">
           {periodButtons.map((b) => (

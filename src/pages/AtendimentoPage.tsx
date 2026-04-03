@@ -303,7 +303,12 @@ const AtendimentoPage: React.FC = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {filtered.map((c, i) => {
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 gap-2">
+            <MessageSquare size={40} className="text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">Nenhuma conversa ainda</p>
+          </div>
+        ) : filtered.map((c, i) => {
           const realIdx = contacts.indexOf(c);
           const tags = contactTags[realIdx] || [];
           const hasPago = tags.some((t) => t.label === "pago");
