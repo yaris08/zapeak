@@ -1,15 +1,15 @@
 
 
-# Ajustar alinhamento vertical da logo no header
+# Mostrar notificações e perfil no mobile
 
 ## Arquivo
 `src/components/layout/AppLayout.tsx`
 
 ## Alteração
-Linha 110: adicionar `mt-0.5` à classe da imagem da logo para deslocá-la levemente para baixo e centralizá-la visualmente com o botão hamburger.
+Linha 127: trocar `hidden md:flex` por `flex` na div que contém as notificações e o avatar do usuário, para que apareçam também no mobile.
 
-De: `className="h-8"`
-Para: `className="h-8 mt-0.5"`
+De: `<div className="hidden md:flex items-center gap-2">`
+Para: `<div className="flex items-center gap-2">`
 
 Nenhuma outra alteração.
 
