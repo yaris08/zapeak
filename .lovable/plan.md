@@ -1,17 +1,33 @@
 
 
-# Adicionar botão "Simular venda" e função de simulação
+# Tornar o botão "Simular venda" acessível
+
+## Problema
+O botão "Simular venda" existe no dropdown do avatar, mas só aparece quando `pushEnabled === true`. Não há como ativar isso pela interface — falta um botão de ativar notificações push no dropdown.
+
+## Solução
+Adicionar um botão "Ativar notificações" / "Desativar notificações" no dropdown do avatar (antes do "Simular venda"), que chama `handleTogglePush`. Assim o usuário pode ativar as notificações push do navegador e, uma vez ativo, o botão "Simular venda" aparece.
 
 ## Arquivo
 `src/components/layout/AppLayout.tsx`
 
-## Alterações
+## Alteração
+No dropdown do avatar (linha ~231), adicionar um botão com ícone `Bell` / `BellOff`:
 
-### 1. Adicionar `simulateSaleNotification` (após linha 92, logo após `showSaleNotification`)
-Função que escolhe aleatoriamente entre 3 vendas simuladas e dispara uma notificação nativa.
+```tsx
+<button
+  onClick={() => { handleTogglePush(); setShowUserMenu(false); }}
+  className="w-full flex items-center gap-2 px-4 py-2 text-xs hover:bg-[#2a2a2a] transition-colors"
+  style={{ color: "#22c55e" }}
+>
+  {pushEnabled ? <><BellOff size={14} /> Desativar notificações</> : <><Bell size={14} /> Ativar notificações</>}
+</button>
+```
 
-### 2. Adicionar botão no dropdown do usuário (linha 218, antes do botão "Sair")
-Botão condicional `{pushEnabled && (...)}` com ícone `Zap` e texto "Simular venda", cor `#f59e0b`. Fecha o menu ao clicar.
+Adicionar `BellOff` ao import do lucide-react (Bell já está importado).
 
-Nenhuma outra parte do arquivo será alterada. `Zap` já está importado.
+Ordem no dropdown:
+1. Ativar/Desativar notificações
+2. Simular venda (condicional, só se pushEnabled)
+3. Sair
 
