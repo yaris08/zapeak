@@ -87,6 +87,15 @@ const InstanciasPage: React.FC = () => {
       </div>
 
       {/* Instance Cards */}
+      {mockInstances.length === 0 ? (
+        <EmptyState
+          icon={Smartphone}
+          title="Nenhuma instância conectada"
+          subtitle="Crie uma instância e escaneie o QR Code para conectar seu WhatsApp"
+          buttonLabel="Criar instância"
+          onButtonClick={() => setShowNewModal(true)}
+        />
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mockInstances.map((inst) => (
           <div
