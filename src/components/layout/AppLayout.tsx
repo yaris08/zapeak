@@ -48,6 +48,8 @@ const notifIcon = (type: Notification["type"]) => {
 const AppLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userEmail = localStorage.getItem("zapeak_user_email") || "U";
+  const userInitial = userEmail.charAt(0).toUpperCase();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [notifications, setNotifications] = React.useState<Notification[]>(initialNotifications);
