@@ -95,6 +95,18 @@ const AppLayout: React.FC = () => {
       {/* Top Header */}
       <header className="h-12 border-b border-border bg-card flex items-center justify-between px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (window.innerWidth >= 768) {
+                setSidebarCollapsed(!sidebarCollapsed);
+              } else {
+                setMobileMenuOpen(true);
+              }
+            }}
+            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Menu size={20} />
+          </button>
           <img src={zapeakLogo} alt="ZaPeak" className="h-8" />
         </div>
         <nav className="hidden md:flex items-center gap-1">
@@ -182,12 +194,6 @@ const AppLayout: React.FC = () => {
             )}
           </div>
         </div>
-        <button
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground"
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          <Menu size={20} />
-        </button>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
@@ -217,12 +223,6 @@ const AppLayout: React.FC = () => {
               );
             })}
           </div>
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-3 text-muted-foreground hover:text-foreground text-xs border-t border-border"
-          >
-            {sidebarCollapsed ? "→" : "← Recolher"}
-          </button>
         </aside>
 
         {/* Mobile Sidebar Overlay */}
