@@ -614,7 +614,7 @@ const AtendimentoPage: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Registrar Pagamento</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Registre o pagamento manualmente para {selected.name}
+              Registre o pagamento manualmente para {selected?.name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
