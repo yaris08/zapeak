@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Zap, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +13,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem("zapeak_auth", "true");
-    navigate("/");
+    window.location.href = "/";
   };
 
   const inputClass =
