@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Loader2, Check, Eye, EyeOff, Save, Plus, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Check, Eye, EyeOff, Save, Plus, Pencil, Trash2, Activity, Bell } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
