@@ -33,13 +33,7 @@ const baseFunnel = [
   { label: "Converteram", value: 0, pct: 0 },
 ];
 
-const baseFlows = [
-  { name: "Boas-vindas", sessoes: 245, conclusao: 72, msgs: 3420, tempo: "3m12s", conversoes: 28, ultimo: "Hoje 14:32" },
-  { name: "Qualificação Lead", sessoes: 89, conclusao: 54, msgs: 987, tempo: "6m45s", conversoes: 12, ultimo: "Hoje 13:15" },
-  { name: "Suporte Automático", sessoes: 67, conclusao: 81, msgs: 654, tempo: "2m08s", conversoes: 0, ultimo: "Ontem 22:40" },
-  { name: "Recuperação Carrinho", sessoes: 34, conclusao: 38, msgs: 289, tempo: "8m33s", conversoes: 5, ultimo: "Hoje 11:22" },
-  { name: "Pesquisa Satisfação", sessoes: 156, conclusao: 91, msgs: 1248, tempo: "1m55s", conversoes: 0, ultimo: "Hoje 09:05" },
-];
+const baseFlows: any[] = [];
 
 const basePeaks = [
   { hora: "10:00 - 11:00", msgs: 342 },
