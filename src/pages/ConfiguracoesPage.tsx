@@ -63,10 +63,7 @@ const providerBadges: Record<string, { emoji: string; label: string }> = {
   unknown: { emoji: "⚪", label: "Provedor não reconhecido" },
 };
 
-const defaultPixels: Pixel[] = [
-  { id: "principal", name: "Pixel Principal", pixelId: "1234567890", token: "", datasetId: "", serverSide: true, active: true },
-  { id: "vendas", name: "Pixel Vendas", pixelId: "9876543210", token: "", datasetId: "", serverSide: true, active: true },
-];
+const defaultPixels: Pixel[] = [];
 
 const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("pixel");
