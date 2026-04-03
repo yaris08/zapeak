@@ -252,7 +252,7 @@ const AtendimentoPage: React.FC = () => {
     </>
   );
 
-  const profileContent = (
+  const profileContent = selected ? (
     <div className="p-4 space-y-5">
       <h2 className="text-sm font-semibold text-foreground">Perfil do Contato</h2>
       <div className="flex flex-col items-center text-center space-y-2">
