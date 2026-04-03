@@ -95,7 +95,7 @@ const AppLayout: React.FC = () => {
       {/* Top Header */}
       <header className="h-12 border-b border-border bg-card flex items-center justify-between px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <img src={zapeakLogo} alt="ZaPeak" className="h-5" />
+          <img src={zapeakLogo} alt="ZaPeak" className="h-8" />
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
@@ -241,7 +241,7 @@ const AppLayout: React.FC = () => {
         >
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <img src={zapeakLogo} alt="ZaPeak" className="h-5" />
+              <img src={zapeakLogo} alt="ZaPeak" className="h-8" />
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
