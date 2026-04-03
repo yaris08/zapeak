@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Zap, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 
 const LoginPage: React.FC = () => {
