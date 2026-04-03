@@ -1,9 +1,10 @@
 
 
-# Atualizar ícone PWA
+# Atualizar nome do PWA para "ZAPeak"
 
 ## Arquivo
-Copiar `user-uploads://Favicon_512_x_512_px.png` → `public/zapeak-icon-512.png` (substituindo o atual)
+`public/manifest.json`
 
-Nenhum outro arquivo precisa mudar — `manifest.json` e `index.html` já referenciam `/zapeak-icon-512.png`.
+## Alteração
+Mudar `"name"` e `"short_name"` de `"ZaPeak"` para `"ZAPeak"`.
 
