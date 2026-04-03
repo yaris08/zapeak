@@ -107,6 +107,9 @@ const AtribuicaoPage: React.FC = () => {
             <Plus size={14} /> Nova Campanha
           </Button>
         </div>
+        {campaigns.length === 0 ? (
+          <EmptyState icon={Target} title="Nenhuma campanha ainda" subtitle="Crie sua primeira campanha para começar a rastrear resultados" buttonLabel="Nova Campanha" onButtonClick={() => setShowModal(true)} />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[650px]">
             <thead>
@@ -147,6 +150,7 @@ const AtribuicaoPage: React.FC = () => {
             </tfoot>
           </table>
         </div>
+        )}
       </div>
 
       {/* Vendas Identificadas */}
