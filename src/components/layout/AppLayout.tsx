@@ -194,12 +194,6 @@ const AppLayout: React.FC = () => {
             )}
           </div>
         </div>
-        <button
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground"
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          <Menu size={20} />
-        </button>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
