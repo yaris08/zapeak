@@ -36,9 +36,8 @@ const LoginPage: React.FC = () => {
         }}
       >
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <Zap size={24} color="#22c55e" />
-          <span className="text-2xl font-bold text-foreground">ZaPeak</span>
+        <div className="flex items-center justify-center mb-6">
+          <img src={zapeakLogo} alt="ZaPeak" className="h-7" />
         </div>
 
         {/* Title */}
