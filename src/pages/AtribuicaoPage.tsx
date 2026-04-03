@@ -19,11 +19,7 @@ const kpis = [
   { label: "Custo por Compra", base: 0, icon: CreditCard, color: "#f97316", format: fmtDec },
 ];
 
-const campaignsBase = [
-  { name: "Páscoa 2024", investment: 500, conversas: 220, vendas: 23, faturamento: 2209, ticket: 96, custoCompra: 21.7, roas: 4.4 },
-  { name: "Black Friday", investment: 800, conversas: 180, vendas: 18, faturamento: 1890, ticket: 105, custoCompra: 44.4, roas: 2.4 },
-  { name: "Lead Quente", investment: 300, conversas: 100, vendas: 10, faturamento: 791, ticket: 79, custoCompra: 30, roas: 2.6 },
-];
+const campaignsBase: any[] = [];
 
 const salesBase = [
   { date: "02/04 14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", valor: 97, confianca: 94, pixel: true },
