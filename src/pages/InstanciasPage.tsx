@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Smartphone, Wifi, WifiOff, QrCode, Plus, MoreVertical, MessageSquare, RefreshCw, Trash2, Edit, Eye } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -86,6 +87,15 @@ const InstanciasPage: React.FC = () => {
       </div>
 
       {/* Instance Cards */}
+      {mockInstances.length === 0 ? (
+        <EmptyState
+          icon={Smartphone}
+          title="Nenhuma instância conectada"
+          subtitle="Crie uma instância e escaneie o QR Code para conectar seu WhatsApp"
+          buttonLabel="Criar instância"
+          onButtonClick={() => setShowNewModal(true)}
+        />
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mockInstances.map((inst) => (
           <div
@@ -173,6 +183,7 @@ const InstanciasPage: React.FC = () => {
           </div>
         ))}
       </div>
+      )}
 
       {/* Modal — Nova Instância */}
       <Dialog open={showNewModal} onOpenChange={setShowNewModal}>

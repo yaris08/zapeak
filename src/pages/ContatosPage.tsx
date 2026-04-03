@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, DollarSign, TrendingUp, MessageCircle, Eye, Download, Search, X } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -148,7 +149,17 @@ const ContatosPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => (
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={8}>
+                    {search || tagFilter !== "all" || instanceFilter !== "all" || statusFilter !== "all" ? (
+                      <div className="text-center py-12 text-muted-foreground text-sm">Nenhum resultado para a busca atual</div>
+                    ) : (
+                      <EmptyState icon={Users} title="Nenhum contato ainda" subtitle="Os contatos aparecerão aqui quando alguém interagir com seu WhatsApp" />
+                    )}
+                  </td>
+                </tr>
+              ) : filtered.map((c) => (
                 <tr key={c.id} className="border-b border-[#2a2a2a] hover:bg-[#222] transition-colors">
                   <td className="px-4 py-3">
                     <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center text-white text-xs font-medium">{c.initial}</div>

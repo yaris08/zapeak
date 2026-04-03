@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot, Menu, X, User } from "lucide-react";
+import { Search, Send, Paperclip, Mic, Phone, Tag, Clock, ArrowRight, CheckCircle, Plus, StopCircle, Play, DollarSign, Bot, Menu, X, User, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
@@ -303,7 +303,12 @@ const AtendimentoPage: React.FC = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {filtered.map((c, i) => {
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 gap-2">
+            <MessageSquare size={40} className="text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">Nenhuma conversa ainda</p>
+          </div>
+        ) : filtered.map((c, i) => {
           const realIdx = contacts.indexOf(c);
           const tags = contactTags[realIdx] || [];
           const hasPago = tags.some((t) => t.label === "pago");

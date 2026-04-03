@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Play, Pause, MoreHorizontal, Smartphone } from "lucide-react";
+import { Plus, Play, Pause, MoreHorizontal, Smartphone, GitBranch } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -48,7 +49,15 @@ const FlowsPage: React.FC = () => {
         </Button>
       </div>
       <div className="space-y-2">
-        {flows.map((flow) => (
+        {flows.length === 0 ? (
+          <EmptyState
+            icon={GitBranch}
+            title="Nenhum fluxo criado ainda"
+            subtitle="Crie seu primeiro fluxo de automação e comece a atender no piloto automático"
+            buttonLabel="Criar primeiro fluxo"
+            onButtonClick={() => setShowNewFlow(true)}
+          />
+        ) : flows.map((flow) => (
           <Link
             key={flow.id}
             to={`/flows/${flow.id}/editor`}

@@ -50,6 +50,7 @@ const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string
 
 const HomePage: React.FC = () => {
   const [period, setPeriod] = useState<Period>("today");
+  const [simulateEmpty, setSimulateEmpty] = useState(false);
   const m = multipliers[period];
 
   const traffic = useMemo(() => ({
@@ -115,9 +116,18 @@ const HomePage: React.FC = () => {
     <div className="p-3 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-sm text-muted-foreground">Visão geral das suas automações</p>
+          </div>
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input type="checkbox" checked={simulateEmpty} onChange={(e) => setSimulateEmpty(e.target.checked)} className="sr-only" />
+            <div className={`w-7 h-4 rounded-full transition-colors ${simulateEmpty ? "bg-[#22c55e]" : "bg-[#2a2a2a]"}`}>
+              <div className={`w-3 h-3 rounded-full bg-white mt-0.5 transition-transform ${simulateEmpty ? "translate-x-3.5" : "translate-x-0.5"}`} />
+            </div>
+            <span className="text-[10px] text-muted-foreground">Simular vazio</span>
+          </label>
         </div>
         <div className="flex gap-1 bg-[#1a1a1a] rounded-lg p-1 border border-[#2a2a2a]">
           {periodButtons.map((b) => (
@@ -136,24 +146,24 @@ const HomePage: React.FC = () => {
 
       {/* KPIs — 10 cards em grid 5x2 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <KpiCard icon={ShoppingCart} label="Vendas" value={vendas.total.toLocaleString()} color="#22c55e" />
-        <KpiCard icon={CreditCard} label="CPA (Custo por Aquisição)" value={fmt(vendas.custoCompra)} color="#ef4444" />
-        <KpiCard icon={TrendingUp} label="Lucro" value={fmt(vendas.faturamento - roasData.investimento)} color="#22c55e" />
+        <KpiCard icon={ShoppingCart} label="Vendas" value={simulateEmpty ? "—" : vendas.total.toLocaleString()} color="#22c55e" />
+        <KpiCard icon={CreditCard} label="CPA (Custo por Aquisição)" value={simulateEmpty ? "—" : fmt(vendas.custoCompra)} color="#ef4444" />
+        <KpiCard icon={TrendingUp} label="Lucro" value={simulateEmpty ? "—" : fmt(vendas.faturamento - roasData.investimento)} color="#22c55e" />
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-3 flex items-center gap-2 min-w-0 overflow-hidden">
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: (roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444") + "20" }}>
             <Target size={16} style={{ color: roasData.roas >= 2 ? "#22c55e" : roasData.roas >= 1.5 ? "#eab308" : "#ef4444" }} />
           </div>
           <div className="min-w-0 flex-1 overflow-hidden">
-            <p className="text-sm md:text-lg font-bold text-foreground truncate">{roasData.roas}x</p>
+            <p className="text-sm md:text-lg font-bold text-foreground truncate">{simulateEmpty ? "—" : `${roasData.roas}x`}</p>
             <p className="text-[10px] md:text-xs text-muted-foreground">ROI</p>
           </div>
         </div>
-        <KpiCard icon={DollarSign} label="Faturamento" value={fmt(vendas.faturamento)} color="#22c55e" />
-        <KpiCard icon={Wallet} label="Investimento Total" value={fmt(roasData.investimento)} color="#f97316" />
-        <KpiCard icon={Percent} label="Taxa de Conversão" value={`${roasData.taxaConversao}%`} color="#3b82f6" />
-        <KpiCard icon={Receipt} label="Ticket Médio" value={fmt(vendas.ticket)} color="#3b82f6" />
-        <KpiCard icon={MessageSquare} label="Total de Conversas" value={traffic.conversas.toLocaleString()} color="#06b6d4" />
-        <KpiCard icon={MousePointer} label="Custo por Conversa" value={fmt(traffic.custoConversa)} color="#a855f7" />
+        <KpiCard icon={DollarSign} label="Faturamento" value={simulateEmpty ? "—" : fmt(vendas.faturamento)} color="#22c55e" />
+        <KpiCard icon={Wallet} label="Investimento Total" value={simulateEmpty ? "—" : fmt(roasData.investimento)} color="#f97316" />
+        <KpiCard icon={Percent} label="Taxa de Conversão" value={simulateEmpty ? "—" : `${roasData.taxaConversao}%`} color="#3b82f6" />
+        <KpiCard icon={Receipt} label="Ticket Médio" value={simulateEmpty ? "—" : fmt(vendas.ticket)} color="#3b82f6" />
+        <KpiCard icon={MessageSquare} label="Total de Conversas" value={simulateEmpty ? "—" : traffic.conversas.toLocaleString()} color="#06b6d4" />
+        <KpiCard icon={MousePointer} label="Custo por Conversa" value={simulateEmpty ? "—" : fmt(traffic.custoConversa)} color="#a855f7" />
       </div>
 
       {/* Bloco 4 — Funil */}
@@ -166,10 +176,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Conversas iniciadas</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "100%", height: "100%", background: "#22c55e", borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "100%", height: "100%", background: "#22c55e", borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(500 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>100%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(500 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "100%"}</div>
             </div>
           </div>
           <div className="ml-2 md:ml-3" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
@@ -179,10 +189,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Interagiram com bot</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "80%", height: "100%", background: "#22c55e", opacity: 0.8, borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "80%", height: "100%", background: "#22c55e", opacity: 0.8, borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(400 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>80%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(400 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "80%"}</div>
             </div>
           </div>
           <div className="ml-3 md:ml-6" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
@@ -192,10 +202,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Concluíram o fluxo</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "54%", height: "100%", background: "#22c55e", opacity: 0.6, borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "54%", height: "100%", background: "#22c55e", opacity: 0.6, borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(272 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>54%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(272 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "54%"}</div>
             </div>
           </div>
           <div className="ml-4 md:ml-9" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
@@ -205,10 +215,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Compraram</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(51 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>10.2%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(51 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "10.2%"}</div>
             </div>
           </div>
         </div>
@@ -241,7 +251,9 @@ const HomePage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {campaigns.map((c) => (
+              {simulateEmpty ? (
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-muted-foreground text-sm">Sem dados</td></tr>
+              ) : campaigns.map((c) => (
                 <tr key={c.name} className="border-b border-[#2a2a2a] hover:bg-[#222]">
                   <td className="px-4 py-3 text-foreground">{c.name}</td>
                   <td className={tdClass}>{fmt(c.investment)}</td>
@@ -282,7 +294,9 @@ const HomePage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {baseSales.map((s, i) => (
+              {simulateEmpty ? (
+                <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground text-sm">Sem dados</td></tr>
+              ) : baseSales.map((s, i) => (
                 <tr key={i} className="border-b border-[#2a2a2a] last:border-0 hover:bg-[#222]">
                   <td className={tdClass}>{s.time}</td>
                   <td className="px-4 py-3 text-foreground">{s.name}</td>
