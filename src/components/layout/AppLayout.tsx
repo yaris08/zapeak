@@ -107,7 +107,7 @@ const AppLayout: React.FC = () => {
           >
             <Menu size={20} />
           </button>
-          <img src={zapeakLogo} alt="ZaPeak" className="h-8" />
+          <img src={zapeakLogo} alt="ZaPeak" className="h-8 mt-0.5" />
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
