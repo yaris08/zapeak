@@ -6,16 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-const contacts = [
-  { id: "1", name: "João Silva", initial: "J", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", tags: ["pago", "cliente"], instance: "Principal", lastContact: "Hoje 14:32", status: "Pagou", conversations: 12, firstContact: "15/01/2025", flows: ["Boas-vindas", "Qualificação de Lead"] },
-  { id: "2", name: "Maria Souza", initial: "M", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", tags: ["lead"], instance: "Vendas", lastContact: "Hoje 13:15", status: "Não pagou", conversations: 3, firstContact: "20/02/2025", flows: ["Boas-vindas"] },
-  { id: "3", name: "Carlos Lima", initial: "C", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", tags: ["suporte"], instance: "Suporte", lastContact: "Hoje 12:40", status: "Não pagou", conversations: 7, firstContact: "10/03/2025", flows: ["Suporte Automático"] },
-  { id: "4", name: "Ana Paula", initial: "A", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", tags: ["pago"], instance: "Principal", lastContact: "Hoje 11:22", status: "Pagou", conversations: 5, firstContact: "05/01/2025", flows: ["Boas-vindas", "Qualificação de Lead"] },
-  { id: "5", name: "Pedro Costa", initial: "P", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", tags: ["lead"], instance: "Vendas", lastContact: "Ontem 22:05", status: "Não pagou", conversations: 2, firstContact: "25/03/2025", flows: ["Boas-vindas"] },
-  { id: "6", name: "Fernanda Reis", initial: "F", phone: "(11) 93456-7890", wa: "https://wa.me/5511934567890", tags: ["cliente", "pago"], instance: "Principal", lastContact: "Ontem 18:30", status: "Pagou", conversations: 18, firstContact: "01/12/2024", flows: ["Boas-vindas", "Qualificação de Lead", "Suporte Automático"] },
-  { id: "7", name: "Ricardo Melo", initial: "R", phone: "(11) 94567-8901", wa: "https://wa.me/5511945678901", tags: ["lead"], instance: "Vendas", lastContact: "Ontem 15:20", status: "Não pagou", conversations: 1, firstContact: "28/03/2025", flows: ["Boas-vindas"] },
-  { id: "8", name: "Juliana Neves", initial: "J", phone: "(11) 95678-9012", wa: "https://wa.me/5511956789012", tags: ["pago"], instance: "Suporte", lastContact: "Ontem 10:45", status: "Pagou", conversations: 9, firstContact: "14/02/2025", flows: ["Boas-vindas", "Suporte Automático"] },
-];
+const contacts: any[] = [];
 
 const tagColors: Record<string, { bg: string; text: string }> = {
   pago: { bg: "#22c55e20", text: "#22c55e" },
@@ -116,9 +107,9 @@ const ContatosPage = () => {
       {/* KPIs */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Total de Contatos", value: "1.247", icon: Users, color: "#3b82f6" },
-          { label: "Pagaram", value: "312", icon: DollarSign, color: "#22c55e" },
-          { label: "Taxa de conversão", value: "25%", icon: TrendingUp, color: "#f97316" },
+          { label: "Total de Contatos", value: "0", icon: Users, color: "#3b82f6" },
+          { label: "Pagaram", value: "0", icon: DollarSign, color: "#22c55e" },
+          { label: "Taxa de conversão", value: "0%", icon: TrendingUp, color: "#f97316" },
         ].map((kpi) => (
           <div key={kpi.label} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${kpi.color}20` }}>
@@ -198,7 +189,7 @@ const ContatosPage = () => {
           </table>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 border-t border-[#2a2a2a] gap-2">
-          <span className="text-xs text-[#9ca3af]">Mostrando {filtered.length} de 1.247 contatos</span>
+          <span className="text-xs text-[#9ca3af]">Mostrando {filtered.length} de 0 contatos</span>
           <div className="flex items-center gap-1">
             <button className="px-3 py-1.5 rounded text-xs text-[#9ca3af] hover:bg-[#2a2a2a] transition-colors">Anterior</button>
             {[1, 2, 3].map((p) => (

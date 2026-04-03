@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Activity, CheckCircle, MessageSquare, Clock, Download } from "lucide-react";
+import { Activity, CheckCircle, MessageSquare, Clock, Download, BarChart3 } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 
@@ -17,37 +18,25 @@ const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string
 );
 
 const baseChart = [
-  { dia: "27/03", sessoes: 89 },
-  { dia: "28/03", sessoes: 102 },
-  { dia: "29/03", sessoes: 78 },
-  { dia: "30/03", sessoes: 134 },
-  { dia: "31/03", sessoes: 156 },
-  { dia: "01/04", sessoes: 143 },
-  { dia: "02/04", sessoes: 127 },
+  { dia: "27/03", sessoes: 0 },
+  { dia: "28/03", sessoes: 0 },
+  { dia: "29/03", sessoes: 0 },
+  { dia: "30/03", sessoes: 0 },
+  { dia: "31/03", sessoes: 0 },
+  { dia: "01/04", sessoes: 0 },
+  { dia: "02/04", sessoes: 0 },
 ];
 
 const baseFunnel = [
-  { label: "Sessões iniciadas", value: 127, pct: 100 },
-  { label: "Chegaram ao meio", value: 98, pct: 77 },
-  { label: "Concluíram", value: 86, pct: 68 },
-  { label: "Converteram", value: 13, pct: 10 },
+  { label: "Sessões iniciadas", value: 0, pct: 0 },
+  { label: "Chegaram ao meio", value: 0, pct: 0 },
+  { label: "Concluíram", value: 0, pct: 0 },
+  { label: "Converteram", value: 0, pct: 0 },
 ];
 
-const baseFlows = [
-  { name: "Boas-vindas", sessoes: 245, conclusao: 72, msgs: 3420, tempo: "3m12s", conversoes: 28, ultimo: "Hoje 14:32" },
-  { name: "Qualificação Lead", sessoes: 89, conclusao: 54, msgs: 987, tempo: "6m45s", conversoes: 12, ultimo: "Hoje 13:15" },
-  { name: "Suporte Automático", sessoes: 67, conclusao: 81, msgs: 654, tempo: "2m08s", conversoes: 0, ultimo: "Ontem 22:40" },
-  { name: "Recuperação Carrinho", sessoes: 34, conclusao: 38, msgs: 289, tempo: "8m33s", conversoes: 5, ultimo: "Hoje 11:22" },
-  { name: "Pesquisa Satisfação", sessoes: 156, conclusao: 91, msgs: 1248, tempo: "1m55s", conversoes: 0, ultimo: "Hoje 09:05" },
-];
+const baseFlows: any[] = [];
 
-const basePeaks = [
-  { hora: "10:00 - 11:00", msgs: 342 },
-  { hora: "14:00 - 15:00", msgs: 298 },
-  { hora: "09:00 - 10:00", msgs: 276 },
-  { hora: "15:00 - 16:00", msgs: 241 },
-  { hora: "11:00 - 12:00", msgs: 198 },
-];
+const basePeaks: any[] = [];
 
 const conclusaoBadge = (val: number) => {
   const cls = val >= 70 ? "bg-green-500/10 text-green-500" : val >= 50 ? "bg-yellow-500/10 text-yellow-500" : "bg-red-500/10 text-red-500";
@@ -65,7 +54,7 @@ const RelatoriosPage: React.FC = () => {
   const funnelData = baseFunnel.map(d => ({ ...d, value: s(d.value) }));
   const peaksData = basePeaks.map(d => ({ ...d, msgs: s(d.msgs) }));
   const flowsData = baseFlows.map(f => ({ ...f, sessoes: s(f.sessoes), msgs: s(f.msgs), conversoes: s(f.conversoes) }));
-  const maxPeak = Math.max(...peaksData.map(p => p.msgs));
+  const maxPeak = peaksData.length > 0 ? Math.max(...peaksData.map(p => p.msgs)) : 1;
 
   const handleExport = () => {
     const header = "Fluxo,Sessões,Conclusão %,Msgs Enviadas,Tempo Médio,Conversões,Último Disparo";
@@ -104,10 +93,10 @@ const RelatoriosPage: React.FC = () => {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KpiCard icon={Activity} label="Total de Sessões" value={fmt(s(127))} color="#3b82f6" />
-        <KpiCard icon={CheckCircle} label="Taxa de Conclusão" value="68%" color="#22c55e" />
-        <KpiCard icon={MessageSquare} label="Mensagens Enviadas" value={fmt(s(1847))} color="#06b6d4" />
-        <KpiCard icon={Clock} label="Tempo Médio de Fluxo" value="4m 32s" color="#f97316" />
+        <KpiCard icon={Activity} label="Total de Sessões" value="0" color="#3b82f6" />
+        <KpiCard icon={CheckCircle} label="Taxa de Conclusão" value="0%" color="#22c55e" />
+        <KpiCard icon={MessageSquare} label="Mensagens Enviadas" value="0" color="#06b6d4" />
+        <KpiCard icon={Clock} label="Tempo Médio de Fluxo" value="0s" color="#f97316" />
       </div>
 
       {/* Charts row */}
@@ -153,6 +142,9 @@ const RelatoriosPage: React.FC = () => {
             <Download size={14} /> Exportar CSV
           </button>
         </div>
+        {flowsData.length === 0 ? (
+          <EmptyState icon={BarChart3} title="Nenhum fluxo com dados" subtitle="Os dados de desempenho aparecerão aqui quando houver fluxos ativos" />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
             <thead>
@@ -177,11 +169,15 @@ const RelatoriosPage: React.FC = () => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
       {/* Peak messages table */}
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4">
         <h2 className="text-sm font-bold text-foreground mb-4">Pico de Mensagens</h2>
+        {peaksData.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Sem dados de pico ainda</p>
+        ) : (
         <div className="space-y-3">
           {peaksData.map((p, i) => (
             <div key={i} className="flex items-center gap-4">
@@ -193,6 +189,7 @@ const RelatoriosPage: React.FC = () => {
             </div>
           ))}
         </div>
+        )}
       </div>
     </div>
   );

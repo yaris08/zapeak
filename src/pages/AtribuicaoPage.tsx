@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { DollarSign, ShoppingCart, TrendingUp, CreditCard, Copy, Plus, Download, Target, MessageCircle } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,25 +14,15 @@ const fmt = (v: number) => v.toLocaleString("pt-BR", { style: "currency", curren
 const fmtDec = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
 
 const kpis = [
-  { label: "Faturamento Real", base: 4890, icon: DollarSign, color: "#22c55e", format: fmt },
-  { label: "Total de Vendas", base: 51, icon: ShoppingCart, color: "#22c55e", format: (v: number) => Math.round(v).toString() },
-  { label: "Ticket Médio", base: 95.88, icon: TrendingUp, color: "#3b82f6", format: fmtDec },
-  { label: "Custo por Compra", base: 15.69, icon: CreditCard, color: "#f97316", format: fmtDec },
+  { label: "Faturamento Real", base: 0, icon: DollarSign, color: "#22c55e", format: fmt },
+  { label: "Total de Vendas", base: 0, icon: ShoppingCart, color: "#22c55e", format: (v: number) => Math.round(v).toString() },
+  { label: "Ticket Médio", base: 0, icon: TrendingUp, color: "#3b82f6", format: fmtDec },
+  { label: "Custo por Compra", base: 0, icon: CreditCard, color: "#f97316", format: fmtDec },
 ];
 
-const campaignsBase = [
-  { name: "Páscoa 2024", investment: 500, conversas: 220, vendas: 23, faturamento: 2209, ticket: 96, custoCompra: 21.7, roas: 4.4 },
-  { name: "Black Friday", investment: 800, conversas: 180, vendas: 18, faturamento: 1890, ticket: 105, custoCompra: 44.4, roas: 2.4 },
-  { name: "Lead Quente", investment: 300, conversas: 100, vendas: 10, faturamento: 791, ticket: 79, custoCompra: 30, roas: 2.6 },
-];
+const campaignsBase: any[] = [];
 
-const salesBase = [
-  { date: "02/04 14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", valor: 97, confianca: 94, pixel: true },
-  { date: "02/04 13:15", name: "Maria Souza", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", campaign: "Black Friday", valor: 197, confianca: 88, pixel: true },
-  { date: "02/04 12:40", name: "Carlos Lima", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", campaign: "Lead Quente", valor: 47, confianca: 76, pixel: true },
-  { date: "02/04 11:22", name: "Ana Paula", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", campaign: "Páscoa 2024", valor: 97, confianca: 91, pixel: true },
-  { date: "02/04 10:05", name: "Pedro Costa", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", campaign: "Black Friday", valor: 297, confianca: 62, pixel: false },
-];
+const salesBase: any[] = [];
 
 const roasBadge = (v: number) => {
   if (v >= 2) return <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ backgroundColor: "#22c55e20", color: "#22c55e" }}>{v.toFixed(1)}x</span>;
@@ -116,6 +107,9 @@ const AtribuicaoPage: React.FC = () => {
             <Plus size={14} /> Nova Campanha
           </Button>
         </div>
+        {campaigns.length === 0 ? (
+          <EmptyState icon={Target} title="Nenhuma campanha ainda" subtitle="Crie sua primeira campanha para começar a rastrear resultados" buttonLabel="Nova Campanha" onButtonClick={() => setShowModal(true)} />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[650px]">
             <thead>
@@ -156,6 +150,7 @@ const AtribuicaoPage: React.FC = () => {
             </tfoot>
           </table>
         </div>
+        )}
       </div>
 
       {/* Vendas Identificadas */}
@@ -166,6 +161,9 @@ const AtribuicaoPage: React.FC = () => {
             <Download size={14} /> Exportar CSV
           </Button>
         </div>
+        {salesBase.length === 0 ? (
+          <EmptyState icon={ShoppingCart} title="Nenhuma venda identificada" subtitle="As vendas identificadas pela IA aparecerão aqui" />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[700px]">
             <thead>
@@ -203,6 +201,7 @@ const AtribuicaoPage: React.FC = () => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
       {/* Modal Nova Campanha */}

@@ -27,109 +27,9 @@ interface Contact {
 
 const instances = [
   { id: "all", name: "Todas as instâncias", number: "", status: "" },
-  { id: "principal", name: "Principal", number: "(11) 99999-0001", status: "active" },
-  { id: "vendas", name: "Vendas", number: "(11) 99999-0002", status: "active" },
-  { id: "suporte", name: "Suporte", number: "(11) 99999-0003", status: "standby" },
 ];
 
-const contacts: Contact[] = [
-  {
-    name: "João Silva",
-    phone: "(11) 9xxxx-1234",
-    lastMsg: "Acabei de fazer o pix!",
-    time: "14:32",
-    unread: 2,
-    badge: { label: "pago", color: "bg-green-500/20 text-green-400" },
-    tags: [
-      { label: "pago", color: "bg-green-500/20 text-green-400" },
-      { label: "cliente", color: "bg-blue-500/20 text-blue-400" },
-    ],
-    instance: "principal",
-    history: { convos: 3, firstContact: "01/04/2026", flow: "Boas-vindas" },
-    messages: [
-      { id: 1, sender: "bot", text: "Olá João! 👋 Bem-vindo! Como posso te ajudar?", time: "14:20" },
-      { id: 2, sender: "contact", text: "Oi! Quero comprar o produto", time: "14:21" },
-      { id: 3, sender: "bot", text: "Perfeito! O valor é R$ 97,00. Vou te enviar o áudio explicando.", time: "14:21" },
-      { id: 4, sender: "bot", text: "", audio: { duration: "0:42" }, time: "14:22" },
-      { id: 5, sender: "contact", text: "Entendi! Vou pagar agora", time: "14:28" },
-      { id: 6, sender: "bot", text: "Ótimo! Aqui está a chave PIX: 11999999999", time: "14:28" },
-      { id: 7, sender: "contact", text: "Paguei! Segue o comprovante 📎", time: "14:31" },
-      { id: 8, sender: "system", text: "✅ Pagamento de R$ 97,00 identificado pela IA (94% confiança)", time: "14:32" },
-      { id: 9, sender: "bot", text: "✅ Pagamento confirmado! Obrigado João! 🎉", time: "14:32" },
-      { id: 10, sender: "contact", text: "", audio: { duration: "0:08" }, time: "14:33" },
-      { id: 11, sender: "agent", text: "Oi João! Vi seu pagamento. Processando agora 👍", time: "14:35" },
-    ],
-  },
-  {
-    name: "Maria Souza",
-    phone: "(11) 9xxxx-5678",
-    lastMsg: "Qual o prazo de entrega?",
-    time: "14:15",
-    unread: 1,
-    badge: { label: "lead", color: "bg-blue-500/20 text-blue-400" },
-    tags: [{ label: "lead", color: "bg-blue-500/20 text-blue-400" }],
-    instance: "principal",
-    history: { convos: 1, firstContact: "02/04/2026", flow: "Qualificação" },
-    messages: [
-      { id: 1, sender: "bot", text: "Olá Maria! Como posso ajudar?", time: "14:10" },
-      { id: 2, sender: "contact", text: "Qual o prazo de entrega?", time: "14:15" },
-    ],
-  },
-  {
-    name: "Carlos Lima",
-    phone: "(11) 9xxxx-9012",
-    lastMsg: "Olá, tudo bem?",
-    time: "13:40",
-    unread: 0,
-    tags: [],
-    instance: "vendas",
-    history: { convos: 2, firstContact: "28/03/2026", flow: "Suporte" },
-    messages: [
-      { id: 1, sender: "contact", text: "Olá, tudo bem?", time: "13:40" },
-    ],
-  },
-  {
-    name: "Ana Paula",
-    phone: "(11) 9xxxx-3456",
-    lastMsg: "Quero saber mais sobre...",
-    time: "13:22",
-    unread: 0,
-    badge: { label: "pago", color: "bg-green-500/20 text-green-400" },
-    tags: [{ label: "pago", color: "bg-green-500/20 text-green-400" }],
-    instance: "vendas",
-    history: { convos: 5, firstContact: "15/03/2026", flow: "Boas-vindas" },
-    messages: [
-      { id: 1, sender: "contact", text: "Quero saber mais sobre o curso", time: "13:22" },
-    ],
-  },
-  {
-    name: "Pedro Costa",
-    phone: "(11) 9xxxx-7890",
-    lastMsg: "Não recebi o produto",
-    time: "12:05",
-    unread: 3,
-    badge: { label: "suporte", color: "bg-yellow-500/20 text-yellow-400" },
-    tags: [{ label: "suporte", color: "bg-yellow-500/20 text-yellow-400" }],
-    instance: "suporte",
-    history: { convos: 4, firstContact: "20/03/2026", flow: "Suporte Automático" },
-    messages: [
-      { id: 1, sender: "contact", text: "Não recebi o produto", time: "12:05" },
-    ],
-  },
-  {
-    name: "Fernanda Reis",
-    phone: "(11) 9xxxx-4321",
-    lastMsg: "Obrigada!",
-    time: "11:30",
-    unread: 0,
-    tags: [],
-    instance: "suporte",
-    history: { convos: 1, firstContact: "02/04/2026", flow: "Pesquisa" },
-    messages: [
-      { id: 1, sender: "contact", text: "Obrigada!", time: "11:30" },
-    ],
-  },
-];
+const contacts: Contact[] = [];
 
 const tabs = [
   { key: "todas", label: "Todas" },
@@ -137,14 +37,9 @@ const tabs = [
   { key: "resolvidas", label: "Resolvidas" },
 ] as const;
 
-const mockFlows = [
-  { name: "Boas-vindas", trigger: "Palavra-chave", sessions: 245 },
-  { name: "Qualificação Lead", trigger: "Palavra-chave", sessions: 89 },
-  { name: "Suporte Automático", trigger: "Horário", sessions: 67 },
-  { name: "Recuperação Carrinho", trigger: "Horário", sessions: 34 },
-];
+const mockFlows: any[] = [];
 
-const campaigns = ["Páscoa 2024", "Black Friday", "Lead Quente", "Sem campanha"];
+const campaigns: string[] = [];
 
 const AtendimentoPage: React.FC = () => {
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -160,7 +55,7 @@ const AtendimentoPage: React.FC = () => {
   const [showFlowModal, setShowFlowModal] = useState(false);
   const [selectedFlow, setSelectedFlow] = useState<number | null>(null);
   const [showStopModal, setShowStopModal] = useState(false);
-  const [activeFlow, setActiveFlow] = useState<string | null>("Boas-vindas");
+  const [activeFlow, setActiveFlow] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentValue, setPaymentValue] = useState("");
   const [paymentNote, setPaymentNote] = useState("");
@@ -219,7 +114,7 @@ const AtendimentoPage: React.FC = () => {
     if (selectedFlow === null) return;
     const flow = mockFlows[selectedFlow];
     setActiveFlow(flow.name);
-    toast.success(`✓ Fluxo disparado para ${selected.name}`);
+    toast.success(`✓ Fluxo disparado para ${selected?.name}`);
     addSystemMessage(`🤖 Fluxo '${flow.name}' iniciado manualmente`);
     setShowFlowModal(false);
     setSelectedFlow(null);
@@ -464,6 +359,8 @@ const AtendimentoPage: React.FC = () => {
         {contactListContent}
       </div>
 
+      {selected ? (
+      <>
       <div className="flex-1 flex flex-col min-w-0">
         <div className="px-4 py-3 border-b border-[#2a2a2a]">
           <div className="flex items-center justify-between">
@@ -636,13 +533,22 @@ const AtendimentoPage: React.FC = () => {
         </div>
         {profileContent}
       </div>
+      </>
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-2">
+            <MessageSquare size={48} className="text-muted-foreground mx-auto" />
+            <p className="text-sm text-muted-foreground">Nenhuma conversa ainda</p>
+          </div>
+        </div>
+      )}
 
       <Dialog open={showFlowModal} onOpenChange={setShowFlowModal}>
         <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle>Iniciar Fluxo</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Selecione qual fluxo disparar para {selected.name}
+              Selecione qual fluxo disparar para {selected?.name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 py-2">
@@ -709,7 +615,7 @@ const AtendimentoPage: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Registrar Pagamento</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Registre o pagamento manualmente para {selected.name}
+              Registre o pagamento manualmente para {selected?.name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
