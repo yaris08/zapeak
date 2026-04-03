@@ -251,7 +251,9 @@ const HomePage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {campaigns.map((c) => (
+              {simulateEmpty ? (
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-muted-foreground text-sm">Sem dados</td></tr>
+              ) : campaigns.map((c) => (
                 <tr key={c.name} className="border-b border-[#2a2a2a] hover:bg-[#222]">
                   <td className="px-4 py-3 text-foreground">{c.name}</td>
                   <td className={tdClass}>{fmt(c.investment)}</td>
