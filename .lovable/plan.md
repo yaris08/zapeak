@@ -1,33 +1,17 @@
 
 
-# Adicionar notificações push e exposição global
+# Adicionar botão "Simular venda" e função de simulação
 
 ## Arquivo
 `src/components/layout/AppLayout.tsx`
 
 ## Alterações
 
-### 1. Adicionar estado `pushEnabled`
-Na seção de estados (após linha 58), adicionar:
-```ts
-const [pushEnabled, setPushEnabled] = React.useState(false);
-```
+### 1. Adicionar `simulateSaleNotification` (após linha 92, logo após `showSaleNotification`)
+Função que escolhe aleatoriamente entre 3 vendas simuladas e dispara uma notificação nativa.
 
-### 2. Adicionar `handleTogglePush` (após `handleLogout`, linha 91)
-Função completa que solicita permissão de notificação do navegador e envia uma notificação de confirmação.
+### 2. Adicionar botão no dropdown do usuário (linha 218, antes do botão "Sair")
+Botão condicional `{pushEnabled && (...)}` com ícone `Zap` e texto "Simular venda", cor `#f59e0b`. Fecha o menu ao clicar.
 
-### 3. Adicionar `showSaleNotification` (logo após `handleTogglePush`)
-Função que dispara notificação nativa do navegador com valor de venda.
-
-### 4. Adicionar useEffect para expor no `window` (após os useEffects existentes, ~linha 81)
-```ts
-React.useEffect(() => {
-  (window as any).zapeak_showSaleNotification = showSaleNotification;
-}, [pushEnabled]);
-```
-
-### 5. Copiar ícone PWA
-Copiar `user-uploads://Favicon_512_x_512_px-2.png` → `public/zapeak-icon-512.png` (atualizar com a nova imagem enviada).
-
-Nenhuma outra parte do arquivo será alterada.
+Nenhuma outra parte do arquivo será alterada. `Zap` já está importado.
 
