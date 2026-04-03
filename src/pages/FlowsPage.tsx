@@ -49,7 +49,15 @@ const FlowsPage: React.FC = () => {
         </Button>
       </div>
       <div className="space-y-2">
-        {flows.map((flow) => (
+        {flows.length === 0 ? (
+          <EmptyState
+            icon={GitBranch}
+            title="Nenhum fluxo criado ainda"
+            subtitle="Crie seu primeiro fluxo de automação e comece a atender no piloto automático"
+            buttonLabel="Criar primeiro fluxo"
+            onButtonClick={() => setShowNewFlow(true)}
+          />
+        ) : flows.map((flow) => (
           <Link
             key={flow.id}
             to={`/flows/${flow.id}/editor`}
