@@ -91,6 +91,20 @@ const AppLayout: React.FC = () => {
     });
   }, []);
 
+  const simulateSaleNotification = () => {
+    const vendas = [
+      { valor: 97.00, texto: "🤑 PIQUIS\n+R$ 97,00 pra conta!" },
+      { valor: 197.00, texto: "🔥 PLIMMMM\n+R$ 197,00 pra conta!" },
+      { valor: 47.00, texto: "😱 UHUUU\n+R$ 47,00 pra conta!" },
+    ];
+    const venda = vendas[Math.floor(Math.random() * vendas.length)];
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    new Notification("💸 Nova venda identificada!", {
+      body: venda.texto,
+      icon: "/zapeak-icon-512.png",
+    });
+  };
+
   React.useEffect(() => {
     (window as any).zapeak_showSaleNotification = showSaleNotification;
   }, [pushEnabled, showSaleNotification]);
