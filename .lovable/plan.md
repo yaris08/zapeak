@@ -1,12 +1,12 @@
 
 
-# Remover texto "Mais de 2.417 usuários cadastrados"
+# Corrigir redirecionamento após login
 
 ## Arquivo único
 `src/pages/LoginPage.tsx`
 
 ## Alteração
-Remover o bloco condicional que exibe "Mais de 2.417 usuários cadastrados" abaixo do botão na tab "Criar conta" (linhas ~155-159 do arquivo atual).
+No `handleSubmit`, substituir `navigate("/")` por `window.location.href = "/"` para forçar reload da página e o App.tsx reler o localStorage.
 
-Nenhuma outra alteração.
+Também remover o import de `useNavigate` e a linha `const navigate = useNavigate()` pois não serão mais usados.
 
