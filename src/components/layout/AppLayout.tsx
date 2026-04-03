@@ -91,6 +91,20 @@ const AppLayout: React.FC = () => {
     });
   }, []);
 
+  const simulateSaleNotification = () => {
+    const vendas = [
+      { valor: 97.00, texto: "🤑 PIQUIS\n+R$ 97,00 pra conta!" },
+      { valor: 197.00, texto: "🔥 PLIMMMM\n+R$ 197,00 pra conta!" },
+      { valor: 47.00, texto: "😱 UHUUU\n+R$ 47,00 pra conta!" },
+    ];
+    const venda = vendas[Math.floor(Math.random() * vendas.length)];
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    new Notification("💸 Nova venda identificada!", {
+      body: venda.texto,
+      icon: "/zapeak-icon-512.png",
+    });
+  };
+
   React.useEffect(() => {
     (window as any).zapeak_showSaleNotification = showSaleNotification;
   }, [pushEnabled, showSaleNotification]);
@@ -215,6 +229,15 @@ const AppLayout: React.FC = () => {
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-2 w-40 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
+                {pushEnabled && (
+                  <button
+                    onClick={() => { simulateSaleNotification(); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-xs hover:bg-[#2a2a2a] transition-colors"
+                    style={{ color: "#f59e0b" }}
+                  >
+                    <Zap size={14} /> Simular venda
+                  </button>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-4 py-2 text-xs text-red-400 hover:bg-[#2a2a2a] transition-colors"
