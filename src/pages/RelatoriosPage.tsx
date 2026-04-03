@@ -92,10 +92,10 @@ const RelatoriosPage: React.FC = () => {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <KpiCard icon={Activity} label="Total de Sessões" value={fmt(s(127))} color="#3b82f6" />
-        <KpiCard icon={CheckCircle} label="Taxa de Conclusão" value="68%" color="#22c55e" />
-        <KpiCard icon={MessageSquare} label="Mensagens Enviadas" value={fmt(s(1847))} color="#06b6d4" />
-        <KpiCard icon={Clock} label="Tempo Médio de Fluxo" value="4m 32s" color="#f97316" />
+        <KpiCard icon={Activity} label="Total de Sessões" value="0" color="#3b82f6" />
+        <KpiCard icon={CheckCircle} label="Taxa de Conclusão" value="0%" color="#22c55e" />
+        <KpiCard icon={MessageSquare} label="Mensagens Enviadas" value="0" color="#06b6d4" />
+        <KpiCard icon={Clock} label="Tempo Médio de Fluxo" value="0s" color="#f97316" />
       </div>
 
       {/* Charts row */}

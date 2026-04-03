@@ -10,13 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
-const flows = [
-  { id: "1", name: "Boas-vindas", status: "active", sessions: 245, completion: 72, instance: "Principal" },
-  { id: "2", name: "Qualificação de Lead", status: "active", sessions: 89, completion: 54, instance: "Vendas" },
-  { id: "3", name: "Suporte Automático", status: "draft", sessions: 0, completion: 0, instance: undefined },
-  { id: "4", name: "Pesquisa de Satisfação", status: "active", sessions: 156, completion: 81, instance: "Principal" },
-  { id: "5", name: "Recuperação de Carrinho", status: "draft", sessions: 0, completion: 0, instance: undefined },
-];
+const flows: any[] = [];
 
 const FlowsPage: React.FC = () => {
   const navigate = useNavigate();

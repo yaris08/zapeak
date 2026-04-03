@@ -21,13 +21,7 @@ const kpis = [
 
 const campaignsBase: any[] = [];
 
-const salesBase = [
-  { date: "02/04 14:32", name: "João Silva", phone: "(11) 98765-4321", wa: "https://wa.me/5511987654321", campaign: "Páscoa 2024", valor: 97, confianca: 94, pixel: true },
-  { date: "02/04 13:15", name: "Maria Souza", phone: "(11) 91234-5678", wa: "https://wa.me/5511912345678", campaign: "Black Friday", valor: 197, confianca: 88, pixel: true },
-  { date: "02/04 12:40", name: "Carlos Lima", phone: "(11) 99876-5432", wa: "https://wa.me/5511998765432", campaign: "Lead Quente", valor: 47, confianca: 76, pixel: true },
-  { date: "02/04 11:22", name: "Ana Paula", phone: "(11) 92345-6789", wa: "https://wa.me/5511923456789", campaign: "Páscoa 2024", valor: 97, confianca: 91, pixel: true },
-  { date: "02/04 10:05", name: "Pedro Costa", phone: "(11) 98123-4567", wa: "https://wa.me/5511981234567", campaign: "Black Friday", valor: 297, confianca: 62, pixel: false },
-];
+const salesBase: any[] = [];
 
 const roasBadge = (v: number) => {
   if (v >= 2) return <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ backgroundColor: "#22c55e20", color: "#22c55e" }}>{v.toFixed(1)}x</span>;

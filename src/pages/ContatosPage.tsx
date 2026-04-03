@@ -189,7 +189,7 @@ const ContatosPage = () => {
           </table>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 border-t border-[#2a2a2a] gap-2">
-          <span className="text-xs text-[#9ca3af]">Mostrando {filtered.length} de 1.247 contatos</span>
+          <span className="text-xs text-[#9ca3af]">Mostrando {filtered.length} de 0 contatos</span>
           <div className="flex items-center gap-1">
             <button className="px-3 py-1.5 rounded text-xs text-[#9ca3af] hover:bg-[#2a2a2a] transition-colors">Anterior</button>
             {[1, 2, 3].map((p) => (

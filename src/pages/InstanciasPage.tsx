@@ -17,11 +17,7 @@ interface Instance {
   type: string;
 }
 
-const mockInstances: Instance[] = [
-  { id: "1", name: "Principal", number: "(11) 99999-0001", status: "connected", sessions: 245, errors: 0, lastActivity: "Agora", type: "Principal" },
-  { id: "2", name: "Vendas", number: "(11) 99999-0002", status: "connected", sessions: 89, errors: 2, lastActivity: "2 min atrás", type: "Vendas" },
-  { id: "3", name: "Suporte", number: "(11) 99999-0003", status: "standby", sessions: 0, errors: 0, lastActivity: "Há 3 dias", type: "Suporte" },
-];
+const mockInstances: Instance[] = [];
 
 const typeOptions = ["Principal", "Vendas", "Suporte", "Marketing", "Outro"];
 
