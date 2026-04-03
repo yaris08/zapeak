@@ -48,6 +48,8 @@ const notifIcon = (type: Notification["type"]) => {
 const AppLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userEmail = localStorage.getItem("zapeak_user_email") || "U";
+  const userInitial = userEmail.charAt(0).toUpperCase();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [notifications, setNotifications] = React.useState<Notification[]>(initialNotifications);
@@ -166,7 +168,7 @@ const AppLayout: React.FC = () => {
               onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifications(false); }}
               className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center"
             >
-              <span className="text-xs font-medium text-primary">U</span>
+              <span className="text-xs font-medium text-primary">{userInitial}</span>
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-2 w-40 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
