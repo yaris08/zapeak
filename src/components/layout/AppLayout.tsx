@@ -81,6 +81,20 @@ const AppLayout: React.FC = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Expose showSaleNotification globally
+  const showSaleNotification = React.useCallback((valor: number, textoCustom?: string) => {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const texto = textoCustom ?? `💰 +R$ ${valor.toFixed(2)} pra conta!`;
+    new Notification("💸 Nova venda identificada!", {
+      body: texto,
+      icon: "/zapeak-icon-512.png",
+    });
+  }, []);
+
+  React.useEffect(() => {
+    (window as any).zapeak_showSaleNotification = showSaleNotification;
+  }, [pushEnabled, showSaleNotification]);
+
   const markAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
