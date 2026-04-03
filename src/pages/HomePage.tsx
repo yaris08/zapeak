@@ -50,6 +50,7 @@ const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string
 
 const HomePage: React.FC = () => {
   const [period, setPeriod] = useState<Period>("today");
+  const [simulateEmpty, setSimulateEmpty] = useState(false);
   const m = multipliers[period];
 
   const traffic = useMemo(() => ({
