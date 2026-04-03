@@ -241,8 +241,7 @@ const AppLayout: React.FC = () => {
         >
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <Zap size={20} className="text-primary" />
-              <span className="text-sm font-bold text-foreground">ZaPeak</span>
+              <img src={zapeakLogo} alt="ZaPeak" className="h-5" />
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
