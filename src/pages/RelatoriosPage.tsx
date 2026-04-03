@@ -54,7 +54,7 @@ const RelatoriosPage: React.FC = () => {
   const funnelData = baseFunnel.map(d => ({ ...d, value: s(d.value) }));
   const peaksData = basePeaks.map(d => ({ ...d, msgs: s(d.msgs) }));
   const flowsData = baseFlows.map(f => ({ ...f, sessoes: s(f.sessoes), msgs: s(f.msgs), conversoes: s(f.conversoes) }));
-  const maxPeak = Math.max(...peaksData.map(p => p.msgs));
+  const maxPeak = peaksData.length > 0 ? Math.max(...peaksData.map(p => p.msgs)) : 1;
 
   const handleExport = () => {
     const header = "Fluxo,Sessões,Conclusão %,Msgs Enviadas,Tempo Médio,Conversões,Último Disparo";
