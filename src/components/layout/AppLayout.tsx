@@ -56,6 +56,7 @@ const AppLayout: React.FC = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>(initialNotifications);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const [pushEnabled, setPushEnabled] = React.useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -80,8 +81,38 @@ const AppLayout: React.FC = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Expose showSaleNotification globally
+  const showSaleNotification = React.useCallback((valor: number, textoCustom?: string) => {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const texto = textoCustom ?? `💰 +R$ ${valor.toFixed(2)} pra conta!`;
+    new Notification("💸 Nova venda identificada!", {
+      body: texto,
+      icon: "/zapeak-icon-512.png",
+    });
+  }, []);
+
+  React.useEffect(() => {
+    (window as any).zapeak_showSaleNotification = showSaleNotification;
+  }, [pushEnabled, showSaleNotification]);
+
   const markAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const handleTogglePush = async () => {
+    if (!("Notification" in window)) return;
+    if (pushEnabled) {
+      setPushEnabled(false);
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      setPushEnabled(true);
+      new Notification("🔔 ZAPeak ativado!", {
+        body: "Você receberá alertas de vendas aprovadas.",
+        icon: "/zapeak-icon-512.png",
+      });
+    }
   };
 
   const handleLogout = () => {
