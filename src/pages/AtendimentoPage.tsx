@@ -310,7 +310,7 @@ const AtendimentoPage: React.FC = () => {
         </button>
       </div>
     </div>
-  );
+  ) : null;
 
   const renderBubbleContent = (msg: Message) => {
     if (msg.audio) {
