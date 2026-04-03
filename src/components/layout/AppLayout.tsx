@@ -230,10 +230,10 @@ const AppLayout: React.FC = () => {
               <span className="text-xs font-medium text-primary">{userInitial}</span>
             </button>
             {showUserMenu && (
-              <div className="absolute right-0 top-full mt-2 w-40 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
+              <div className="absolute right-0 top-full mt-2 w-52 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
                 <button
-                  onClick={() => { handleTogglePush(); setShowUserMenu(false); }}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-xs hover:bg-[#2a2a2a] transition-colors"
+                  onClick={() => { handleTogglePush(); }}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-xs whitespace-nowrap hover:bg-[#2a2a2a] transition-colors"
                   style={{ color: "#22c55e" }}
                 >
                   {pushEnabled ? <><BellOff size={14} /> Desativar notificações</> : <><Bell size={14} /> Ativar notificações</>}
