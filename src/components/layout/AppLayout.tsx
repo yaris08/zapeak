@@ -99,6 +99,22 @@ const AppLayout: React.FC = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
+  const handleTogglePush = async () => {
+    if (!("Notification" in window)) return;
+    if (pushEnabled) {
+      setPushEnabled(false);
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      setPushEnabled(true);
+      new Notification("🔔 ZAPeak ativado!", {
+        body: "Você receberá alertas de vendas aprovadas.",
+        icon: "/zapeak-icon-512.png",
+      });
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("zapeak_auth");
     navigate("/login");
