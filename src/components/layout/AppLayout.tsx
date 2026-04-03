@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target, Smartphone, Menu, X, Bell, DollarSign, LogOut } from "lucide-react";
+import zapeakLogo from "@/assets/zapeak-logo.png";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
@@ -94,8 +95,7 @@ const AppLayout: React.FC = () => {
       {/* Top Header */}
       <header className="h-12 border-b border-border bg-card flex items-center justify-between px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <Zap size={20} className="text-primary" />
-          <span className="text-sm font-bold text-foreground">ZaPeak</span>
+          <img src={zapeakLogo} alt="ZaPeak" className="h-5" />
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
@@ -241,8 +241,7 @@ const AppLayout: React.FC = () => {
         >
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <Zap size={20} className="text-primary" />
-              <span className="text-sm font-bold text-foreground">ZaPeak</span>
+              <img src={zapeakLogo} alt="ZaPeak" className="h-5" />
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
