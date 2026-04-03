@@ -27,10 +27,10 @@ const baseChart = [
 ];
 
 const baseFunnel = [
-  { label: "Sessões iniciadas", value: 127, pct: 100 },
-  { label: "Chegaram ao meio", value: 98, pct: 77 },
-  { label: "Concluíram", value: 86, pct: 68 },
-  { label: "Converteram", value: 13, pct: 10 },
+  { label: "Sessões iniciadas", value: 0, pct: 0 },
+  { label: "Chegaram ao meio", value: 0, pct: 0 },
+  { label: "Concluíram", value: 0, pct: 0 },
+  { label: "Converteram", value: 0, pct: 0 },
 ];
 
 const baseFlows = [
