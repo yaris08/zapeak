@@ -175,6 +175,9 @@ const RelatoriosPage: React.FC = () => {
       {/* Peak messages table */}
       <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4">
         <h2 className="text-sm font-bold text-foreground mb-4">Pico de Mensagens</h2>
+        {peaksData.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">Sem dados de pico ainda</p>
+        ) : (
         <div className="space-y-3">
           {peaksData.map((p, i) => (
             <div key={i} className="flex items-center gap-4">
@@ -186,6 +189,7 @@ const RelatoriosPage: React.FC = () => {
             </div>
           ))}
         </div>
+        )}
       </div>
     </div>
   );

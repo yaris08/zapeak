@@ -161,6 +161,9 @@ const AtribuicaoPage: React.FC = () => {
             <Download size={14} /> Exportar CSV
           </Button>
         </div>
+        {salesBase.length === 0 ? (
+          <EmptyState icon={ShoppingCart} title="Nenhuma venda identificada" subtitle="As vendas identificadas pela IA aparecerão aqui" />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs min-w-[700px]">
             <thead>
@@ -198,6 +201,7 @@ const AtribuicaoPage: React.FC = () => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
       {/* Modal Nova Campanha */}
