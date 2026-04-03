@@ -395,7 +395,9 @@ const ConfiguracoesPage: React.FC = () => {
                 </button>
               </div>
               <div className="space-y-2">
-                {adminNumbers.map(admin => (
+                {adminNumbers.length === 0 ? (
+                  <EmptyState icon={Bell} title="Nenhum número cadastrado" subtitle="Adicione um número para receber alertas" />
+                ) : adminNumbers.map(admin => (
                   <div key={admin.id} className="flex items-center justify-between bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg p-3">
                     <div className="flex items-center gap-3">
                       <div>
