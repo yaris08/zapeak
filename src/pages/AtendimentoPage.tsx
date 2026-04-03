@@ -547,7 +547,7 @@ const AtendimentoPage: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Iniciar Fluxo</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Selecione qual fluxo disparar para {selected.name}
+              Selecione qual fluxo disparar para {selected?.name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 py-2">
