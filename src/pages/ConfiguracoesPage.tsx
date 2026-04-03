@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Loader2, Check, Eye, EyeOff, Save, Plus, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Check, Eye, EyeOff, Save, Plus, Pencil, Trash2, Activity, Bell } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -63,10 +64,7 @@ const providerBadges: Record<string, { emoji: string; label: string }> = {
   unknown: { emoji: "⚪", label: "Provedor não reconhecido" },
 };
 
-const defaultPixels: Pixel[] = [
-  { id: "principal", name: "Pixel Principal", pixelId: "1234567890", token: "", datasetId: "", serverSide: true, active: true },
-  { id: "vendas", name: "Pixel Vendas", pixelId: "9876543210", token: "", datasetId: "", serverSide: true, active: true },
-];
+const defaultPixels: Pixel[] = [];
 
 const ConfiguracoesPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("pixel");
@@ -92,10 +90,7 @@ const ConfiguracoesPage: React.FC = () => {
 
   // Admin Numbers
   interface AdminNumber { id: string; name: string; phone: string; active: boolean; }
-  const defaultAdmins: AdminNumber[] = [
-    { id: "principal", name: "Principal", phone: "+55 11 99999-9999", active: true },
-    { id: "backup", name: "Backup", phone: "+55 11 88888-8888", active: true },
-  ];
+  const defaultAdmins: AdminNumber[] = [];
   const [adminNumbers, setAdminNumbers] = useState<AdminNumber[]>(defaultAdmins);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<AdminNumber | null>(null);
@@ -231,7 +226,9 @@ const ConfiguracoesPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              {pixels.map(pixel => (
+              {pixels.length === 0 ? (
+                <EmptyState icon={Activity} title="Nenhum pixel cadastrado" subtitle="Adicione seu primeiro pixel do Facebook" />
+              ) : pixels.map(pixel => (
                 <div key={pixel.id} className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg p-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Switch checked={pixel.active} onCheckedChange={() => togglePixelActive(pixel.id)} />
@@ -399,7 +396,9 @@ const ConfiguracoesPage: React.FC = () => {
                 </button>
               </div>
               <div className="space-y-2">
-                {adminNumbers.map(admin => (
+                {adminNumbers.length === 0 ? (
+                  <EmptyState icon={Bell} title="Nenhum número cadastrado" subtitle="Adicione um número para receber alertas" />
+                ) : adminNumbers.map(admin => (
                   <div key={admin.id} className="flex items-center justify-between bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg p-3">
                     <div className="flex items-center gap-3">
                       <div>
