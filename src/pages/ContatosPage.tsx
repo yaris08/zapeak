@@ -107,9 +107,9 @@ const ContatosPage = () => {
       {/* KPIs */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Total de Contatos", value: "1.247", icon: Users, color: "#3b82f6" },
-          { label: "Pagaram", value: "312", icon: DollarSign, color: "#22c55e" },
-          { label: "Taxa de conversão", value: "25%", icon: TrendingUp, color: "#f97316" },
+          { label: "Total de Contatos", value: "0", icon: Users, color: "#3b82f6" },
+          { label: "Pagaram", value: "0", icon: DollarSign, color: "#22c55e" },
+          { label: "Taxa de conversão", value: "0%", icon: TrendingUp, color: "#f97316" },
         ].map((kpi) => (
           <div key={kpi.label} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${kpi.color}20` }}>
