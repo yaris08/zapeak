@@ -205,7 +205,7 @@ const AppLayout: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2 mx-1 rounded-md text-xs transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 mx-1 rounded-md text-sm transition-colors ${
                     active
                       ? "bg-primary/10 text-primary font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
