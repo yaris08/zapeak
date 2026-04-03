@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target, Smartphone, Menu, X, Bell, DollarSign, LogOut } from "lucide-react";
+import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target, Smartphone, Menu, X, Bell, BellOff, DollarSign, LogOut } from "lucide-react";
 import zapeakLogo from "@/assets/zapeak-logo.png";
 
 const navItems = [
@@ -229,6 +229,13 @@ const AppLayout: React.FC = () => {
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-2 w-40 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
+                <button
+                  onClick={() => { handleTogglePush(); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-xs hover:bg-[#2a2a2a] transition-colors"
+                  style={{ color: "#22c55e" }}
+                >
+                  {pushEnabled ? <><BellOff size={14} /> Desativar notificações</> : <><Bell size={14} /> Ativar notificações</>}
+                </button>
                 {pushEnabled && (
                   <button
                     onClick={() => { simulateSaleNotification(); setShowUserMenu(false); }}
