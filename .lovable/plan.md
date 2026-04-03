@@ -1,44 +1,25 @@
 
 
-# Configurar PWA com ícone personalizado
+# Carregar logo instantaneamente
 
-O app será instalável como PWA (Add to Home Screen) usando a imagem enviada como ícone — **sem service worker**, apenas manifest + ícone.
+## Problema
+A logo (`src/assets/zapeak-logo.png`) tem 71KB — muito grande para uma imagem exibida com apenas 32-40px de altura. Isso causa delay no carregamento.
+
+## Solução
+Converter a logo PNG em base64 inline diretamente no código, eliminando qualquer request de rede. Para reduzir o tamanho, primeiro redimensionar a imagem para 80px de altura (2x do maior uso, suficiente para retina) antes de converter.
 
 ## Arquivos
 
-| Ação | Arquivo |
-|------|---------|
-| Copiar | `user-uploads://ZaPeak_Favicon.png` → `public/zapeak-icon-512.png` |
-| Deletar | `public/favicon.ico` |
-| Criar | `public/manifest.json` — manifest com nome "ZaPeak", cores escuras, `display: "standalone"`, ícone 512x512 |
-| Editar | `index.html` — adicionar `<link rel="manifest">`, `<link rel="icon">` apontando para o PNG, e `<meta name="theme-color">` |
+| Arquivo | Alteração |
+|---------|-----------|
+| `src/assets/zapeak-logo.png` | Substituir por versão redimensionada (~2-5KB) |
+| `src/components/layout/AppLayout.tsx` | Sem alteração (import continua igual) |
+| `src/pages/LoginPage.tsx` | Sem alteração |
+
+Alternativa mais agressiva: converter para base64 data URL inline, eliminando completamente o arquivo separado. Mas redimensionar o PNG já deve resolver o problema.
 
 ## Detalhes técnicos
-
-### manifest.json
-```json
-{
-  "name": "ZaPeak",
-  "short_name": "ZaPeak",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0f0f0f",
-  "theme_color": "#22c55e",
-  "icons": [
-    { "src": "/zapeak-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
-}
-```
-
-### index.html — adicionar no `<head>`
-```html
-<link rel="icon" href="/zapeak-icon-512.png" type="image/png">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#22c55e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/zapeak-icon-512.png">
-```
-
-**Sem service worker** — apenas installabilidade via manifest. Funciona no preview publicado, não no editor.
+- Usar ImageMagick para redimensionar: altura 80px (2x retina do `h-10` = 40px)
+- PNG otimizado de ~80px de altura ficará com ~2-5KB vs 71KB atual
+- Vite já faz inline automático de imagens < 4KB como base64 no bundle JS
 
