@@ -102,7 +102,7 @@ const AppLayout: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 location.pathname === item.path
                   ? "bg-primary/10 text-primary font-medium"
                   : "text-muted-foreground hover:text-foreground"
@@ -205,7 +205,7 @@ const AppLayout: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2 mx-1 rounded-md text-xs transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 mx-1 rounded-md text-sm transition-colors ${
                     active
                       ? "bg-primary/10 text-primary font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -219,7 +219,7 @@ const AppLayout: React.FC = () => {
           </div>
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-3 text-muted-foreground hover:text-foreground text-[10px] border-t border-border"
+            className="p-3 text-muted-foreground hover:text-foreground text-xs border-t border-border"
           >
             {sidebarCollapsed ? "→" : "← Recolher"}
           </button>
