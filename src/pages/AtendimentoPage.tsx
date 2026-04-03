@@ -37,12 +37,7 @@ const tabs = [
   { key: "resolvidas", label: "Resolvidas" },
 ] as const;
 
-const mockFlows = [
-  { name: "Boas-vindas", trigger: "Palavra-chave", sessions: 245 },
-  { name: "Qualificação Lead", trigger: "Palavra-chave", sessions: 89 },
-  { name: "Suporte Automático", trigger: "Horário", sessions: 67 },
-  { name: "Recuperação Carrinho", trigger: "Horário", sessions: 34 },
-];
+const mockFlows: any[] = [];
 
 const campaigns = ["Páscoa 2024", "Black Friday", "Lead Quente", "Sem campanha"];
 
