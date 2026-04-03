@@ -56,6 +56,7 @@ const AppLayout: React.FC = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>(initialNotifications);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showUserMenu, setShowUserMenu] = React.useState(false);
+  const [pushEnabled, setPushEnabled] = React.useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
