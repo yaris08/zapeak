@@ -359,6 +359,7 @@ const AtendimentoPage: React.FC = () => {
         {contactListContent}
       </div>
 
+      {selected ? (
       <div className="flex-1 flex flex-col min-w-0">
         <div className="px-4 py-3 border-b border-[#2a2a2a]">
           <div className="flex items-center justify-between">
