@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Smartphone, Wifi, WifiOff, QrCode, Plus, MoreVertical, MessageSquare, RefreshCw, Trash2, Edit, Eye } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
