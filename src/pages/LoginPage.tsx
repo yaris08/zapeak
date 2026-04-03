@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
       >
         {/* Logo */}
         <div className="flex items-center justify-center mb-6">
-          <img src={zapeakLogo} alt="ZaPeak" className="h-7" />
+          <img src={zapeakLogo} alt="ZaPeak" className="h-10" />
         </div>
 
         {/* Title */}
