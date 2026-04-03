@@ -17,13 +17,13 @@ const KpiCard = ({ icon: Icon, label, value, color }: { icon: any; label: string
 );
 
 const baseChart = [
-  { dia: "27/03", sessoes: 89 },
-  { dia: "28/03", sessoes: 102 },
-  { dia: "29/03", sessoes: 78 },
-  { dia: "30/03", sessoes: 134 },
-  { dia: "31/03", sessoes: 156 },
-  { dia: "01/04", sessoes: 143 },
-  { dia: "02/04", sessoes: 127 },
+  { dia: "27/03", sessoes: 0 },
+  { dia: "28/03", sessoes: 0 },
+  { dia: "29/03", sessoes: 0 },
+  { dia: "30/03", sessoes: 0 },
+  { dia: "31/03", sessoes: 0 },
+  { dia: "01/04", sessoes: 0 },
+  { dia: "02/04", sessoes: 0 },
 ];
 
 const baseFunnel = [
