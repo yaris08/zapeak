@@ -219,7 +219,7 @@ const AppLayout: React.FC = () => {
           </div>
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-3 text-muted-foreground hover:text-foreground text-[10px] border-t border-border"
+            className="p-3 text-muted-foreground hover:text-foreground text-xs border-t border-border"
           >
             {sidebarCollapsed ? "→" : "← Recolher"}
           </button>
