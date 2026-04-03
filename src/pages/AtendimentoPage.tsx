@@ -55,7 +55,7 @@ const AtendimentoPage: React.FC = () => {
   const [showFlowModal, setShowFlowModal] = useState(false);
   const [selectedFlow, setSelectedFlow] = useState<number | null>(null);
   const [showStopModal, setShowStopModal] = useState(false);
-  const [activeFlow, setActiveFlow] = useState<string | null>("Boas-vindas");
+  const [activeFlow, setActiveFlow] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentValue, setPaymentValue] = useState("");
   const [paymentNote, setPaymentNote] = useState("");
