@@ -13,10 +13,10 @@ const fmt = (v: number) => v.toLocaleString("pt-BR", { style: "currency", curren
 const fmtDec = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
 
 const kpis = [
-  { label: "Faturamento Real", base: 4890, icon: DollarSign, color: "#22c55e", format: fmt },
-  { label: "Total de Vendas", base: 51, icon: ShoppingCart, color: "#22c55e", format: (v: number) => Math.round(v).toString() },
-  { label: "Ticket Médio", base: 95.88, icon: TrendingUp, color: "#3b82f6", format: fmtDec },
-  { label: "Custo por Compra", base: 15.69, icon: CreditCard, color: "#f97316", format: fmtDec },
+  { label: "Faturamento Real", base: 0, icon: DollarSign, color: "#22c55e", format: fmt },
+  { label: "Total de Vendas", base: 0, icon: ShoppingCart, color: "#22c55e", format: (v: number) => Math.round(v).toString() },
+  { label: "Ticket Médio", base: 0, icon: TrendingUp, color: "#3b82f6", format: fmtDec },
+  { label: "Custo por Compra", base: 0, icon: CreditCard, color: "#f97316", format: fmtDec },
 ];
 
 const campaignsBase = [
