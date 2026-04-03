@@ -89,10 +89,7 @@ const ConfiguracoesPage: React.FC = () => {
 
   // Admin Numbers
   interface AdminNumber { id: string; name: string; phone: string; active: boolean; }
-  const defaultAdmins: AdminNumber[] = [
-    { id: "principal", name: "Principal", phone: "+55 11 99999-9999", active: true },
-    { id: "backup", name: "Backup", phone: "+55 11 88888-8888", active: true },
-  ];
+  const defaultAdmins: AdminNumber[] = [];
   const [adminNumbers, setAdminNumbers] = useState<AdminNumber[]>(defaultAdmins);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<AdminNumber | null>(null);
