@@ -43,8 +43,12 @@ const LoginPage: React.FC = () => {
 
         {/* Title */}
         <div className="text-center mb-6">
-          <h1 className="text-[22px] font-bold text-foreground">Bem-vindo de volta</h1>
-          <p className="text-sm text-muted-foreground mt-1">Faça login para continuar</p>
+          <h1 className="text-[22px] font-bold text-foreground">
+            {activeTab === "login" ? "Bem-vindo de volta" : "Bem-vindo"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {activeTab === "login" ? "Faça login para continuar" : "Crie sua conta"}
+          </p>
         </div>
 
         {/* Tabs */}
