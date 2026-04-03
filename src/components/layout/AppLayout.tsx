@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Zap, Target, Smartphone, Menu, X, Bell, DollarSign, LogOut } from "lucide-react";
+import { Home, GitBranch, MessageSquare, BarChart3, Settings, Users, Target, Smartphone, Menu, X, Bell, DollarSign, LogOut } from "lucide-react";
+import zapeakLogo from "@/assets/zapeak-logo.png";
 
 const navItems = [
   { label: "Home", path: "/", icon: Home },
