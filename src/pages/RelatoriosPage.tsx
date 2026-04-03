@@ -142,6 +142,9 @@ const RelatoriosPage: React.FC = () => {
             <Download size={14} /> Exportar CSV
           </button>
         </div>
+        {flowsData.length === 0 ? (
+          <EmptyState icon={BarChart3} title="Nenhum fluxo com dados" subtitle="Os dados de desempenho aparecerão aqui quando houver fluxos ativos" />
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
             <thead>
@@ -166,6 +169,7 @@ const RelatoriosPage: React.FC = () => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
       {/* Peak messages table */}
