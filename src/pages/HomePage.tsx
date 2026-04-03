@@ -294,7 +294,9 @@ const HomePage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {baseSales.map((s, i) => (
+              {simulateEmpty ? (
+                <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground text-sm">Sem dados</td></tr>
+              ) : baseSales.map((s, i) => (
                 <tr key={i} className="border-b border-[#2a2a2a] last:border-0 hover:bg-[#222]">
                   <td className={tdClass}>{s.time}</td>
                   <td className="px-4 py-3 text-foreground">{s.name}</td>
