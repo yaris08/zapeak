@@ -202,10 +202,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Concluíram o fluxo</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "54%", height: "100%", background: "#22c55e", opacity: 0.6, borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "54%", height: "100%", background: "#22c55e", opacity: 0.6, borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(272 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>54%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(272 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "54%"}</div>
             </div>
           </div>
           <div className="ml-4 md:ml-9" style={{ width: "1px", height: "6px", background: "#22c55e", opacity: 0.3 }} />
