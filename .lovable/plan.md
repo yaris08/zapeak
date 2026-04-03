@@ -1,23 +1,26 @@
 
 
-# Substituir texto "ZaPeak" pela logo em imagem
+# Adicionar botão hamburger ao lado esquerdo da logo no header
 
-## O que será feito
-Copiar a logo enviada para o projeto e substituir o texto "ZaPeak" (ícone Zap + texto) pela imagem da logo nos 3 locais visuais onde aparece.
+## Arquivo
+`src/components/layout/AppLayout.tsx`
 
-## Arquivo de imagem
-Copiar `user-uploads://ZaPeak_1.png` → `src/assets/zapeak-logo.png`
+## Alteração
+Na div do logo no header (linha 97-99), adicionar um botão `Menu` (ícone ≡) **antes** da imagem da logo. Esse botão alterna `sidebarCollapsed` no desktop e `mobileMenuOpen` no mobile.
 
-## Arquivos a alterar
+```
+<div className="flex items-center gap-2">
+  <button onClick={toggleSidebar} className="p-1.5 text-muted-foreground hover:text-foreground">
+    <Menu size={20} />
+  </button>
+  <img src={zapeakLogo} alt="ZaPeak" className="h-8" />
+</div>
+```
 
-| Arquivo | Alteração |
-|---------|-----------|
-| `src/pages/LoginPage.tsx` | Substituir `<Zap>` + `<span>ZaPeak</span>` por `<img>` da logo (~28px altura) |
-| `src/components/layout/AppLayout.tsx` | Substituir nos 2 locais (header desktop + drawer mobile) o `<Zap>` + `<span>ZaPeak</span>` por `<img>` da logo (~20px altura) |
+- No desktop (`md+`): clica → alterna `sidebarCollapsed`
+- No mobile: clica → alterna `mobileMenuOpen` (comportamento atual do botão mobile, que será movido para cá)
 
-## O que NÃO muda
-- Chaves localStorage (`zapeak_auth`, `zapeak_user_email`, etc.)
-- Título do `index.html`
-- Metatags OG/Twitter
-- Nenhuma lógica de negócio
+Remover o botão `Menu` separado que existe no canto direito para mobile (linha ~165) e o botão "← Recolher" no rodapé da sidebar (linha ~222), já que o hamburger no header substitui ambos.
+
+Nenhuma outra alteração.
 
