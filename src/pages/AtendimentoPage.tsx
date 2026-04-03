@@ -543,6 +543,7 @@ const AtendimentoPage: React.FC = () => {
         </div>
       )}
 
+      <Dialog open={showFlowModal} onOpenChange={setShowFlowModal}>
         <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle>Iniciar Fluxo</DialogTitle>
