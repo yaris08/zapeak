@@ -533,8 +533,16 @@ const AtendimentoPage: React.FC = () => {
         </div>
         {profileContent}
       </div>
+      </>
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-2">
+            <MessageSquare size={48} className="text-muted-foreground mx-auto" />
+            <p className="text-sm text-muted-foreground">Nenhuma conversa ainda</p>
+          </div>
+        </div>
+      )}
 
-      <Dialog open={showFlowModal} onOpenChange={setShowFlowModal}>
         <DialogContent className="bg-[#1a1a1a] border-[#2a2a2a] text-foreground max-w-md">
           <DialogHeader>
             <DialogTitle>Iniciar Fluxo</DialogTitle>
