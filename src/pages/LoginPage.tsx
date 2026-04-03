@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Zap, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
+import zapeakLogo from "@/assets/zapeak-logo.png";
 
 const LoginPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
