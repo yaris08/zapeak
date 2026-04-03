@@ -162,11 +162,6 @@ const LoginPage: React.FC = () => {
             <ArrowRight size={16} />
           </button>
 
-          {activeTab === "register" && (
-            <p className="text-xs text-muted-foreground text-center mt-3">
-              Mais de <span className="font-bold" style={{ color: "#22c55e" }}>2.417</span> usuários cadastrados
-            </p>
-          )}
         </form>
       </div>
     </div>
