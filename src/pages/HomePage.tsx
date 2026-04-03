@@ -215,10 +215,10 @@ const HomePage: React.FC = () => {
             <div className="min-w-0 flex-1" style={{ fontSize: "13px" }}>Compraram</div>
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div className="w-16 md:w-[120px]" style={{ height: "6px", background: "#ffffff10", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{ width: "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
+                <div style={{ width: simulateEmpty ? "0%" : "10%", height: "100%", background: "#22c55e", opacity: 0.4, borderRadius: "3px" }} />
               </div>
-              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{Math.round(51 * m)}</div>
-              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>10.2%</div>
+              <div className="shrink-0" style={{ fontSize: "13px", fontWeight: 500, color: "#22c55e", minWidth: "32px", textAlign: "right" }}>{simulateEmpty ? 0 : Math.round(51 * m)}</div>
+              <div className="shrink-0" style={{ fontSize: "11px", color: "#9ca3af", minWidth: "36px", textAlign: "right" }}>{simulateEmpty ? "0%" : "10.2%"}</div>
             </div>
           </div>
         </div>
