@@ -13,6 +13,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem("zapeak_auth", "true");
+    localStorage.setItem("zapeak_user_email", email);
     window.location.href = "/";
   };
 

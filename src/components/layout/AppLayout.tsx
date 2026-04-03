@@ -168,7 +168,7 @@ const AppLayout: React.FC = () => {
               onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifications(false); }}
               className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center"
             >
-              <span className="text-xs font-medium text-primary">U</span>
+              <span className="text-xs font-medium text-primary">{userInitial}</span>
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-2 w-40 rounded-lg shadow-xl z-50 py-1" style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
