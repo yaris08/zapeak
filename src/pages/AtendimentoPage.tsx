@@ -114,7 +114,7 @@ const AtendimentoPage: React.FC = () => {
     if (selectedFlow === null) return;
     const flow = mockFlows[selectedFlow];
     setActiveFlow(flow.name);
-    toast.success(`✓ Fluxo disparado para ${selected.name}`);
+    toast.success(`✓ Fluxo disparado para ${selected?.name}`);
     addSystemMessage(`🤖 Fluxo '${flow.name}' iniciado manualmente`);
     setShowFlowModal(false);
     setSelectedFlow(null);
