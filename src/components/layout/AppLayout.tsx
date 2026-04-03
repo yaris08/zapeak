@@ -117,6 +117,7 @@ const AppLayout: React.FC = () => {
     if (!("Notification" in window)) return;
     if (pushEnabled) {
       setPushEnabled(false);
+      setShowUserMenu(false);
       return;
     }
     const permission = await Notification.requestPermission();
@@ -127,6 +128,7 @@ const AppLayout: React.FC = () => {
         icon: "/zapeak-icon-512.png",
       });
     }
+    setShowUserMenu(false);
   };
 
   const handleLogout = () => {
