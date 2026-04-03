@@ -102,7 +102,7 @@ const AppLayout: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`px-3 py-1.5 text-xs rounded-md transition-colors ${
+              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 location.pathname === item.path
                   ? "bg-primary/10 text-primary font-medium"
                   : "text-muted-foreground hover:text-foreground"
